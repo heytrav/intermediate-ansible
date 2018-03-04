@@ -11,6 +11,7 @@
 
 		<!-- Theme used for syntax highlighting of code -->
 		<link rel="stylesheet" href="lib/css/zenburn.css">
+        <link rel="stylesheet" type="text/css" href="css/asciinema-player.css" />
 
 		<!-- Printing and PDF exports -->
 		<script>
@@ -24,13 +25,21 @@
 	<body>
 		<div class="reveal">
 			<div class="slides">
-				<section>Slide 1</section>
-				<section>Slide 2</section>
+<section data-markdown="pages/main-title.md" >
+</section>
+<section data-markdown="pages/course-outline.md" 
+         data-separator-vertical="^\n\n"
+    >
+</section>
+                
 			</div>
 		</div>
 
 		<script src="lib/js/head.min.js"></script>
-		<script src="js/reveal.js"></script>
+        <script src="plugin/markdown/marked.js" charset="utf-8"></script>
+        <script src="plugin/markdown/markdown.js" charset="utf-8"></script>
+        <script src="plugin/asciinema/asciinema-player.js"></script>
+		<script src="js/reveal.js" charset="utf-8"></script>
 
 		<script>
 			// More info about config & dependencies:
