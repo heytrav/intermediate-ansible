@@ -1,0 +1,10 @@
+---
+- name: Only playbook for my project
+  hosts: localhost
+  tasks:
+
+      - name: This is my first task
+
+      - name: This is my second task
+
+      - name: This is my third task
