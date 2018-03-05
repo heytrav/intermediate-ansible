@@ -53,6 +53,7 @@ $ tree
 
 Conventional organisation of tasks in ansible
  <pre><code data-trim data-noescape>
+ $ mkdir -p $WORKDIR/lesson1/ansible/tasks
  .
  └── ansible
       ├── hosts
@@ -95,7 +96,7 @@ Conventional organisation of tasks in ansible
 
 Statically include a task list
 
-```
+```yaml
 tasks:
   - debug:
       msg: Task in main playbook
@@ -113,7 +114,7 @@ tasks:
 
 * Dynamically include a task list
 
-```
+```yaml
 tasks:
   - debug:
       msg: Task in main playbook
