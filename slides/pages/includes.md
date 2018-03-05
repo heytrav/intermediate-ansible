@@ -14,6 +14,20 @@ $ tree
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
 
 
+## Long playbook
+
+```
+  tasks:
+    - name: Basic tasks 1
+
+    - name: Basic tasks 2
+    .
+    .
+    - name: Basic task n
+
+```
+
+
 ## Refactoring Infrastructure Code
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -25,13 +39,14 @@ $ tree
 
 ## Refactoring a Playbook
 
-* Have a look at `ansible/long-playbook.yml`
-* It contains a few tasks for
-    * Installing some monitoring libraries
-    * Installing and setting up a database
-    * Setting up a folder for a project
-* Works fine, but managing a few unrelated jobs
-* Let's try splitting these up into components
+* Ideal to break playbook into smaller components
+  - Compartmentalise logic
+  - Avoid repetition
+* Use Ansible _includes_
+  - `include`
+  - `import_tasks`
+  - `include_tasks`
+
 
 
 ## Including files in Ansible
@@ -43,6 +58,15 @@ $ tree
 
 
 ## Including files in Ansible
+
+#### `import_tasks`
+
+Statically include a task list
+
+```
+
+```
+
 
 #### `include_tasks`
 
