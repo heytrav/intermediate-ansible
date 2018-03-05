@@ -14,11 +14,6 @@ $ tree
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
 
 
-## Long playbook
-
-![Long playbook](img/playbook-long.svg "Long playbook")
-
-
 ## Refactoring Infrastructure Code
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -40,6 +35,52 @@ $ tree
 
 
 
+## Long playbook
+
+![Long playbook](img/playbook-long.svg "Long playbook")
+
+* Goal is to restructure so that
+  - Related tasks are grouped together
+  - Components can be _reused_ if possible
+
+
+## Refactored playbook
+
+![Broken up playbook](img/playbook-refactor1.svg "Refactored")
+
+
+## Project layout
+
+Conventional organisation of tasks in ansible
+ <pre><code data-trim data-noescape>
+ .
+ └── ansible
+      ├── hosts
+      ├── long-playbook.yml
+      <mark>└── tasks
+            ├── db.yml
+            ├── monitoring.yml
+            ├── server.yml
+            └── setup.yml</mark>
+ </code></pre>
+
+
+## Task files
+
+* Task file contains a YAML list
+* Ideally tasks related to specific purpose
+
+```yaml
+---
+- name: This is task 1
+
+- name: This is task 2
+.
+.
+- name: This is task n
+```
+
+
 ## Including files in Ansible
 
 #### `include`
@@ -55,24 +96,33 @@ $ tree
 Statically include a task list
 
 ```
+tasks:
+  - debug:
+      msg: Task in main playbook
 
+  - import_tasks: "tasks/import-stuff.yml"
+
+  - debug:
+      msg: Second task in main playbook
 ```
 
+
+## Including files in Ansible
 
 #### `include_tasks`
 
 * Dynamically include a task list
 
-
 ```
 tasks:
-- debug:
-    msg: Task in main playbook
+  - debug:
+      msg: Task in main playbook
 
-- include_tasks: tasks/some-stuff.yml
+  - include_tasks: tasks/import-stuff.yml
+  - include_tasks: "tasks/{{ myfile  }}.yml"
 
-- debug:
-    msg: Second task in main playbook
+  - debug:
+      msg: Second task in main playbook
 ```
 
 
