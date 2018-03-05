@@ -16,16 +16,7 @@ $ tree
 
 ## Long playbook
 
-```
-  tasks:
-    - name: Basic tasks 1
-
-    - name: Basic tasks 2
-    .
-    .
-    - name: Basic task n
-
-```
+![Long playbook](img/playbook-long.svg "Long playbook")
 
 
 ## Refactoring Infrastructure Code
