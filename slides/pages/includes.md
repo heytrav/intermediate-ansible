@@ -58,17 +58,19 @@ Conventional organisation of tasks in ansible
  └── ansible
       ├── hosts
       ├── long-playbook.yml
-      <mark>└── tasks
-            ├── db.yml
+<mark class="fragment" data-fragment-index="0">      └── tasks</mark>
+<mark class="fragment" data-fragment-index="1">            ├── db.yml
             ├── monitoring.yml
             ├── server.yml
             └── setup.yml</mark>
  </code></pre>
 
+>In general you can put task files anywhere as long they're resolvable by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
+
 
 ## Task files
 
-* Task file contains a YAML list
+* Task _only_ file contains a YAML list
 * Ideally tasks related to specific purpose
 
 ```yaml
@@ -97,6 +99,7 @@ Conventional organisation of tasks in ansible
 Statically include a task list
 
 ```yaml
+name: Main playbook
 tasks:
   - debug:
       msg: Task in main playbook
@@ -115,6 +118,7 @@ tasks:
 * Dynamically include a task list
 
 ```yaml
+name: Main playbook
 tasks:
   - debug:
       msg: Task in main playbook
@@ -127,4 +131,47 @@ tasks:
 ```
 
 
+### Exercise: Refactor a playbook using task files
 
+* Break up `long-playbook.yml` into separate tasks files by _function_
+  - basic setup
+  - db setup
+  - application setup
+  - monitoring setup
+
+
+### Refactoring our playbook
+
+```yaml
+  tasks:
+    - debug:
+        msg: Running main playbook task
+
+    - import_tasks: tasks/basic.yml
+    - import_tasks: tasks/db.yml
+    - import_tasks: tasks/app.yml
+    - import_tasks: tasks/monitoring.yml
+    
+```
+Answers may vary <!-- .element: class="fragment" data-fragment-index="0" -->
+
+
+### Refactoring our playbook
+
+#### Alternative approach
+
+* Use `include_tasks` to dynamically load files
+
+```yaml
+  tasks:
+    - debug:
+        msg: Running main playbook task
+
+    - include_tasks: "tasks/{{ item }}.yml"
+      with_items:
+        - basic
+        - db
+        - app
+        - monitoring
+```
+import_tasks will not work here because of how ansible parses playbooks <!-- .element: class="fragment" data-fragment-index="0" -->
