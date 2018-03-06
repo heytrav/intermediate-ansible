@@ -1,0 +1,16 @@
+---
+- name: Set up python application
+  hosts: localhost
+  tasks:
+
+    - name: Check out code for project
+      git:
+        repo: https://github.com/heytrav/sample-flask-app.git
+        dest: "{{ ansible_env.HOME }}/sample-flask-app"
+
+    - name: Create python virtual environment
+      pip:
+        virtualenv_python: python3
+        chdir: "{{ ansible_env.HOME }}/sample-flask-app"
+
+
