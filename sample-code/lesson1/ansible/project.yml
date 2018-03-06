@@ -64,3 +64,15 @@
         lc_collate: en_NZ.UTF-8
         template: template0
 
+
+    - name: Create table for pics 
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "CREATE TABLE IF NOT EXISTS images (id SERIAL primary key not null,
+        image char(200) not null unique)" {{ database }}
+                                                                                                                                                                                                                                  
+    - name: Add images to new table
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
+      with_items: "{{ images }}"
