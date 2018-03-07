@@ -1,0 +1,16 @@
+- name: Run a set of tools in local directory
+  hosts: localhost
+  vars:
+    application_directory: "{{ ansible_env.PWD }}/.."
+  tasks:
+
+    - name: Delete a branch from repository
+      command: git branch -D notabranch
+
+
+    - name: Run tools command in working directory
+      shell: "{{ ansible_env.PWD }}/../tools.sh"
+      args:
+        chdir: "{{ application_directory }}"
+      
+         

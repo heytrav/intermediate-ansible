@@ -1,4 +1,34 @@
-# Task state
+# Task conditions
+
+
+
+# Task conditions
+
+```
+$ cd $WORKDIR/lesson2
+```
+
+
+## Managing task conditions
+
+* Most modules have their own way of defining failure or change of state <!-- .element: class="fragment" data-fragment-index="0" -->
+* Some improvise based on return code <!-- .element: class="fragment" data-fragment-index="1" -->
+  - command family of modules: (command, shell, script, raw)
+* Shell commands typically return uninformative error codes <!-- .element: class="fragment" data-fragment-index="2" -->
+  - 0 for success
+  - &ge; 1 for failure
+* May be necessary to override Ansible behaviour <!-- .element: class="fragment" data-fragment-index="3" -->
+
+
+## Managing errors
+
+#### `ansible/runtools.yml`
+
+* This playbook tries to:
+  - Delete a branch from the repository
+  - Run a script which creates a directory
+* Run playbook `ansible/runtools.yml`
+<asciinema-player loop="1" cols="100" theme="solarized-light" start-at="13.0" rows="15" autoplay="1" src="asciinema/error-playbook.cast"></asciinema-player>
 
 
 ## Ignore errors
@@ -6,23 +36,16 @@
 #### `ignore_errors`
 
 Tell Ansible to continue execution when an error happens
+
 ```
-    - name: Task that checks out fake repository
-      git:
-        repo: git@github.com/fake/repo.git
-        dest: /some/path
-      ignore_errors: true
+    - name: Delete a branch from repository
+      command: git branch -D notabranch
 ```
 
 
 ## Error state
 
 * Modules generally know how to interpret task error
-* Sometimes necessary to control how Ansible handles error
-  - command
-  - script
-  - shell
-  - raw
 
 
 

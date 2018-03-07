@@ -1,0 +1,26 @@
+---
+- name: Set up python application
+  hosts: localhost
+  vars_files:
+    - secrets.yml
+  vars:
+    database_user: admin
+    database: cat_pics
+    database_host: localhost
+  environment:
+    PGPASSWORD: "{{ vault_database_password }}"
+  tasks:
+
+
+    - name: Create table for pics 
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "CREATE TABLE IF NOT EXISTS images_unique (id SERIAL primary key not null,
+        image char(200) not null unique)" {{ database }}
+
+    - name: Add images to new table
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "INSERT INTO images_unique (image) VALUES ('{{ item }}')" {{ database }}
+      with_items: "{{ images }}"
+      
