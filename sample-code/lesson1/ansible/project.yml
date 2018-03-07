@@ -7,6 +7,8 @@
     database_user: admin
     database: cat_pics
     database_host: localhost
+  environment:
+    PGPASSWORD: "{{ vault_database_password }}"
   tasks:
 
     - name: Update apt cache
@@ -76,3 +78,7 @@
         psql -U {{ database_user }} -h {{ database_host }} 
         -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
       with_items: "{{ images }}"
+      register: db_insert
+      failed_when: db_insert.rc != 0 and 'duplicate' not in db_insert.stderr
+      changed_when: db_insert.rc == 0 and 'INSERT' in db_insert.stdout
+      
