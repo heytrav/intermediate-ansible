@@ -1,0 +1,110 @@
+---
+- name: Set up python application
+  hosts: localhost
+  vars_files:
+    - secrets.yml
+  vars:
+    database_user: admin
+    database: cat_pics
+    database_host: localhost
+    locale: en_NZ.UTF-8
+  environment:
+    PGPASSWORD: "{{ vault_database_password }}"
+  tasks:
+
+    - name: Update apt cache
+      become: yes
+      apt:
+        update_cache: yes
+
+    - name: Install needed libraries
+      become: yes
+      apt:
+        name: "{{ item }}"  
+        state: present
+      with_items:
+        - python3-dev
+        - python3-psycopg2
+        - python-psycopg2
+        - postgresql
+
+    - name: Check out code for project
+      git:
+        repo: https://github.com/heytrav/sample-flask-app.git
+        dest: "{{ ansible_env.HOME }}/sample-flask-app"
+
+    - name: Create python virtual environment
+      pip:
+        virtualenv_python: python3
+        chdir: "{{ ansible_env.HOME }}/sample-flask-app"
+        virtualenv: "{{ ansible_env.HOME }}/sample-flask-app/venv"
+        requirements: requirements.txt
+
+    - name: Add app config
+      template:
+        src: templates/config.py.j2
+        dest: "{{ ansible_env.HOME }}/sample-flask-app/config.py"
+        owner: "{{ ansible_env.USER }}"
+        group: "{{ ansible_env.USER }}"
+        mode: 0644
+
+    - name: Create project locale
+      become: true
+      locale_gen:
+        name: "{{ locale }}"
+
+    - name: Create DB user
+      become: true
+      become_user: postgres
+      postgresql_user:
+        name: "{{ database_user }}"
+        password: "{{ vault_database_password }}"
+
+    - name: Make postgres listen on external ports
+      become: true
+      lineinfile:
+        path: /etc/postgresql/9.5/main/postgresql.conf
+        line: "listen_addresses = '*'"
+        insertbefore: '^#listen_addresses'
+      notify: restart postgres
+
+    - name: Add pb_hba rule for hosts
+      become: true
+      lineinfile:
+        path: /etc/postgresql/9.5/main/pg_hba.conf
+        insertafter: "^# IPv4 local connections"
+        line: "host      all    all   192.168.99.0/24     md5"
+      notify: restart postgres
+
+    - name: Create the database
+      become: true
+      become_user: postgres
+      postgresql_db:
+        name: "{{ database }}"
+        owner: "{{ database_user }}"
+        encoding: UTF8
+        lc_ctype: en_NZ.UTF-8
+        lc_collate: en_NZ.UTF-8
+        template: template0
+
+
+    - name: Create table for pics 
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "CREATE TABLE IF NOT EXISTS images (id SERIAL primary key not null,
+        image char(200) not null)" {{ database }}
+
+    - name: Add images to new table
+      command: |
+        psql -U {{ database_user }} -h {{ database_host }} 
+        -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
+      with_items: "{{ images }}"
+      
+
+  handlers:
+    - name: restart postgres
+      become: true
+      service:
+        name: postgresql
+        state: restarted
+
