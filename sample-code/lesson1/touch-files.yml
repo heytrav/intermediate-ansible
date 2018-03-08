@@ -1,0 +1,21 @@
+---
+- name: Touch some files
+  hosts: localhost
+  gather_facts: false
+  tasks:
+
+    - name: Create directory for file
+      file:
+        path: /tmp/foo
+        state: directory
+
+
+    - name: touch file in directory
+      file:
+        path: /tmp/foo/file1.txt
+        state: touch
+
+    - name: touch file in directory
+      file:
+        path: /tmp/foo/file1.txt
+        state: touch
