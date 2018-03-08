@@ -71,14 +71,11 @@
       command: |
         psql -U {{ database_user }} -h {{ database_host }} 
         -c "CREATE TABLE IF NOT EXISTS images (id SERIAL primary key not null,
-        image char(200) not null unique)" {{ database }}
-                                                                                                                                                                                                                                  
+        image char(200) not null)" {{ database }}
+
     - name: Add images to new table
       command: |
         psql -U {{ database_user }} -h {{ database_host }} 
         -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
       with_items: "{{ images }}"
-      register: db_insert
-      failed_when: db_insert.rc != 0 and 'duplicate' not in db_insert.stderr
-      changed_when: db_insert.rc == 0 and 'INSERT' in db_insert.stdout
       
