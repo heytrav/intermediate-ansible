@@ -7,6 +7,7 @@
     database_user: admin
     database: cat_pics
     database_host: localhost
+    locale: en_NZ.UTF-8
   environment:
     PGPASSWORD: "{{ vault_database_password }}"
   tasks:
@@ -47,6 +48,11 @@
         group: "{{ ansible_env.USER }}"
         mode: 0644
 
+    - name: Create project locale
+      become: true
+      locale_gen:
+        name: "{{ locale }}"
+
     - name: Create DB user
       become: true
       become_user: postgres
@@ -54,6 +60,21 @@
         name: "{{ database_user }}"
         password: "{{ vault_database_password }}"
 
+    - name: Make postgres listen on external ports
+      become: true
+      lineinfile:
+        path: /etc/postgresql/9.5/main/postgresql.conf
+        line: "listen_addresses = '*'"
+        insertbefore: '^#listen_addresses'
+      notify: restart postgres
+
+    - name: Add pb_hba rule for hosts
+      become: true
+      lineinfile:
+        path: /etc/postgresql/9.5/main/pg_hba.conf
+        insertafter: "^# IPv4 local connections"
+        line: "host      all    all   192.168.99.0/24     md5"
+      notify: restart postgres
 
     - name: Create the database
       become: true
@@ -79,3 +100,11 @@
         -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
       with_items: "{{ images }}"
       
+
+  handlers:
+    - name: restart postgres
+      become: true
+      service:
+        name: postgresql
+        state: restarted
+
