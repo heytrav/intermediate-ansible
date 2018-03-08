@@ -4,7 +4,7 @@
 ### Roles
 
 ```
-$ cd $WORKDIR/lesson1.5
+$ cd $WORKDIR/lesson2
 .
 ├── ansible
 │   ├── group_vars
