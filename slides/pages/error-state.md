@@ -5,7 +5,7 @@
 # Task conditions
 
 ```
-$ cd $WORKDIR/lesson2
+$ cd $WORKDIR/lesson3
 ```
 
 
@@ -217,7 +217,7 @@ $ cd $WORKDIR/lesson2
 
 #### Exercise: Add task to remove a directory
 
-* Remove the `temporarydir` in lesson2
+* Remove the `temporarydir` in lesson3
 * Use _removes_ argument
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
