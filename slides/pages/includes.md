@@ -17,7 +17,8 @@ $ tree
 ### Refactoring Infrastructure Code
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
-* Pressure to get things done quickly eventually become technical debt <!-- .element: class="fragment" data-fragment-index="1" -->
+* Pressure to get things done quickly <!-- .element: class="fragment" data-fragment-index="1" -->
+* Decisions that "seemed like a good idea at the time" evolve into technical debt <!-- .element: class="fragment" data-fragment-index="2" -->
     * Copy paste <!-- .element: class="fragment" data-fragment-index="2" -->
     * Code organisation <!-- .element: class="fragment" data-fragment-index="3" -->
 * Eventually you will probably need to refactor <!-- .element: class="fragment" data-fragment-index="4" -->
@@ -44,6 +45,23 @@ $ tree
   - Components can be reused if possible <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
+### Task files
+
+* The conventional approach is to break tasks out into separate "task files" <!-- .element: class="fragment" data-fragment-index="0" -->
+* Task file only contains a YAML list <!-- .element: class="fragment" data-fragment-index="1" -->
+<pre class="fragment" data-fragment-index="1"><code data-trim>
+    - name: This is task 1
+
+    - name: This is task 2
+    .
+    .
+    - name: This is task n
+</code></pre>
+* Ideally tasks related to specific purpose <!-- .element: class="fragment" data-fragment-index="2" -->
+* Import them into your playbooks as needed <!-- .element: class="fragment" data-fragment-index="3" -->
+
+
+
 ### Refactored playbook
 
 ![Broken up playbook](img/playbook-refactor1.svg "Refactored")
@@ -65,23 +83,9 @@ Conventional organisation of tasks in ansible
             └── setup.yml</mark>
  </code></pre>
 
->In general you can put task files anywhere as long they're resolvable by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
+* In general you can put task files anywhere as long they're resolvable by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
+* Having moved tasks out of playbook, you now need a way to import them <!-- .element: class="fragment" data-fragment-index="3" -->
 
-
-### Task files
-
-* Task file _only_ contains a YAML list
-* Ideally tasks related to specific purpose
-
-```yaml
----
-- name: This is task 1
-
-- name: This is task 2
-.
-.
-- name: This is task n
-```
 
 
 ### Including files in Ansible
@@ -250,10 +254,11 @@ $ $EDITOR tasks/files.yml
 
 ### Refactor main playbook to pass dictionary to include
 
-* Modify `touch-files.yml` to only import task file once
-* Pass nested dictionary to import 
+* This works, but we import the same task multiple times for different files
+* It is possible to use complex data in our tasks so we only have to import
+  the task file once
 
-```yaml
+<pre  class="fragment" data-fragment-index="0"><code data-trim>
 - name: Create a directory and touch file
   import_tasks: tasks/files.yml
   vars:
@@ -262,13 +267,11 @@ $ $EDITOR tasks/files.yml
         path: /tmp/foo
       bar:
         path: /tmp/foo
-
-```
+</code></pre>
 
 
 ### Iterating over complex data
 
-* It is possible to use complex data in our tasks
 * Modify `files.yml` to process _files_ dictionary
 
 ```yaml
@@ -290,13 +293,13 @@ $ $EDITOR tasks/files.yml
 
 ### Passing conditionals to included files
 
-* Includes can also take a conditional _when_ attribute
-   ```
+* Includes can also take a conditional "when" attribute <!-- .element: class="fragment" data-fragment-index="0" -->
+    <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
    - import_tasks: some-stuff.yml
-     when: true
-   ```
-* Conditional is not used to control import
-* Rather it is _applied to each task in the imported file_
+     <mark>when: true</mark>
+    </code></pre>
+* Conditional is not used to control import <!-- .element: class="fragment" data-fragment-index="1" -->
+* Rather it is applied to each task in the imported file <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
 
