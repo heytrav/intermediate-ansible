@@ -1,7 +1,7 @@
-# Organising Ansible
+# Organising Infrastructure Code
 
 
-## Organising Ansible
+### Organising Infrastructure Code
 
 ```
 $ cd $WORKDIR/sample-code/lesson1
@@ -14,7 +14,7 @@ $ tree
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
 
 
-## Refactoring Infrastructure Code
+### Refactoring Infrastructure Code
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
 * Pressure to get things done quickly eventually become technical debt <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -23,7 +23,7 @@ $ tree
 * Eventually you will probably need to refactor <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
-## Refactoring a Playbook
+### Refactoring a Playbook
 
 * Ideal to break playbook into smaller components
   - Compartmentalise logic
@@ -35,21 +35,21 @@ $ tree
 
 
 
-## Long playbook
+### Refactoring a long playbook
 
 ![Long playbook](img/playbook-long.svg "Long playbook")
 
 * Goal is to restructure so that
-  - Related tasks are grouped together
-  - Components can be _reused_ if possible
+  - Related tasks are grouped together <!-- .element: class="fragment" data-fragment-index="0" -->
+  - Components can be reused if possible <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
-## Refactored playbook
+### Refactored playbook
 
 ![Broken up playbook](img/playbook-refactor1.svg "Refactored")
 
 
-## Project layout
+### Project layout
 
 Conventional organisation of tasks in ansible
  <pre><code data-trim data-noescape>
@@ -68,9 +68,9 @@ Conventional organisation of tasks in ansible
 >In general you can put task files anywhere as long they're resolvable by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-## Task files
+### Task files
 
-* Task _only_ file contains a YAML list
+* Task file _only_ contains a YAML list
 * Ideally tasks related to specific purpose
 
 ```yaml
@@ -84,7 +84,7 @@ Conventional organisation of tasks in ansible
 ```
 
 
-## Including files in Ansible
+### Including files in Ansible
 
 #### `include`
 
@@ -92,7 +92,7 @@ Conventional organisation of tasks in ansible
 
 
 
-## Including files in Ansible
+### Including files in Ansible
 
 #### `import_tasks`
 
@@ -111,7 +111,7 @@ tasks:
 ```
 
 
-## Including files in Ansible
+### Including files in Ansible
 
 #### `include_tasks`
 
@@ -180,12 +180,12 @@ note: import_tasks will not work here because of how ansible parses playbooks <!
 
 ### Passing variables to includes
 
-* Tasks are useful for iterative tasks
-* ..or often need to be run in different contexts 
+* Importing tasks is useful when it is necessary to iterate over sets of tasks
+* ..or when tasks need to be run in different contexts 
 * Can be necessary to pass variables into included/imported tasks
 
 
-### Conditionals on include
+### Passing variables to includes
 
 * Pass a variable to an include using `vars:` attribute
 * Variable scope only within the included task file
@@ -230,7 +230,8 @@ $ $EDITOR tasks/files.yml
 
 ### Exercise: pass variable to an included file
 
-* Modify playbook to use `tasks/files.yml`
+* Modify `touch-files.yml` to use `tasks/files.yml`
+* Pass the path and file parameters in to tasks
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
   tasks:
@@ -246,3 +247,98 @@ $ $EDITOR tasks/files.yml
         file: bizz.txt
 </code></pre>
 
+
+### Refactor main playbook to pass dictionary to include
+
+* Modify `touch-files.yml` to only import task file once
+* Pass nested dictionary to import 
+
+```yaml
+- name: Create a directory and touch file
+  import_tasks: tasks/files.yml
+  vars:
+    files:
+      foo:
+        path: /tmp/foo
+      bar:
+        path: /tmp/foo
+
+```
+
+
+### Iterating over complex data
+
+* It is possible to use complex data in our tasks
+* Modify `files.yml` to process _files_ dictionary
+
+```yaml
+- name: Create directory
+  file:
+    path: "{{ item.value.path }}"
+    state: directory
+  with_dict:  "{{ files }}"
+
+- name: touch file
+  file:
+    path: "{{ item.value.path }}/{{ item.key }}"
+    state: touch
+  with_dict:  "{{ files }}"
+
+```
+
+
+
+### Passing conditionals to included files
+
+* Includes can also take a conditional _when_ attribute
+   ```
+   - import_tasks: some-stuff.yml
+     when: true
+   ```
+* Conditional is not used to control import
+* Rather it is _applied to each task in the imported file_
+
+
+
+### Passing conditionals
+
+* Let's add a conditional to import_tasks in `long-playbook.yml`
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+    - import_tasks: tasks/basic.yml
+      vars:
+        some_list:
+          - true
+          - false
+      when: item | bool <mark  class="fragment" data-fragment-index="1">&lt;-- condition gets passed to each task</mark>
+</code></pre>
+ 
+
+
+### Conditional behaviour on imported tasks
+
+* Modify `tasks/basic.yml` to iterate over the `some_list` variable
+* Run `long-playbook.yml` and note some tasks are skipped when `item == false`
+
+```yaml
+- name: Basic setup task
+  debug:
+    msg: Running 1st setup task
+  with_items: "{{ some_list }}"
+
+- name: Basic setup task 2
+  debug:
+    msg: Running 2nd setup task
+  with_items: "{{ some_list }}"
+```
+
+
+### Summary
+
+* Includes provide way to organise infrastructure for large projects
+  - `import_tasks` for static inclusion
+  - `include_tasks` for dynamic inclusion
+* Include statements take a `vars` argument for passing variable data in scope
+  of include
+* Conditionals applied to includes are actually applied to each task in an
+  included file
