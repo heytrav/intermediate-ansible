@@ -12,10 +12,10 @@
 
     - name: touch file in directory
       file:
-        path: /tmp/foo/bar.txt
+        path: /tmp/foo/file1.txt
         state: touch
 
-    - name: touch file2 in directory
+    - name: touch file in directory
       file:
-        path: /tmp/foo/bizz.txt
+        path: /tmp/foo/file1.txt
         state: touch

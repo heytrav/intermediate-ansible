@@ -174,4 +174,75 @@ Answers may vary <!-- .element: class="fragment" data-fragment-index="0" -->
         - app
         - monitoring
 ```
-import_tasks will not work here because of how ansible parses playbooks <!-- .element: class="fragment" data-fragment-index="0" -->
+note: import_tasks will not work here because of how ansible parses playbooks <!-- .element: class="fragment" data-fragment-index="0" -->
+
+
+
+### Passing variables to includes
+
+* Tasks are useful for iterative tasks
+* ..or often need to be run in different contexts 
+* Can be necessary to pass variables into included/imported tasks
+
+
+### Conditionals on include
+
+* Pass a variable to an include using `vars:` attribute
+* Variable scope only within the included task file
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+ - import_tasks: tasks/some-tasks.yml
+   vars:
+     foo: "bar"
+     bizz: "buzz"
+</code></pre>
+
+
+### Exercise: Refactor a playbook to use tasks
+
+* Playbook `touch-files.yml` just creates a directory and touches a few files
+* Refactor this to use tasks instead
+
+
+
+### Exercise: pass variables to an included file
+
+* Task file 
+  - Use variables instead of fixed paths
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim>
+$ mkdir -p tasks
+$ $EDITOR tasks/files.yml
+</code></pre>
+
+<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
+- name: Create directory for file
+  file:
+    path: "{{ path }}"
+    state: directory
+
+- name: touch file in directory
+  file:
+    path: "{{ path }}/{{ file }}"
+    state: touch 
+</code></pre>
+
+
+### Exercise: pass variable to an included file
+
+* Modify playbook to use `tasks/files.yml`
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+  tasks:
+    
+    - import_tasks: tasks/files.yml
+      vars:
+        path: /tmp/foo
+        file: bar.txt
+
+    - import_tasks: tasks/files.yml
+      vars:
+        path: /tmp/foo
+        file: bizz.txt
+</code></pre>
+
