@@ -134,10 +134,6 @@
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no  -o ProxyCommand='ssh -W %h:%p {{ ssh_user }}@{{ groups.bastion[0] }}'"
       with_items: "{{ groups.mycluster | difference(groups.bastion) }}"
 
-    - wait_for:
-        host: "{{ hostvars[item].ansible_host }}"
-        port: 22
-      with_items: "{{ groups.bastion }}"
 
     - name: Remove floating ip from known hosts
       known_hosts:
@@ -188,6 +184,10 @@
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
       with_items: "{{ host_set }}"
 
+    - wait_for:
+        host: "{{ hostvars[item].ansible_host }}"
+        port: 22
+      with_items: "{{ groups.bastion }}"
 
 
 - name: Basic host setup
