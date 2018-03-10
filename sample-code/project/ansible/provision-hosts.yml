@@ -198,7 +198,6 @@
   tasks:
 
 
-
     - name: Update apt cache
       raw: apt update -y
 
@@ -213,10 +212,10 @@
         name: en_NZ.UTF-8
         state: present
 
-    - name: Add entry to /etc/hosts for all instance
+    - name: Add entry to /etc/hosts for all instances
       lineinfile:
         dest: /etc/hosts
-        line: "{{ hostvars[item].fixed_ip }} {{ item }}"
+        line: "{{ hostvars[item].ansible_host }} {{ item }}"
       with_items: "{{ host_set }}"
 
 
@@ -233,6 +232,6 @@
         dest: /etc/hosts
         insertafter: EOF
         block: |
-          {{ ansible_host }} my-app.cat
+          {{ floating_ip }} my-app.cat
         marker: "# {mark} ANSIBLE MANAGED BLOCK for my-app.cat"
 
