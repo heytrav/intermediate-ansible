@@ -137,7 +137,7 @@
     - wait_for:
         host: "{{ hostvars[item].ansible_host }}"
         port: 22
-      with_items: "{{ host_set }}"
+      with_items: "{{ groups.bastion }}"
 
     - name: Remove floating ip from known hosts
       known_hosts:
