@@ -22,6 +22,8 @@ $ cd $WORKDIR/lesson2
 
 ### Making tasks reusable
 
+* At some point in your development/refactoring process, you may come across
+  bits that will be useful across multiple projects
 * Important to follow _DRY_ (don't repeat yourself) principles in infrastructure code
 * _Roles_ are mechanism for reusing code in Ansible
   - within a project
@@ -30,7 +32,8 @@ $ cd $WORKDIR/lesson2
 
 ### Basic concepts
 
-* Roles have a name to represent what they do
+* Roles typically designed for a specific purpose
+* Roles are not executable on their own
 * Can be distributed multiple ways:
   - In `roles` subdirectory in the same place your playbooks live
   - In `/etc/ansible/roles` directory

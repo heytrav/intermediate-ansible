@@ -28,7 +28,7 @@ $ cd $WORKDIR/lesson3
   - Delete a branch from the repository
   - Run a script which creates a directory
 * Run playbook `ansible/runtools.yml`
-<asciinema-player loop="1" cols="70" theme="solarized-light" start-at="13.0" rows="10" autoplay="1" font-size="medium" src="asciinema/error-playbook.cast"></asciinema-player>
+<asciinema-player loop="1" cols="90" theme="solarized-light" start-at="13.0" rows="10" autoplay="1" font-size="medium" src="asciinema/error-playbook.cast"></asciinema-player>
 
 
 ## Ignore errors
@@ -261,16 +261,16 @@ $ cd $WORKDIR/lesson3
 
 ### Exercise: only show changed when table created
 
-* First task doesn't fail because of _if not exists_ clause
-* If a table exists postgres outputs _already exists, skipping_ to stderr
+* First task doesn't fail because of <!-- .element: class="fragment" data-fragment-index="0" -->_if not exists_ clause
+* If a table exists postgres outputs <!-- .element: class="fragment" data-fragment-index="1" --> _already exists, skipping_ to stderr
 
-<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+<pre  class="fragment" data-fragment-index="2"><code data-trim data-noescape>
     - name: Create table for pics 
       command: |
         psql -U {{ database_user }} -h {{ database_host }} 
         -c "CREATE TABLE IF NOT EXISTS images (id SERIAL primary key not null,
         image char(200) not null unique)" {{ database }}
-<mark  class="fragment" data-fragment-index="1">      register: create_table_output
+<mark  class="fragment" data-fragment-index="3">      register: create_table_output
       changed_when:
         - create_table_output.rc == 0
         - not create_table_output.stderr | search('already exists')</mark>
@@ -278,18 +278,20 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
+### Recovering from errors
+
+* Sometimes necessary to recover from errors <!-- .element: class="fragment" data-fragment-index="0" -->
+* May need to perform tasks to clean up <!-- .element: class="fragment" data-fragment-index="1" -->
+* The method in ansible is to use<!-- .element:parent: class="fragment" data-fragment-index="2" --> _blocks_ 
+  - Group tasks into a logical unit <!-- .element: class="fragment" data-fragment-index="3" -->
+* blocks used with rescue/always section similar to <!-- .element: class="fragment" data-fragment-index="4" -->_try/catch blocks_ in programming 
+
 
 ### Summary
 
 * It is sometimes necessary to override or ignore Ansible task conditions
-* Failed and changed states can be determined for arbitrary tasks using
+* Failed and changed states can be controlled for arbitrary tasks using
   - `failed_when`
   - `changed_when`
 * command modules also have _creates_ and _removes_ attributes to help take
   care of some of the work
-
-
-
-
-
-
