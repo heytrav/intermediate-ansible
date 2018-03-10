@@ -138,6 +138,58 @@
         port: 22
       with_items: "{{ host_set }}"
 
+    - name: Remove floating ip from known hosts
+      known_hosts:
+        name: "{{ ansible_host }}"
+        state: absent
+      with_items: "{{ host_set }}"
+
+    - name: Add hosts to .ssh/config
+      blockinfile:
+
+    - name: "Add bastion host to local ~/.ssh/config"
+      blockinfile:
+        dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+        insertbefore: BOF
+        block: |
+          Host {{ item }}
+              User {{ ssh_user }}
+              StrictHostKeyChecking no
+          Host {{ hostvars[item].ansible_host }}
+              Hostname {{ item }}
+              User {{ ssh_user }}
+              StrictHostKeyChecking no
+        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
+      with_items: "{{ groups.bastion }}"
+
+    - name: "Add cluster to local ~/.ssh/config"
+      blockinfile:
+        dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+        insertbefore: BOF
+        block: |
+          Host {{ item }}
+              User {{ ssh_user }}
+              StrictHostKeyChecking no
+              ProxyCommand ssh -W %h:%p {{ ssh_user }}@{{ groups.bastion[0] }}
+          Host {{ hostvars[item].ansible_host }}
+              Hostname {{ item }}
+              User {{ ssh_user }}
+              StrictHostKeyChecking no
+              ProxyCommand ssh -W %h:%p {{ ssh_user }}@{{ groups.bastion[0] }}
+        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
+      with_items: "{{ host_set | difference(groups.bastion) }}"
+
+    - name: "Add host to /etc/hosts"
+      become: yes
+      blockinfile:
+        dest: /etc/hosts
+        insertafter: EOF
+        block: |
+          {{ hostvars[item].ansible_host }} {{ item }}
+        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
+      with_items: "{{ host_set }}"
+
+
 
 - name: Basic host setup
   hosts: "mycluster"
@@ -146,36 +198,7 @@
   vars: 
     host_set: "{{ groups['mycluster']  }}"
   tasks:
-    - name: Remove floating ip from known hosts
-      delegate_to: localhost
-      known_hosts:
-        name: "{{ ansible_host }}"
-        state: absent
 
-    - name: "Add {{ inventory_hostname }} to local ~/.ssh/config"
-      delegate_to: localhost
-      blockinfile:
-        dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
-        insertbefore: BOF
-        block: |
-          Host {{ inventory_hostname }}
-              User {{ ssh_user }}
-              StrictHostKeyChecking no
-          Host {{ ansible_host }}
-              Hostname {{ inventory_hostname }}
-              User {{ ssh_user }}
-              StrictHostKeyChecking no
-        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
-
-    - name: "Add {{ inventory_hostname }} to /etc/hosts"
-      delegate_to: localhost
-      become: yes
-      blockinfile:
-        dest: /etc/hosts
-        insertafter: EOF
-        block: |
-          {{ ansible_host }} {{ inventory_hostname }}
-        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
 
 
     - name: Update apt cache
