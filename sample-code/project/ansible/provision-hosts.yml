@@ -140,12 +140,10 @@
 
     - name: Remove floating ip from known hosts
       known_hosts:
-        name: "{{ ansible_host }}"
+        name: "{{ item }}"
         state: absent
       with_items: "{{ host_set }}"
 
-    - name: Add hosts to .ssh/config
-      blockinfile:
 
     - name: "Add bastion host to local ~/.ssh/config"
       blockinfile:
