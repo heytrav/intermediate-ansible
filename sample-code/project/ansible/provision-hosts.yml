@@ -102,6 +102,15 @@
     - debug:
         var: launch
 
+
+    - name: Append info for launched machines to host info
+      add_host:
+        name: "{{ item.openstack.name }}"
+        ansible_host: "{{ item.openstack.private_v4 }}"
+        ansible_user: "{{ hostvars[item.item].ssh_user }}"
+        ansible_python_interpreter: /usr/bin/python
+      with_items: "{{ launch.results }}"
+
     - name: Assign floating ips
       os_floating_ip:
         state: present
@@ -115,12 +124,14 @@
     - name: Append floating ip to host info
       add_host:
         name: "{{ item.item }}"
-        ansible_host: "{{ item.floating_ip.floating_ip_address |default(omit) }}"
-        ansible_user: "{{ hostvars[item.item].ssh_user }}"
-        fixed_ip: "{{ item.floating_ip.fixed_ip_address }}"
+        floating_ip: "{{ item.floating_ip.floating_ip_address }}"
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
-        ansible_python_interpreter: /usr/bin/python
       with_items: "{{ floating_ip_info.results }}"
+
+    - name: Append info for non bastion hosts to host info
+      add_host:
+        name: "{{ item }}"
+        ansible_ssh_common_args: "-o StrictHostKeyChecking=no  -o ProxyCommand='ssh -W %h:%p {{ ssh_user }}@{{ groups.bastion[0] }}'"
 
     - wait_for:
         host: "{{ hostvars[item].ansible_host }}"
