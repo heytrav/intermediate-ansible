@@ -154,7 +154,7 @@
           Host {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
-          Host {{ hostvars[item].ansible_host }}
+          Host {{ hostvars[item].floating_ip }}
               Hostname {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
