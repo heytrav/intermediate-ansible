@@ -221,7 +221,7 @@
 
 
 - name: Basic host setup
-  hosts: "mycluster:!bastion"
+  hosts: mycluster:!bastion
   become: true
   gather_facts: false
   tasks:
