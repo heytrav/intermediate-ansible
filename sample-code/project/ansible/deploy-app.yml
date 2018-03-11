@@ -82,12 +82,20 @@
         psql -U {{ database_user }} -h {{ groups['db'][0] }} 
         -c "CREATE TABLE IF NOT EXISTS images (id SERIAL primary key not null,
         image char(200) not null unique)" {{ database }}
+      register: create_table_output
+      changed_when:
+        - create_table_output.rc == 0
+        - not create_table_output.stderr | search('already exists')
                                                                                                                                                                                                                                   
     - name: Add images to new table
       command: |
         psql -U {{ database_user }} -h {{ groups['db'][0] }} 
         -c "INSERT INTO images (image) VALUES ('{{ item }}')" {{ database }}
       with_items: "{{ images }}"
+      register: db_insert
+      failed_when:
+        - db_insert.rc != 0 
+        - not db_insert.stderr | search('duplicate')
 
 
 - name: Set up app server
@@ -221,6 +229,7 @@
   become: true
   tasks:
 
+
     - name: Install haproxy
       apt:
         name: haproxy
@@ -237,13 +246,14 @@
 
     - name: Add lines to rsyslog conf
       lineinfile:
+        path: /etc/rsyslog.conf
         line: "{{ item.line }}"
         regexp: "{{ item.regexp }}"
         insertbefore: EOF
       with_items:
-        - {line: "$ModLoad imudp", regexp: "^#\$ModLoad.*"}
-        - {line: "$UDPServerAddress 127.0.0.1", regexp: "^\$UDPServerAddress.*"}
-        - {line: "$UDPServerRun 514", regexp: "^\$UDPServerRun.*"}
+        - {line: "$ModLoad imudp", regexp: '^#\$ModLoad.*'}
+        - {line: "$UDPServerAddress 127.0.0.1", regexp: '^\$UDPServerAddress.*'}
+        - {line: "$UDPServerRun 514", regexp: '^\$UDPServerRun.*'}
       notify: restart rsyslog
 
     - name: Copy rsyslog config for haproxy
@@ -253,7 +263,7 @@
 
   handlers:
     - name: restart haproxy
-      service: 
+      systemd: 
         name: haproxy
         state: restarted
 

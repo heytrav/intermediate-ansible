@@ -18,7 +18,13 @@ defaults
     timeout server  10000
 
 
-listen {{ appname }} 0.0.0.0:80
+
+frontend catapp-frontend
+  bind {{ ansible_default_ipv4.address }}:80
+  mode http
+  default_backend catapp-backend
+
+backend catapp-backend
     mode http
     stats enable
     stats uri /haproxy?stats
@@ -29,5 +35,5 @@ listen {{ appname }} 0.0.0.0:80
     option forwardfor
     cookie SRVNAME insert
     {% for item in groups.web %}
-    server item {{ hostvars[item].ansible_host }}:80 cookie S{{ loop.index }} check
+    server item {{ hostvars[item].ansible_default_ipv4.address }}:80 cookie S{{ loop.index }} check
     {% endfor %}
