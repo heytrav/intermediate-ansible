@@ -191,10 +191,34 @@
       with_items: "{{ groups.bastion }}"
 
 
-
-- name: Bastion host setup
+- name: Basic host setup
   hosts: bastion
+  become: true
+  gather_facts: false
+  vars: 
+    host_set: "{{ groups.mycluster }}"
   tasks:
+
+
+    - name: Update apt cache
+      raw: apt update -y
+
+    - name: Install python
+      raw: >
+        which python || apt-get install -y python && echo 'installed'
+      register: python
+      changed_when: python.stdout == 'installed'
+
+    - name: Add NZ locale to all instances
+      locale_gen:
+        name: en_NZ.UTF-8
+        state: present
+
+    - name: Add entry to /etc/hosts for all instances
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ hostvars[item].ansible_host }} {{ item }}"
+      with_items: "{{ host_set }}"
 
     - name: Copy ssh private key to bastion host
       copy:
