@@ -205,7 +205,7 @@
         mode: 0400
 
 - name: Wait for non bastion hosts to be online
-  hosts: mycluster:!bastion
+  hosts: localhost
   tasks:
 
     - wait_for:
