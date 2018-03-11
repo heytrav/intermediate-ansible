@@ -221,16 +221,6 @@
       with_items: "{{ host_set }}"
 
 
-- name: Wait for non bastion hosts to come online
-  hosts: localhost
-  tasks:
-
-    - wait_for:
-        host: "{{ item.ansible_host }}"
-        port: 22
-      with_items: "{{ groups.mycluster | difference(groups.bastion) }}"
-
-
 
 - name: Basic host setup
   hosts: "mycluster:!bastion"
