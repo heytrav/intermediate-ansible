@@ -125,7 +125,7 @@
     - name: Append floating ip to host info
       add_host:
         name: "{{ item.item }}"
-        floating_ip: "{{ item.floating_ip.floating_ip_address }}"
+        ansible_host: "{{ item.floating_ip.floating_ip_address }}"
         ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
       with_items: "{{ floating_ip_info.results }}"
 
@@ -181,7 +181,7 @@
         dest: /etc/hosts
         insertafter: EOF
         block: |
-          {{ hostvars[item].floating_ip | default(hostvars[item].ansible_host) }} {{ item }}
+          {{ hostvars[item].ansible_host }} {{ item }}
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
       with_items: "{{ host_set }}"
 
@@ -204,7 +204,7 @@
         group: "{{ ssh_user }}"
         mode: 0400
 
-- name: Wait for non bastion hosts to be online
+- name: Wait for non bastion hosts to come online
   hosts: localhost
   tasks:
 
