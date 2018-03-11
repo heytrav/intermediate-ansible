@@ -195,8 +195,6 @@
   hosts: bastion
   become: true
   gather_facts: false
-  vars: 
-    host_set: "{{ groups.mycluster }}"
   tasks:
 
 
@@ -218,7 +216,7 @@
       lineinfile:
         dest: /etc/hosts
         line: "{{ hostvars[item].ansible_host }} {{ item }}"
-      with_items: "{{ host_set }}"
+      with_items: "{{ groups.mycluster }}"
 
 
 
@@ -226,8 +224,6 @@
   hosts: "mycluster:!bastion"
   become: true
   gather_facts: false
-  vars: 
-    host_set: "{{ groups['mycluster']  }}"
   tasks:
 
 
@@ -249,7 +245,7 @@
       lineinfile:
         dest: /etc/hosts
         line: "{{ hostvars[item].ansible_host }} {{ item }}"
-      with_items: "{{ host_set }}"
+      with_items: "{{ groups.mycluster }}"
 
 
 - name: Extra set up for web demo
