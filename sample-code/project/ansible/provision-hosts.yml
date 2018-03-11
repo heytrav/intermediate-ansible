@@ -151,7 +151,7 @@
           Host {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
-          Host {{ hostvars[item].floating_ip }}
+          Host {{ hostvars[item].ansible_host }}
               Hostname {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
@@ -246,7 +246,7 @@
 
 
 - name: Extra set up for web demo
-  hosts: "web"
+  hosts: "loadbalancer"
   become: true
   gather_facts: false
   tasks:
@@ -258,6 +258,6 @@
         dest: /etc/hosts
         insertafter: EOF
         block: |
-          {{ floating_ip }} my-app.cat
+          {{ ansible_host }} my-app.cat
         marker: "# {mark} ANSIBLE MANAGED BLOCK for my-app.cat"
 
