@@ -96,7 +96,7 @@
                       lock_passwd: true
                       sudo: ALL=(ALL) NOPASSWD:ALL
                       ssh_authorized_keys:
-                        - "{{ ssh_public_key }}"
+                        - "{{ hostvars[item].ssh_public_key }}"
       with_items: "{{ host_set }}"
       register: launch
 
