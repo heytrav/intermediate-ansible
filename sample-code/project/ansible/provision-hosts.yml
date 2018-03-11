@@ -108,7 +108,7 @@
       add_host:
         name: "{{ item.openstack.name }}"
         ansible_host: "{{ item.openstack.private_v4 }}"
-        ansible_user: "{{ hostvars[item.item].ssh_user }}"
+        ansible_user: "{{ hostvars[item.name].ssh_user }}"
         ansible_python_interpreter: /usr/bin/python
       with_items: "{{ launch.results }}"
 
