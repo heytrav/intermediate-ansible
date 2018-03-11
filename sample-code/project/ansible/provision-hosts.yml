@@ -181,14 +181,14 @@
         dest: /etc/hosts
         insertafter: EOF
         block: |
-          {{ hostvars[item].ansible_host }} {{ item }}
+          {{ hostvars[item].floating_ip | default(hostvars[item].ansible_host) }} {{ item }}
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
-      with_items: "{{ groups.bastion }}"
+      with_items: "{{ host_set }}"
 
     - wait_for:
-        host: "{{ hostvars[item].ansible_host }}"
+        host: "{{ hostvars[item].floating_ip | default(hostvars[item].ansible_host) }}"
         port: 22
-      with_items: "{{ groups.bastion }}"
+      with_items: "{{ host_set }}"
 
 
 - name: Basic host setup
