@@ -182,7 +182,7 @@
         block: |
           {{ hostvars[item].ansible_host }} {{ item }}
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
-      with_items: "{{ host_set }}"
+      with_items: "{{ groups.bastion }}"
 
     - wait_for:
         host: "{{ hostvars[item].ansible_host }}"
