@@ -186,7 +186,7 @@
       with_items: "{{ host_set }}"
 
     - wait_for:
-        host: "{{ hostvars[item].floating_ip | default(hostvars[item].ansible_host) }}"
+        host: "{{ item }}"
         port: 22
       with_items: "{{ host_set }}"
 
