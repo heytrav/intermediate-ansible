@@ -188,7 +188,31 @@
     - wait_for:
         host: "{{ item }}"
         port: 22
-      with_items: "{{ host_set }}"
+      with_items: "{{ groups.bastion }}"
+
+
+
+- name: Bastion host setup
+  hosts: bastion
+  tasks:
+
+    - name: Copy ssh private key to bastion host
+      copy:
+        content: "{{ mycluster_ssh_private_key }}"
+        dest: "/home/{{ ssh_user }}/.ssh/id_rsa"
+        owner: "{{ ssh_user }}"
+        group: "{{ ssh_user }}"
+        mode: 0400
+
+- name: Wait for non bastion hosts to be online
+  hosts: mycluster:!bastion
+  tasks:
+
+    - wait_for:
+        host: "{{ item }}"
+        port: 22
+      with_items: "{{ groups.mycluster | difference(groups.bastion) }}"
+
 
 
 - name: Basic host setup
