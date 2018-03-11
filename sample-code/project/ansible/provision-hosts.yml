@@ -80,6 +80,7 @@
         image: "{{ default_os_image }}"
         key_name: "{{ keypair_name  }}"
         flavor: "{{ default_flavor }}"
+        auto_ip: no
         nics:
           - net-name: "{{ network_name }}"
         security_groups: "default,{{ hostvars[item].security_groups | map(attribute='group') | list | unique | join(',')}}"
