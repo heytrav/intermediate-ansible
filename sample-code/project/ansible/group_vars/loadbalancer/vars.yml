@@ -1,6 +1,9 @@
 ---
 haproxy_admin: admin
 machine_security_groups:
+  - {group: "bastion{{ suffix }}", port: 22, remote_ip_prefix: "202.78.240.7/32"}
+  - {group: "bastion{{ suffix }}", port: 22, remote_ip_prefix: "{{ ssh_remote_cidr }}"}
   - {group: "lb{{ suffix }}", port: 80, remote_ip_prefix: "0.0.0.0/0"}
   - {group: "lb{{ suffix }}", port: 443, remote_ip_prefix: "0.0.0.0/0"}
+
 security_groups: "{{ machine_security_groups + main_security_groups }}"

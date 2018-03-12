@@ -96,6 +96,9 @@
       failed_when:
         - db_insert.rc != 0 
         - not db_insert.stderr | search('duplicate')
+      changed_when:
+        - db_insert.rc == 0
+        - db_insert.stdout | search('INSERT')
 
 
 - name: Set up app server
@@ -251,9 +254,9 @@
         regexp: "{{ item.regexp }}"
         insertbefore: EOF
       with_items:
-        - {line: "$ModLoad imudp", regexp: '^#\$ModLoad.*'}
-        - {line: "$UDPServerAddress 127.0.0.1", regexp: '^\$UDPServerAddress.*'}
-        - {line: "$UDPServerRun 514", regexp: '^\$UDPServerRun.*'}
+        - {line: "$ModLoad imudp", regexp: '^#?\$ModLoad.*'}
+        - {line: "$UDPServerAddress 127.0.0.1", regexp: '^#?\$UDPServerAddress.*'}
+        - {line: "$UDPServerRun 514", regexp: '^#?\$UDPServerRun.*'}
       notify: restart rsyslog
 
     - name: Copy rsyslog config for haproxy
