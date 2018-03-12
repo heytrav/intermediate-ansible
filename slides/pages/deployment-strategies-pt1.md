@@ -9,7 +9,7 @@ $ cd $WORKDIR/project
 $ tree
 .
 ├── ansible
-│   ├── deploy-app.retry
+│   ├── provision-hosts.yml
 .
 .
 .
