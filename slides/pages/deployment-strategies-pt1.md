@@ -25,7 +25,7 @@ $ tree
 * Python Flask application
 * DB server
 * all behind load balancer
-![Basic network diagram](img/application-cluster-bg.svg  "Diagram of our simple app")
+![Basic network diagram](img/application-lb.svg  "Diagram of our simple app")
 
 
 ### Deploy our application
@@ -33,6 +33,7 @@ $ tree
 ```
 $ ansible-playbook -K --ask-vault-pass ansible/provision-hosts.yml -e suffix=-$(hostname)
 ```
+
 
 ### Security setup
 
