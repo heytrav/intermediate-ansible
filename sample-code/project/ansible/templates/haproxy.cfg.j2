@@ -20,7 +20,7 @@ defaults
 
 
 frontend catapp-frontend
-  bind {{ ansible_default_ipv4.address }}:80
+  bind 0.0.0.0:80
   mode http
   default_backend catapp-backend
 
@@ -34,6 +34,6 @@ backend catapp-backend
     option httpclose
     option forwardfor
     cookie SRVNAME insert
-    {% for item in groups.web %}
-    server item {{ hostvars[item].ansible_default_ipv4.address }}:80 cookie S{{ loop.index }} check
-    {% endfor %}
+{% for item in groups.web %}
+    server {{ item }} {{ hostvars[item].ansible_default_ipv4.address }}:80 cookie S{{ loop.index }} check
+{% endfor %}

@@ -1,7 +1,7 @@
 ---
 
 machine_security_groups:
-  - {group: "web{{ suffix }}", port: 80, remote_ip_prefix: "0.0.0.0/0"}
-  - {group: "web{{ suffix }}", port: 443, remote_ip_prefix: "0.0.0.0/0"}
+  - {group: "web{{ suffix }}", port: 80, remote_group: "lb{{ suffix }}"}
+  - {group: "web{{ suffix }}", port: 443, remote_group: "lb{{ suffix }}"}
 security_groups: "{{ machine_security_groups + main_security_groups }}"
 
