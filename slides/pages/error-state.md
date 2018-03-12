@@ -13,7 +13,7 @@ $ cd $WORKDIR/lesson3
 
 * Most modules have their own way of defining failure or change of state <!-- .element: class="fragment" data-fragment-index="0" -->
 * Some improvise based on return code <!-- .element: class="fragment" data-fragment-index="1" -->
-  - command family of modules: (command, shell, script, raw)
+  - `command` family of modules: (command, shell, script, raw)
 * Shell commands typically return uninformative error codes <!-- .element: class="fragment" data-fragment-index="2" -->
   - 0 for success
   - &ge; 1 for failure
@@ -60,17 +60,16 @@ $ cd $WORKDIR/lesson3
 
 ### Problems with `ignore_errors`
 
-* Blunt way of bypassing errors
-* Output of task can be confusing because it looks like something bad happened
-* May miss failures that are important
-* Shell command output may not be failure
+* Blunt way of bypassing errors <!-- .element: class="fragment" data-fragment-index="0" -->
+* Output of task can be confusing because it looks like something bad happened <!-- .element: class="fragment" data-fragment-index="1" -->
+* May miss failures that are important <!-- .element: class="fragment" data-fragment-index="2" -->
+* Shell command output may not be failure <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
 ### Controlling failure
 
 * Run `ansible/runtools.yml` a couple times
-* The second task in `ansible/runtools.yml` 
-  - runs a script `tools.sh` 
+* The second task in `ansible/runtools.yml` runs a script `tools.sh` 
     * creates a directory
     * fails if directory already exists
 * Actually failing because of idempotent behaviour
@@ -80,7 +79,7 @@ $ cd $WORKDIR/lesson3
 
 #### How do we keep playbook from failing?
 
-* One option would be to check if directory exists before running script
+* One option would be to check if the directory exists before running script
 <pre><code data-trim data-noescape>
     - name: Get status of testdir
       stat:
@@ -93,21 +92,20 @@ $ cd $WORKDIR/lesson3
         chdir: "{{ application_directory }}"
       <mark>when: not stat_output.stat.exists</mark>
 </code></pre>
-* Naive approach that adds extra tasks
+* This works, but adds extra unneeded tasks <!-- .element: class="fragment" data-fragment-index="0" -->
 
 
 ## Defining failed state
 
 #### `failed_when`
 
-* A finer way of dealing with failed states
-* Define when ansible should interpret a task has failed
-* Semantically similar to _when_ (i.e. conditional)
-* Use with _register_ to capture stdout/stderr
-<pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+* Define when ansible should interpret a task has failed <!-- .element: class="fragment" data-fragment-index="0" -->
+* Semantically similar to<!-- .element: class="fragment" data-fragment-index="1" --> _when_ (i.e. conditional)
+* Use with<!-- .element: class="fragment" data-fragment-index="2" --> _register_ to capture stdout/stderr
+<pre class="fragment" data-fragment-index="3"><code data-trim data-noescape>
     - name: Run some command
       shell: do_something_with_error_code.sh
-<mark  class="fragment" data-fragment-index="1">    register: my_output
+<mark  class="fragment" data-fragment-index="4">    register: my_output
       failed_when: 
       - my_output.rc != 0
       - not my_output.stderr | search('not a fail!')</mark>
@@ -141,9 +139,9 @@ $ cd $WORKDIR/lesson3
 
 #### `changed_when`
 
-* `changed_when` attribute can be used to define criteria for _changed_
-* Also similar semantics to _when_ conditional
-<pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+* <!-- .element: class="fragment" data-fragment-index="0" -->`changed_when` attribute can be used to define criteria for _changed_
+* Also similar semantics to<!-- .element: class="fragment" data-fragment-index="1" --> _when_ conditional 
+<pre class="fragment" data-fragment-index="2"><code data-trim data-noescape>
   - name: Perform a task
     command: change_something.sh
     changed_when: &lt;condition true&gt;
