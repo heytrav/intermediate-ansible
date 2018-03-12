@@ -100,16 +100,13 @@
       with_items: "{{ host_set }}"
       register: launch
 
-    - debug:
-        var: launch
-
-
     - name: Append info for launched machines to host info
       add_host:
         name: "{{ item.openstack.name }}"
         ansible_host: "{{ item.openstack.private_v4 }}"
         ansible_user: "{{ hostvars[item.openstack.name].ssh_user }}"
         ansible_python_interpreter: /usr/bin/python
+        ansible_ssh_common_args: "{{ hostvars[item.openstack.name].ssh_common_args }}"
       with_items: "{{ launch.results }}"
 
     - name: Assign floating ips
@@ -126,22 +123,13 @@
       add_host:
         name: "{{ item.item }}"
         ansible_host: "{{ item.floating_ip.floating_ip_address }}"
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
       with_items: "{{ floating_ip_info.results }}"
-
-    - name: Append info for non bastion hosts to host info
-      add_host:
-        name: "{{ item }}"
-        ansible_ssh_common_args: "-o StrictHostKeyChecking=no  -o ProxyCommand='ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p'"
-      with_items: "{{ groups.mycluster | difference(groups.bastion) }}"
-
 
     - name: Remove floating ip from known hosts
       known_hosts:
         name: "{{ item }}"
         state: absent
       with_items: "{{ host_set }}"
-
 
     - name: "Add bastion host to local ~/.ssh/config"
       blockinfile:
@@ -166,14 +154,14 @@
           Host {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
-              ProxyCommand ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p
+              {{ hostvars[item].ssh_proxy_command }}
           Host {{ hostvars[item].ansible_host }}
               Hostname {{ item }}
               User {{ ssh_user }}
               StrictHostKeyChecking no
-              ProxyCommand ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p
+              {{ hostvars[item].ssh_proxy_command }}
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
-      with_items: "{{ host_set | difference(groups.bastion) }}"
+      with_items: "{{ groups.mycluster }}"
 
     - name: "Add host to /etc/hosts"
       become: yes

@@ -2,3 +2,4 @@
 ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 security_groups: "{{ machine_security_groups }}"
 ssh_common_args:  "-o StrictHostKeyChecking=no"
+ssh_proxy_command: ""
