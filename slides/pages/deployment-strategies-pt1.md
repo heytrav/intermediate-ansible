@@ -43,8 +43,13 @@ $ tree
 
 * Create a role called _os-provision_
 * Move tasks into role
-  - start with _Connect to Catalyst Cloud_
-  - up to and including _Append info for non bastion hosts to host info_
+  ```
+  tasks:
+    - name: Connect to Catalyst Cloud
+      .
+      .
+    - name: Append floating ip to host info
+  ```
 * Use role in `provision-hosts.yml`
 * Change remaining tasks to `post_tasks`
 
@@ -59,11 +64,9 @@ $ tree
 │   │   └── os-provision
 │   │       └── tasks
 │   │           └── main.yml</mark>
-</code></pre>```
-
-
+</code></pre>
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-<mark>roles:
+<mark>  roles:
     - role: 'os-provision'
 
   post_tasks:</mark>

@@ -31,7 +31,7 @@
         state: absent
       with_items: "{{ host_set }}"
 
-    - name: Remove swarm servers
+    - name: Remove cluster servers
       os_server:
         name: "{{ item }}"
         state: absent
@@ -44,17 +44,17 @@
         state: absent
       with_items: "{{ host_set }}"
 
-    - name: Remove swarm keypair
+    - name: Remove cluster keypair
       os_keypair: 
         state: absent
         name: "{{ keypair_name }}"
 
-    - name: Remove swarm router
+    - name: Remove cluster router
       os_router:
         state: absent
         name: "{{ router_name }}"
 
-    - name: Remove swarm network
+    - name: Remove cluster network
       os_network:
         state: absent
         name: "{{ network_name }}"
