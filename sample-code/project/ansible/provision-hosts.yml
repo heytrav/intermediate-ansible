@@ -8,7 +8,6 @@
       when: suffix is not defined or suffix == ""
 
 
-
 - name: Provision a set of hosts in the Catalyst Cloud
   hosts: localhost
   gather_facts: false

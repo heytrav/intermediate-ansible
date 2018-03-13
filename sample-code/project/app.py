@@ -16,7 +16,7 @@ def index():
         'select image from images where id = %d ' % random.randint(0,9)
     )
     url = result.first()[0]
-    return render_template('index.html', url=url)
+    return render_template('index.html', url=url, server=config.Config.SERVER)
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0")
