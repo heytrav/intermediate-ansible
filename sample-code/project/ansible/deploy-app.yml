@@ -124,22 +124,7 @@
         - virtualenvwrapper
           
 
-    - name: Make sure deploy directory exists
-      file:
-        path: "{{ app_directory }}"
-        state: directory
-        owner: train
-        group: train
-
-    - name: Make sure templates directory exists
-      file:
-        path: "{{ app_directory }}/templates"
-        state: directory
-        owner: train
-        group: train
-
-
-    - name: Copy app files into app directory
+    - name: Checkout application from git
       git:
         repo: https://github.com/heytrav/sample-flask-app.git
         dest: "{{ app_directory }}"

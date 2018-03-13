@@ -1,0 +1,44 @@
+---
+- name: Upgrade application in place
+  become: true
+  hosts: app
+  serial: 1
+  vars:
+    web_server: "{{ inventory_hostname | regex_replace('^(.*)app(\\d+)$', '\\1web\\2') }}"
+  tags:
+    - app
+  tasks:
+
+    - debug:
+        msg: "Disabling {{ web_server }}"
+
+    - name: Disable application at load balancer
+      haproxy:
+        backend: catapp-backend
+        host: "{{ web_server }}"
+        state: disabled
+      delegate_to: "{{ groups.loadbalancer[0] }}"
+
+    - name: Checkout application from git
+      git:
+        repo: https://github.com/heytrav/sample-flask-app.git
+        dest: "{{ app_directory }}"
+        version: "{{ app_version | default('master') }}"
+      notify: restart gunicorn
+
+    - meta: flush_handlers
+
+    - name: Re-enable application at load balancer
+      haproxy:
+        backend: catapp-backend
+        host: "{{ web_server }}"
+        state: enabled
+      delegate_to: "{{ groups.loadbalancer[0] }}"
+
+
+  handlers:
+    - name: restart gunicorn
+      systemd:
+        name: gunicorn
+        state: restarted
+
