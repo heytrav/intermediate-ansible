@@ -106,11 +106,12 @@
   become: true
   tasks:
 
-    - name: Install packages needed for app
+    - name: Install packages needed for application
       apt:
         name: "{{ item }}"
         state: present
       with_items:
+        - git
         - python-dev
         - python-pip
         - python-psycopg2
@@ -143,18 +144,10 @@
 
 
     - name: Copy app files into app directory
-      copy:
-        src: "{{ item.src }}"
-        dest: "{{ item.dest }}"
-        owner: train
-        group: train
-        mode: 0644
-      with_items:
-        - { src: "../wsgi.py", dest: "{{ app_directory }}/wsgi.py" }
-        - { src: "../__init__.py", dest: "{{ app_directory }}/__init__.py" }
-        - { src: "../app.py", dest: "{{ app_directory }}/app.py" }
-        - { src: "../requirements.txt", dest: "{{ app_directory }}/requirements.txt" }
-        - { src: "../templates/index.html", dest: "{{ app_directory }}/templates/index.html" }
+      git:
+        repo: https://github.com/heytrav/sample-flask-app.git
+        dest: "{{ app_directory }}"
+        version: "{{ app_version | default('master') }}"
       notify: restart gunicorn
 
     - name: Add app config
