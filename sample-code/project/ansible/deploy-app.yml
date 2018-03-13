@@ -63,19 +63,15 @@
 
     
 - name: Set up app and database machine
-  hosts: db:app
+  hosts: db
   tasks:
+
     - name: "Create the pgpass file for user to access database"
       lineinfile:
         path: "{{ ansible_env.HOME }}/.pgpass"
         line: "{{ groups['db'][0] }}:5432:{{ database }}:{{ database_user }}:{{ database_password }}"
         create: yes
         mode: 0600
-
-- name: Set up app and database machine
-  hosts: db
-  tasks:
-
 
     - name: Create table for pics 
       command: |

@@ -1,0 +1,50 @@
+---
+
+- name: Upgrade application in place
+  become: true
+  hosts: app
+  serial: 1
+  tasks:
+
+    - name: Disable application at load balancer
+      haproxy:
+        backend: catapp-backend
+        host: "{{ inventory_hostname }}"
+        state: disabled
+      delegate_to: "{{ groups.loadbalancer[0] }}"
+
+    - name: Copy app files into app directory
+      copy:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest }}"
+        owner: train
+        group: train
+        mode: 0644
+      with_items:
+        - { src: "../wsgi.py", dest: "{{ app_directory }}/wsgi.py" }
+        - { src: "../__init__.py", dest: "{{ app_directory }}/__init__.py" }
+        - { src: "../app.py", dest: "{{ app_directory }}/app.py" }
+        - { src: "../requirements.txt", dest: "{{ app_directory }}/requirements.txt" }
+        - { src: "../templates/index.html", dest: "{{ app_directory }}/templates/index.html" }
+      notify: restart gunicorn
+
+    - meta: flush_handlers
+
+    - name: Wait for healthy service
+      wait_for:
+        port: 5000
+
+    - name: Re-enable application at load balancer
+      haproxy:
+        backend: catapp-backend
+        host: "{{ inventory_hostname }}"
+        state: enabled
+      delegate_to: "{{ groups.loadbalancer[0] }}"
+
+
+  handlers:
+    - name: restart gunicorn
+      systemd:
+        name: gunicorn
+        state: restarted
+

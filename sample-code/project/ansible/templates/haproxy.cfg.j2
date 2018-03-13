@@ -1,5 +1,7 @@
 
 global
+    stats socket /var/run/haproxy.sock mode 600 level admin
+    stats timeout 2m
     log 127.0.0.1 local0 notice
     maxconn 2000
     user haproxy
