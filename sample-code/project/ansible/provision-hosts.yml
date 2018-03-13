@@ -15,6 +15,7 @@
     # optional suffix to namespace resources
     suffix: ""
     host_set: "{{ groups.mycluster | unique | list }}"
+    public_hosts: "{{ groups.bastion | unique | list }}"
     # change if required or override at runtime using --extra-vars
 
     security_groups: "{{ host_set | map('extract', hostvars, 'security_groups') | sum(start=[]) | unique | list }}"
@@ -116,7 +117,7 @@
         server: "{{ item }}"
       register: floating_ip_info
       with_items:
-        - "{{ groups.bastion }}"
+        - "{{ public_hosts }}"
 
     - name: Append floating ip to host info
       add_host:
@@ -160,7 +161,7 @@
     - wait_for:
         host: "{{ item }}"
         port: 22
-      with_items: "{{ groups.bastion }}"
+      with_items: "{{ public_hosts }}"
 
 
 - name: Basic host setup
