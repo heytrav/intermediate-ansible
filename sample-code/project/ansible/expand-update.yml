@@ -7,17 +7,20 @@
       when: suffix is not defined or suffix == ""
 
     - fail:
-      when: version is not defined or version == ""
+      when: suffix is not defined or suffix == ""
+
+    - fail:
+      when: prefix is not defined or prefix == ""
 
     - name: Add new web host to inventory
       add_host:
-        name: "{{ suffix }}-web-{{ version }}"
+        name: "{{ prefix }}-web-{{ version }}"
         groups: mycluster,web,web-new
 
 
-    - name: Add new web host to inventory
+    - name: Add new app host to inventory
       add_host:
-        name: "{{ suffix }}-app-{{ version }}"
+        name: "{{ prefix }}-app-{{ version }}"
         groups: mycluster,app,app-new
 
 
