@@ -1,0 +1,9 @@
+server {
+ listen 80;
+ server_name  my-app.cat;
+
+ location / {
+  include proxy_params;
+  proxy_pass http://{{ inventory_hostname | regex_replace('^(.*)web(.*)$','\\1app\\2') }}:5000;
+ }
+}
