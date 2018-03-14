@@ -1,0 +1,9 @@
+---
+
+- name: Make sure variables are defined before starting
+  hosts: localhost
+  gather_facts: false
+  vars:
+    prefix: "{{ app_prefix | mandatory }}"
+    suffix: "-{{ prefix }}"
+    version: "{{ app_version | mandatory }}"

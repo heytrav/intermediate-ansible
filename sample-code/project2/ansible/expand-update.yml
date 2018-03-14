@@ -1,11 +1,6 @@
 ---
-- name: Preflight to add hosts to inventory
-  hosts: localhost
-  gather_facts: false
-  vars:
-    suffix: "{{ app_suffix | mandatory }}"
-    prefix: "{{ app_prefix | mandatory }}"
-    version: "{{ app_version | mandatory }}"
+
+- import_playbook: check-defined.yml
 
 - name: Gather facts from existing cluster
   hosts: mycluster
@@ -41,28 +36,7 @@
       with_items: "{{ lb_hosts }}"
 
 
-- name: Add new hosts to inventory
-  hosts: localhost
-  gather_facts: false
-  tasks:
-
-    - name: Add loadbalancer to inventory
-      add_host:
-        name: "{{ prefix }}-lb-{{ app_version }}"
-        groups: mycluster,loadbalancer,mycluster_new,loadbalancer_new
-
-    - name: Add web hosts to inventory
-      add_host:
-        name: "{{ prefix }}-web-{{ app_version }}-{{ item }}"
-        groups: mycluster,web,mycluster_new
-      with_sequence: count=2
-
-    - name: Add app hosts to inventory
-      add_host:
-        name: "{{ prefix }}-app-{{ app_version }}-{{ item }}"
-        groups: mycluster,app,mycluster_new
-      with_sequence: count=2
-
+- import_playbook: add-hosts-to-inventory.yml
 
 
 - name: Provision a set of hosts in the Catalyst Cloud
