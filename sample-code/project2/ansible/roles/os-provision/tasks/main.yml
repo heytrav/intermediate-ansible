@@ -1,0 +1,103 @@
+---
+
+- name: Connect to Catalyst Cloud
+  os_auth:
+
+- name: Create keypair
+  os_keypair:
+    name: "{{ keypair_name }}"
+    public_key: "{{ ssh_public_key }}"
+
+- name: Create Network
+  os_network:
+    name: "{{ network_name }}"
+    state: present
+
+- name: Create subnet
+  os_subnet:
+    name: "{{ subnet_name }}"
+    network_name: "{{ network_name }}"
+    state: present
+    cidr: "{{ subnet_cidr }}"
+    allocation_pool_start: "{{ subnet_dhcp_start }}"
+    allocation_pool_end: "{{ subnet_dhcp_end }}"
+    ip_version: 4
+    dns_nameservers: "{{ default_nameservers }}"
+
+- name: Create router
+  os_router:
+    state: present
+    name: "{{ router_name }}"
+    network: "{{ public_net_name }}"
+    interfaces:
+      - "{{ subnet_name }}"
+
+- name: Create security groups
+  os_security_group:
+    state: present
+    name: "{{ item }}"
+  with_items: "{{ security_group_names }}"
+
+- name: Add rules for security group
+  os_security_group_rule:
+    state: present
+    security_group: "{{ item.group }}"
+    protocol: "{{ item.proto | default('tcp') }}"
+    port_range_min: "{{ omit if item.port == 'any' else item.port }}"
+    port_range_max: "{{ omit if item.port == 'any' else item.port_end | default(item.port) }}"
+    remote_ip_prefix: "{{ item.remote_ip_prefix | default(omit) }}"
+    remote_group: "{{ item.remote_group | default(omit) }}"
+  with_items: "{{ security_groups }}"
+
+
+- name: Create cluster instances
+  os_server:
+    state: present
+    name: "{{ item }}"
+    image: "{{ default_os_image }}"
+    key_name: "{{ keypair_name  }}"
+    flavor: "{{ default_flavor }}"
+    auto_ip: no
+    nics:
+      - net-name: "{{ network_name }}"
+    security_groups: "default,{{ hostvars[item].security_groups | map(attribute='group') | list | unique | join(',')}}"
+    userdata: |
+              #cloud-config
+              datasource:
+                OpenStack:
+                  metadata_urls: ["http://169.254.169.254"]
+                  max_wait: -1
+              users:
+                - name: "{{ hostvars[item].ssh_user }}"
+                  shell: /bin/bash
+                  lock_passwd: true
+                  sudo: ALL=(ALL) NOPASSWD:ALL
+                  ssh_authorized_keys:
+                    - "{{ hostvars[item].ssh_public_key }}"
+  with_items: "{{ host_set }}"
+  register: launch
+
+- name: Append info for launched machines to host info
+  add_host:
+    name: "{{ item.openstack.name }}"
+    ansible_host: "{{ item.openstack.private_v4 }}"
+    private_v4: "{{ item.openstack.private_v4 }}"
+    ansible_user: "{{ hostvars[item.openstack.name].ssh_user }}"
+  with_items: "{{ launch.results }}"
+
+- name: Assign floating ips
+  os_floating_ip:
+    state: present
+    reuse: yes
+    wait: true
+    server: "{{ item }}"
+  register: floating_ip_info
+  with_items:
+    - "{{ public_hosts }}"
+
+- name: Append floating ip to host info
+  add_host:
+    name: "{{ item.item }}"
+    floating_ip: "{{ item.floating_ip.floating_ip_address }}"
+  with_items: "{{ floating_ip_info.results }}"
+

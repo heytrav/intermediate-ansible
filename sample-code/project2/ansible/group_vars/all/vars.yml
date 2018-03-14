@@ -5,7 +5,6 @@ ssh_public_key: "{{ lookup('file', ssh_public_key_file) }}"
 keypair_name: "training-key{{ suffix }}"
 ssh_remote_cidr: "{{ lookup('dig', 'myip.opendns.com', '@resolver1.opendns.com') + '/32' | default('0.0.0.0/0', true) }}"
 proxy_command: "ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p"
-ansible_ssh_common_args:  "-o StrictHostKeyChecking=no -o ProxyCommand='{{ proxy_command }}'"
 ssh_proxy_command: "ProxyCommand {{ proxy_command }}"
 ansible_python_interpreter: /usr/bin/python
 network_name: "training-net{{ suffix }}"

@@ -1,0 +1,26 @@
+---
+
+- name: "Add host info to local ~/.ssh/config"
+  blockinfile:
+    dest: "{{ lookup('env', 'HOME') }}/.ssh/config"
+    insertbefore: BOF
+    block: |
+      Host {{ item }}
+          User {{ ssh_user }}
+          StrictHostKeyChecking no
+          {{ hostvars[item].ssh_proxy_command }}
+      Host {{ ip }}
+          Hostname {{ item }}
+          User {{ ssh_user }}
+          StrictHostKeyChecking no
+          {{ hostvars[item].ssh_proxy_command }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
+
+- name: "Add host to /etc/hosts"
+  become: yes
+  blockinfile:
+    dest: /etc/hosts
+    insertafter: EOF
+    block: |
+      {{ ip }} {{ item }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"

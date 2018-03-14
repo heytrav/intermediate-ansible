@@ -6,7 +6,10 @@
     suffix: "{{ app_suffix | mandatory }}"
     prefix: "{{ app_prefix | mandatory }}"
     version: "{{ app_version | mandatory }}"
-  tasks:
+
+- name: Gather facts from existing cluster
+  hosts: mycluster
+
 
 
 - name: Preflight to set up machine specific variables
@@ -103,7 +106,7 @@
   become: true
   gather_facts: false
   vars:
-    host_set: "{{ groups.mycluster_new }}"
+    host_set: "{{ groups.mycluster }}"
   roles:
     - role: common
 

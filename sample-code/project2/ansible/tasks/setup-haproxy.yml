@@ -1,0 +1,34 @@
+---
+
+
+- name: Install haproxy
+  apt:
+    name: haproxy
+    state: present
+
+- name: Add haproxy config to loadbalancer
+  template:
+    src: templates/haproxy.cfg.j2
+    dest: /etc/haproxy/haproxy.cfg
+    owner: root
+    group: root
+    mode: "0644"
+  notify: restart haproxy
+
+- name: Add lines to rsyslog conf
+  lineinfile:
+    path: /etc/rsyslog.conf
+    line: "{{ item.line }}"
+    regexp: "{{ item.regexp }}"
+    insertbefore: EOF
+  with_items:
+    - {line: "$ModLoad imudp", regexp: '^#?\$ModLoad.*'}
+    - {line: "$UDPServerAddress 127.0.0.1", regexp: '^#?\$UDPServerAddress.*'}
+    - {line: "$UDPServerRun 514", regexp: '^#?\$UDPServerRun.*'}
+  notify: restart rsyslog
+
+- name: Copy rsyslog config for haproxy
+  copy:
+    src: files/rsyslog-haproxy.conf
+    dest: /etc/rsyslog.d/haproxy.conf
+
