@@ -16,5 +16,13 @@
 - name: Add entry to /etc/hosts for all instances
   lineinfile:
     dest: /etc/hosts
-    line: "{{ hostvars[item].private_v4 | default(hostvars[item].ansible_default_ipv4.address) }} {{ item }}"
+    line: "{{ hostvars[item].private_v4 }} {{ item }}"
   with_items: "{{ host_set }}"
+  when: "'private_v4' in hostvars[item]"
+
+- name: Add entry to /etc/hosts for all instances
+  lineinfile:
+    dest: /etc/hosts
+    line: "{{ hostvars[item].ansible_default_ipv4.address }} {{ item }}"
+  with_items: "{{ host_set }}"
+  when: "'ansible_default_ipv4' in hostvars[item]"
