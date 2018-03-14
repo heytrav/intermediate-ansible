@@ -5,7 +5,7 @@ ssh_public_key: "{{ lookup('file', ssh_public_key_file) }}"
 keypair_name: "training-key{{ suffix }}"
 ssh_remote_cidr: "{{ lookup('dig', 'myip.opendns.com', '@resolver1.opendns.com') + '/32' | default('0.0.0.0/0', true) }}"
 proxy_command: "ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p"
-ssh_common_args:  "-o StrictHostKeyChecking=no  -o ProxyCommand='{{ proxy_command }}'"
+ssh_common_args:  "-o StrictHostKeyChecking=no -o ProxyCommand='{{ proxy_command }}'"
 ssh_proxy_command: "ProxyCommand {{ proxy_command }}"
 network_name: "training-net{{ suffix }}"
 public_net_name: public-net
@@ -28,5 +28,6 @@ default_nameservers: "{{ region_nameservers[lookup('env', 'OS_REGION_NAME')] }}"
 
 main_security_groups:
   - {group: "managed{{ suffix }}", port: 22, remote_group: "bastion{{ suffix }}"}
+
 database_user: train_user
 database: cat_pics

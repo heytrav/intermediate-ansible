@@ -1,11 +1,40 @@
 ---
-- name: Preflight to set up machine specific variables
-  hosts: "mycluster"
+
+- name: Preflight to add hosts to inventory
+  hosts: localhost
   gather_facts: false
   tasks:
 
     - fail:
       when: suffix is not defined or suffix == ""
+
+    - fail:
+      when: prefix is not defined or prefix == ""
+
+    - fail:
+      when: app_version is not defined or app_version == ""
+
+    - name: Add loadbalancer to inventory
+      add_host:
+        name: "{{ prefix }}-lb-{{ app_version }}"
+        groups: mycluster,loadbalancer
+
+    - name: Add web hosts to inventory
+      add_host:
+        name: "{{ prefix }}-web-{{ app_version }}-{{ item }}"
+        groups: mycluster,web
+      with_sequence: count=2
+
+    - name: Add app hosts to inventory
+      add_host:
+        name: "{{ prefix }}-app-{{ app_version }}-{{ item }}"
+        groups: mycluster,app
+      with_sequence: count=2
+
+
+- name: Set up variables for inventory
+  hosts: mycluster
+  gather_facts: false
 
 
 - name: Provision a set of hosts in the Catalyst Cloud

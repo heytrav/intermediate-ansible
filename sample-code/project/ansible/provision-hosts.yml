@@ -104,6 +104,7 @@
       add_host:
         name: "{{ item.openstack.name }}"
         ansible_host: "{{ item.openstack.private_v4 }}"
+        private_v4: "{{ item.openstack.private_v4 }}"
         ansible_user: "{{ hostvars[item.openstack.name].ssh_user }}"
         ansible_python_interpreter: /usr/bin/python
         ansible_ssh_common_args: "{{ hostvars[item.openstack.name].ssh_common_args }}"

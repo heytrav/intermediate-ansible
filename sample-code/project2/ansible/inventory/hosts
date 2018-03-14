@@ -1,22 +1,12 @@
 [mycluster]
-travis-lb
-travis-web[1:2]
-travis-app[1:2]
+travis-bastion
 travis-db1
 
-[loadbalancer]
-travis-lb
-
 [bastion]
-travis-lb
-
-[web]
-travis-web[1:2]
+travis-bastion
 
 [db]
 travis-db1
 
-[app]
-travis-app[1:2]
 
 
