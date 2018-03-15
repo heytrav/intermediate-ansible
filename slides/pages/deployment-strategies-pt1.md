@@ -25,8 +25,8 @@ $ tree
 ### Basic application
 
 ![Basic app](img/simple-project-app.svg "opt title")
-* web server running nginx
-* app server running a Python Flask application
+* Web server running nginx
+* App server running a Python Flask web application
 * A database
 * All behind a loadbalancer
 
@@ -68,10 +68,10 @@ $ tree
 #### Provisioning role
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ sudo mkdir -p /etc/ansible/roles
+$ sudo mkdir -p $WORKDIR/project/ansible/roles
 </code></pre>
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
-/etc
+.
 ├── ansible
 │   <mark>├── roles
 │   │   └── os-provision
@@ -125,7 +125,7 @@ $ sudo mkdir -p /etc/ansible/roles
 #### Refactoring _common_ tasks
 
 * These tasks <!-- .element: class="fragment" data-fragment-index="0" -->will be useful in later lessons 
-* Put them in<!-- .element: class="fragment" data-fragment-index="1" --> `/etc/ansible/roles` with the _os-provision_ role
+* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/project/ansible/roles` next to _os-provision_ role
 
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 /etc
