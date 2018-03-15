@@ -91,7 +91,7 @@ $ tree
   </div>
 
 
-### Refactoring a long playbook
+### Refactoring tasks
 
 ![Long playbook](img/playbook-long.svg "Long playbook")
 
@@ -102,8 +102,8 @@ $ tree
 
 ### Task files
 
-* The conventional approach is to break tasks out into separate "task files" <!-- .element: class="fragment" data-fragment-index="0" -->
-* Task file only contains a YAML list <!-- .element: class="fragment" data-fragment-index="1" -->
+* The<!-- .element: class="fragment" data-fragment-index="0" --> conventional approach is to break tasks out into separate _task files_ 
+* A<!-- .element: class="fragment" data-fragment-index="1" --> _task file_ only contains a YAML list 
 <pre class="fragment" data-fragment-index="1"><code data-trim>
     - name: This is task 1
 
@@ -138,8 +138,8 @@ Conventional organisation of tasks in ansible
             └── setup.yml</mark>
  </code></pre>
 
-* In general you can put task files anywhere as long they're resolvable by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
-* Having moved tasks out of playbook, you now need a way to import them <!-- .element: class="fragment" data-fragment-index="3" -->
+* In general you can put task files anywhere as long they can be resolved by ansible <!-- .element: class="fragment" data-fragment-index="2" -->
+* Having moved tasks out of playbook, you now need a way to incorporate them into the parent playbook <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
 
@@ -151,48 +151,56 @@ Conventional organisation of tasks in ansible
 
 
 
-### Including files in Ansible
+### Including _tasks_ in Ansible
 
 #### `import_tasks`
 
 Statically include a task list
 
-```yaml
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 name: Main playbook
 tasks:
   - debug:
       msg: Task in main playbook
 
-  - import_tasks: "tasks/import-stuff.yml"
+  <mark>- import_tasks: tasks/import-stuff.yml</mark>
 
   - debug:
       msg: Second task in main playbook
-```
+</code></pre>
+
+* Ansible parses the task file, including all tasks, at start when the <!-- .element: class="fragment" data-fragment-index="1" -->
+  playbook is parsed
 
 
-### Including files in Ansible
+### Including _tasks_ in Ansible
 
 #### `include_tasks`
 
-* Dynamically include a task list
+Dynamically include a task list
 
-```yaml
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 name: Main playbook
 tasks:
   - debug:
       msg: Task in main playbook
 
-  - include_tasks: tasks/import-stuff.yml
-  - include_tasks: "tasks/{{ myfile  }}.yml"
+  <mark>- include_tasks: tasks/import-stuff.yml</mark>
+  <mark>- include_tasks: "tasks/{{ myfile  }}.yml"</mark>
 
   - debug:
       msg: Second task in main playbook
-```
+
+</code></pre>
+
+* Ansible parses the task file when the <!-- .element: class="fragment" data-fragment-index="1" --> task is encountered during playbook execution
 
 
 ### Exercise: Refactor a playbook using task files
 
-* Break up `long-playbook.yml` into separate tasks files by _function_
+* Break up `long-playbook.yml` into separate tasks files
+* The way you organise them is up to you
+* Example:
   - basic setup
   - db setup
   - application setup
@@ -394,9 +402,9 @@ $ $EDITOR tasks/files.yml
 ### Summary
 
 * Includes provide way to organise infrastructure for large projects
-  - `import_tasks` for static inclusion
-  - `include_tasks` for dynamic inclusion
-* Include statements take a `vars` argument for passing variable data in scope
+  - `import*` for static inclusion
+  - `include*` for dynamic inclusion
+* For tasks, include statements take a `vars` argument for passing variable data in scope
   of include
-* Conditionals applied to includes are actually applied to each task in an
+* Conditionals applied to task includes are actually applied to each task in an
   included file

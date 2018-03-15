@@ -1,5 +1,9 @@
 ---
-- import_playbook: check-defined.yml
+- name: Make sure variables are defined before starting
+  hosts: localhost
+  gather_facts: false
+  vars:
+    app_prefix: "{{ prefix | mandatory }}"
 
 - name: Preflight to set up machine specific variables
   hosts: mycluster
@@ -165,7 +169,7 @@
       with_items: "{{ groups.bastion }}"
 
 
-- name: Basic host setup
+- name: Set up the bastion hosts
   hosts: bastion
   become: true
   gather_facts: false
@@ -194,7 +198,7 @@
 
 
 
-- name: Basic host setup
+- name: Set up rest of cluster
   hosts: mycluster:!bastion
   become: true
   gather_facts: false
