@@ -18,7 +18,7 @@ $ tree
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
 * Pressure to get things done quickly <!-- .element: class="fragment" data-fragment-index="1" -->
-* Decisions that "seemed like a good idea at the time" evolve into technical debt <!-- .element: class="fragment" data-fragment-index="2" -->
+* Sources of technical debt <!-- .element: class="fragment" data-fragment-index="2" -->
     * Copy paste <!-- .element: class="fragment" data-fragment-index="2" -->
     * Code organisation <!-- .element: class="fragment" data-fragment-index="3" -->
 * Eventually you will probably need to refactor <!-- .element: class="fragment" data-fragment-index="4" -->
@@ -26,14 +26,69 @@ $ tree
 
 ### Refactoring a Playbook
 
-* Ideal to break playbook into smaller components
-  - Compartmentalise logic
-  - Avoid repetition
-* Use Ansible _includes_
-  - `include`
-  - `import_tasks`
-  - `include_tasks`
+* Ideal to break infrastructure code into smaller components <!-- .element: class="fragment" data-fragment-index="0" -->
+  - Compartmentalise logic <!-- .element: class="fragment" data-fragment-index="1" -->
+  - Avoid repetition <!-- .element: class="fragment" data-fragment-index="2" -->
+  - Code reuse <!-- .element: class="fragment" data-fragment-index="3" -->
+    * use in multiple parent playbooks
+    * multiple times in same playbooks
+* We can reuse<!-- .element: class="fragment" data-fragment-index="4" --> _tasks_ and _plays_ 
 
+
+### Importing and including
+
+* Two modes for reusing code in Ansible <!-- .element: class="fragment" data-fragment-index="0" -->
+  - static <!-- .element: class="fragment" data-fragment-index="1" -->
+  - dynamic <!-- .element: class="fragment" data-fragment-index="2" -->
+* Static <!-- .element: class="fragment" data-fragment-index="3" -->
+  - Processed during playbook parsing 
+  - <!-- .element: class="fragment" data-fragment-index="4" -->begin with `import*` 
+* Dynamic <!-- .element: class="fragment" data-fragment-index="5" -->
+  - Processed at run time when the task/play is encountered
+  - <!-- .element: class="fragment" data-fragment-index="6" -->begin with `include*` 
+
+
+
+### Importing playbooks
+
+#### `import_playbook`
+
+  <div style="width:45%;float:left;">
+  <pre class="fragment" data-fragment-index="0"><code data-trim>
+  - name: First play
+    hosts: somehosts
+    tasks:
+      - name: First task
+      - name: Second task
+
+  - name: Another play
+    hosts: somehosts
+    tasks:
+      - name: Another task
+      - name: Another task
+  </code></pre>
+  </div>
+  <div style="width:55%;float:right;"  >
+  <p style="font-size:16pt;" class="fragment" data-fragment-index="1">
+  play1.yml
+  </p>
+  <pre class="fragment" data-fragment-index="1"><code data-trim>
+  - name: First play
+    hosts: somehosts
+    tasks:
+        - name: First task
+        - name: Second task
+  </code></pre>
+  <pre class="fragment" data-fragment-index="2"><code data-trim data-noescape>
+  <mark>- import_playbook: play1.yml</mark>
+
+  - name: Another play
+    hosts: somehosts
+    tasks:
+      - name: Another task
+      - name: Another task
+  </code></pre>
+  </div>
 
 
 ### Refactoring a long playbook
