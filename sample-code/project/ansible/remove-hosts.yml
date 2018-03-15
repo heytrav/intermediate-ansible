@@ -1,12 +1,9 @@
 ---
-- name: Preflight to set up machine specific variables
-  hosts: "mycluster"
+- name: Make sure variables are defined before starting
+  hosts: localhost
   gather_facts: false
-  tasks:
-
-    - fail:
-      when: suffix is not defined or suffix == ""
-
+  vars:
+    app_prefix: "{{ prefix | mandatory }}"
 
 - name: Provision a set of hosts in the Catalyst Cloud
   hosts: localhost
