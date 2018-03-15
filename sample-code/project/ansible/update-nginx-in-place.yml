@@ -30,6 +30,10 @@
 
     - meta: flush_handlers
 
+    - name: Make sure nginx is accepting connections
+      wait_for:
+        port: 80
+
     - name: Re-enable application at load balancer
       haproxy:
         backend: catapp-backend

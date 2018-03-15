@@ -1,5 +1,8 @@
 ---
 ansible_ssh_common_args: "-o StrictHostKeyChecking=no"
 security_groups: "{{ machine_security_groups }}"
-ssh_common_args:  "-o StrictHostKeyChecking=no"
 ssh_proxy_command: ""
+
+machine_security_groups:
+  - {group: "bastion{{ suffix }}", port: 22, remote_ip_prefix: "202.78.240.7/32"}
+  - {group: "bastion{{ suffix }}", port: 22, remote_ip_prefix: "{{ ssh_remote_cidr }}"}

@@ -3,12 +3,13 @@ travis-lb
 travis-web[1:2]
 travis-app[1:2]
 travis-db1
+travis-bastion
 
 [loadbalancer]
 travis-lb
 
 [bastion]
-travis-lb
+travis-bastion
 
 [web]
 travis-web[1:2]
@@ -19,4 +20,6 @@ travis-db1
 [app]
 travis-app[1:2]
 
-
+[publichosts:children]
+loadbalancer
+bastion

@@ -9,8 +9,6 @@
     - app
   tasks:
 
-    - debug:
-        msg: "Disabling {{ web_server }}"
 
     - name: Disable application at load balancer
       haproxy:
@@ -26,10 +24,41 @@
         version: "{{ app_version | default('master') }}"
       notify: restart gunicorn
 
+    
+    - name: Add app config
+      template:
+        src: templates/config.py.j2
+        dest: "{{ app_directory }}/config.py"
+        owner: train
+        group: train
+        mode: 0644
+      notify: restart gunicorn
+
+    - name: Install app requirements
+      pip:
+        requirements: "{{ app_directory }}/requirements.txt"
+        virtualenv: "{{ app_directory }}/venv"
+        virtualenv_python: /usr/bin/python3
+
+    - name: Install gunicorn
+      pip:
+        name: gunicorn
+        virtualenv: "{{ app_directory }}/venv"
+
+    - name: Add systemd config
+      template:
+        src: templates/gunicorn.service.j2
+        dest: /etc/systemd/system/gunicorn.service
+        owner: root
+        group: root
+        mode: 0644
+      notify: restart gunicorn
+
     - meta: flush_handlers
 
-    - pause:
-        seconds: 40
+    - name: Make sure gunicorn is accepting connections
+      wait_for:
+        port: 5000
 
     - name: Re-enable application at load balancer
       haproxy:
