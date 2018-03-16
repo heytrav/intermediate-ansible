@@ -26,3 +26,8 @@ $ cd $WORKDIR/project2
   - No need to worry about config not managed by Ansible
   - Avoid configuration drift
   - Rolling back much easier
+
+
+### Upgrading by expanding contract
+
+
