@@ -1,7 +1,7 @@
-# Another upgrade strategy
+# Expand and contract
 
 
-###  Another upgrade strategy
+###  Expand and contract
 
 ```
 $ cd $WORKDIR/project2
@@ -19,12 +19,12 @@ $ cd $WORKDIR/project2
 
 
 
-### Expand contract
+### Expand and contract
 
-* Self service on-demand infrastructure has made it more easier and cheaper to create
-  hosts
+* Easier and cheaper to create servers on-demand
 * This strategy involves creating new hosts from scratch
 * Advantages
   - Machines are more up-to-date
   - No need to worry about config not managed by Ansible
   - Avoid configuration drift
+  - Rolling back much easier
