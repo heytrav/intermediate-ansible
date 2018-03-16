@@ -30,4 +30,17 @@ $ cd $WORKDIR/project2
 
 ### Upgrading by expanding contract
 
+![cluster-pre-upgrade](img/expand-contract-pre-upgrade.svg "Pre upgrade")
 
+
+### Create new cluster
+
+![cluster-upgrade-step1](img/expand-contract-upgrade.svg "During upgrade")
+
+
+### Change to new cluster
+
+![cluster-upgrade-step2](img/expand-contract-upgrade-2.svg "Post upgrade")
+
+* Change DNS to point at new cluster
+* Decommision old cluster
