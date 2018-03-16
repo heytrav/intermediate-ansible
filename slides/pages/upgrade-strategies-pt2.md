@@ -1,7 +1,9 @@
-# Expand and contract
+# Upgrade strategies
+
+## Expand and contract
 
 
-###  Expand and contract
+###  Expand and contract upgrades
 
 ```
 $ cd $WORKDIR/project2
@@ -33,14 +35,20 @@ $ cd $WORKDIR/project2
 ![cluster-pre-upgrade](img/expand-contract-pre-upgrade.svg "Pre upgrade")
 
 
-### Create new cluster
+### Expand phase
 
-![cluster-upgrade-step1](img/expand-contract-upgrade.svg "During upgrade")
+![cluster-upgrade-step1](img/expand-contract-upgrade.svg "During upgrade") <!-- .element height="50%" width="50%" -->
+
+* Deploy application update to new machines <!-- .element: class="fragment" data-fragment-index="0" -->
+* Current version remains active <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
 ### Change to new cluster
 
-![cluster-upgrade-step2](img/expand-contract-upgrade-2.svg "Post upgrade")
+![cluster-upgrade-step2](img/expand-contract-upgrade-2.svg "Post upgrade")<!-- .element height="40%" width="40%" -->
 
-* Change DNS to point at new cluster
-* Decommision old cluster
+* Once new cluster finished and healthy: <!-- .element: class="fragment" data-fragment-index="0" -->
+  - Change DNS to point at new cluster
+  - Stop services on old cluster
+* Decommision old cluster <!-- .element: class="fragment" data-fragment-index="1" -->
+

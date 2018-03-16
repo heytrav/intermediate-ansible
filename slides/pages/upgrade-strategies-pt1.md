@@ -1,4 +1,6 @@
-# Strategies for upgrading applications
+# Upgrade strategies
+
+## In place rolling upgrade
 
 
 ### Load balanced application
