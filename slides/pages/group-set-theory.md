@@ -52,6 +52,8 @@ $ cd $WORKDIR/project3
 
 Combination of hosts in two groups
 
+![union](img/union.svg "Union")
+
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Union of hosts
   <mark>hosts: web:db</mark>
@@ -60,9 +62,12 @@ Combination of hosts in two groups
 </code></pre>
 
 
+
 ### Intersection
 
 Hosts that are in first and second group
+
+![Intersect](img/intersect.svg "Intersection")
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Intersection of hosts
@@ -75,6 +80,8 @@ Hosts that are in first and second group
 ### Difference
 
 Set of hosts in first set but not in second set
+
+![Difference](img/difference.svg "Difference")
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Difference of groups
