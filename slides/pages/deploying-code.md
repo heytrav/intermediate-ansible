@@ -157,7 +157,8 @@ Let's go ahead and provision our machines
 $ cat ~/credentials.txt
 $ source ~/os-training.catalyst.net.nz-openrc.sh 
 # prompts for password
-$ ansible-playbook -e prefix=$(hostname) -K \
+$ ansible-playbook -i ansible/inventory/hosts \
+   -e prefix=$(hostname) -K \
     --ask-vault-pass ansible/provision-hosts.yml
 # Prompts for sudo and vault password
 ```

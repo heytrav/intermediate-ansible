@@ -24,3 +24,11 @@ travis-app[1:2]
 loadbalancer
 bastion
 
+[primary]
+travis-web1
+travis-app1
+
+
+[secondary]
+travis-web2
+travis-app2
