@@ -1,0 +1,14 @@
+- name: Any errors fatal example
+  hosts: failhosts
+  gather_facts: false
+  max_fail_percentage: 20
+  tasks:
+    - name: fail last host
+      fail:
+        msg: "I am last"
+      when: inventory_hostname == play_hosts[-1]
+    - name: never ran
+      debug:
+        msg: "I should never be ran"
+
+
