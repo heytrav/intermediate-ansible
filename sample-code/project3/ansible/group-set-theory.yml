@@ -1,0 +1,46 @@
+---
+- name: Explore set functions in groups
+  hosts: mycluster
+  gather_facts: false
+  tasks:
+
+    - name: Output server type
+      debug:
+        var: inventory_hostname
+
+- name: Union of hosts
+  hosts: web:db
+  gather_facts: false
+  tasks:
+
+    - name: Output union of web and db
+      debug:
+        var: inventory_hostname
+
+- name: Intersection of hosts
+  hosts: web:&primary
+  gather_facts: false
+  tasks:
+    - name: Output intersection of web and primary
+      debug:
+        var: inventory_hostname
+
+
+- name: Intersection of hosts
+  hosts: app:&secondary
+  gather_facts: false
+  tasks:
+    - name: Output intersection of app and secondary
+      debug:
+        var: inventory_hostname
+
+
+
+- name: Difference of groups
+  hosts: wellington:!primary
+  gather_facts: false
+  tasks:
+    - name: Output difference of primary and secondary
+      debug:
+        var: inventory_hostname
+
