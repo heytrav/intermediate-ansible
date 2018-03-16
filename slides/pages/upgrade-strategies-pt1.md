@@ -13,10 +13,10 @@
 
 #### What can go wrong?
 
-* Risk of disrupting entire operation <!-- .element: class="fragment" data-fragment-index="0" -->
+* Without some kind of redundancy, we risk of disrupting entire operation <!-- .element: class="fragment" data-fragment-index="0" -->
 * Could be bad for business <!-- .element: class="fragment" data-fragment-index="1" -->
 
-<div  class="fragment" data-fragment-index="2">
+<div  class="fragment" data-fragment-index="0">
 
 ![update all at once](img/upgrade-complete-outage.svg "All at once upgrade")
 <!-- .element width="50%" height="50%"-->
@@ -25,7 +25,7 @@
 
 ### Load balanced application
 
-![Basic network diagram](img/rolling-upgrade-pre.svg  "Diagram of our simple app") <!-- .element width="80%" height="80%" -->
+![Basic network diagram](img/rolling-upgrade-pre.svg  "Diagram of our simple app") <!-- .element width="50%" height="50%" -->
 
 * Applications often installed on multiple machines/clusters
   - Ensures redundancy
@@ -33,12 +33,12 @@
 
 
 
-### In-place upgrades
+### In-place rolling upgrade
 
-* Traditional model <!-- .element: class="fragment" data-fragment-index="0" -->
-  - Cost and effort of creating new infrastructure 
-* Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="1" -->
-* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="2" -->
+* Traditional approach to upgrading applications across a cluster <!-- .element: class="fragment" data-fragment-index="0" -->
+  - Creating new infrastructure can be prohibitively expensive
+* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="1" -->
+* Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
 
@@ -59,29 +59,33 @@ width="50%" height="50%"-->
 * Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
-### Managing a rolling upgrade
-
-#### The `serial` attribute
+### Ansible default behaviour
 
 * By default Ansible will act on multiple hosts at once <!-- .element: class="fragment" data-fragment-index="0" -->
-* We need to change this behaviour <!-- .element: class="fragment" data-fragment-index="1" -->
-* The<!-- .element: class="fragment" data-fragment-index="2" --> `serial` attribute in a play tells Ansible to only work on a fixed number of hosts at a time
+* This can still lead to problems <!-- .element: class="fragment" data-fragment-index="1" -->
+
+![multi-host](img/rolling-upgrade-pre-multi.svg "Simultaneous upgrade") <!--
+.element: style="float:left;" width="45%" height="45%" class="fragment" data-fragment-index="0"-->
+![multi-host](img/rolling-upgrade-complete-outage.svg "Simultaneous upgrade") <!--
+.element: style="float:right;" width="45%" height="45%"  class="fragment" data-fragment-index="1" -->
 
 
-### Using the `serial` attribute
 
-* Serial can be represented as <!-- .element: class="fragment" data-fragment-index="0" -->
-  * An integer <!-- .element: class="fragment" data-fragment-index="1" -->
-  * A percentage of hosts in the cluster to act on <!-- .element: class="fragment" data-fragment-index="2" -->
+### Performing `serial` operations
 
-<pre  class="fragment" data-fragment-index="3"><code data-trim data-noescape>
+* The<!-- .element: class="fragment" data-fragment-index="0" --> `serial` attribute regulates how many hosts Ansible operates on at a time 
+* Serial can be represented as <!-- .element: class="fragment" data-fragment-index="1" -->
+  * An integer <!-- .element: class="fragment" data-fragment-index="2" -->
+  * A percentage of hosts in the cluster to act on <!-- .element: class="fragment" data-fragment-index="3" -->
+
+<pre  class="fragment" data-fragment-index="4" style="font-size:15pt;"><code data-trim data-noescape>
 - name: Upgrade application in place
   become: true
   hosts: app
   <mark>serial: 1</mark>
   vars:
 </code></pre>
-<pre  class="fragment" data-fragment-index="4"><code data-trim data-noescape>
+<pre  class="fragment" data-fragment-index="5" style="font-size:15pt;"><code data-trim data-noescape>
 - name: Upgrade application in place
   become: true
   hosts: app
