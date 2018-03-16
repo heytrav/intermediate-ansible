@@ -5,8 +5,22 @@
 
 ### Load balanced application
 
-![Basic network diagram](img/application-lb.svg  "Diagram of our simple app")
+![Basic network diagram](img/3678.deprecated.png  "Diagram of our simple app")
 * Often multiple clusters behind loadbalancer for redundancy and scalability
+
+
+### Upgrading at scale
+
+#### What can go wrong?
+
+* Risk of disrupting entire operation <!-- .element: class="fragment" data-fragment-index="0" -->
+* Could be bad for business <!-- .element: class="fragment" data-fragment-index="1" -->
+
+<div  class="fragment" data-fragment-index="2">
+
+![update all at once](img/cluster-non-serial-update.svg "All at once upgrade")
+<!-- .element width="50%" height="50%"-->
+</div>
 
 
 ### Ensuring no downtime
@@ -15,13 +29,6 @@
 * Core feature of Ansible is that it operates on multiple hosts at a time
 * However, if we allow ansible to start upgrading all hosts at once we could
   create a considerable mess
-
-
-### Upgrading all hosts
-
-* Risk of disrupting entire operation
-  - Could be bad for business
-![update all at once](img/cluster-non-serial-update.svg "All at once upgrade")
 
 
 ### In-place upgrades
@@ -35,7 +42,8 @@
 
 ### First step of in place upgrade
 
-![step2](img/cluster-update-step1.svg "Upgrade first cluster")
+![step2](img/rolling-upgrade-phase1.svg "Upgrade first cluster") <!-- .element
+width="50%" height="50%"-->
 
 * Disable application at LB (no HTTP requests) <!-- .element: class="fragment" data-fragment-index="0" -->
 * Upgrade necessary applications, configuration <!-- .element: class="fragment" data-fragment-index="1" -->
