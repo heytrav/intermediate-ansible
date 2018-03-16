@@ -3,13 +3,13 @@
 ## In place rolling upgrade
 
 
-### Load balanced application
+### Simple application
 
-![Basic network diagram](img/3678.deprecated.png  "Diagram of our simple app")
-* Often multiple clusters behind loadbalancer for redundancy and scalability
+![simple application](img/simple-project-app.svg "Simple application")
+<!-- .element width="80%" height="80%" -->
 
 
-### Upgrading at scale
+### Upgrading our application
 
 #### What can go wrong?
 
@@ -18,25 +18,27 @@
 
 <div  class="fragment" data-fragment-index="2">
 
-![update all at once](img/cluster-non-serial-update.svg "All at once upgrade")
+![update all at once](img/upgrade-complete-outage.svg "All at once upgrade")
 <!-- .element width="50%" height="50%"-->
 </div>
 
 
-### Ensuring no downtime
+### Load balanced application
 
-* Essential that we can upgrade without taking application offline
-* Core feature of Ansible is that it operates on multiple hosts at a time
-* However, if we allow ansible to start upgrading all hosts at once we could
-  create a considerable mess
+![Basic network diagram](img/rolling-upgrade-pre.svg  "Diagram of our simple app") <!-- .element width="80%" height="80%" -->
+
+* Applications often installed on multiple machines/clusters
+  - Ensures redundancy
+  - High availability
+
 
 
 ### In-place upgrades
 
-* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="0" -->
-* Goal is to minimize downtime <!-- .element: class="fragment" data-fragment-index="1" -->
-* Traditional model <!-- .element: class="fragment" data-fragment-index="2" -->
+* Traditional model <!-- .element: class="fragment" data-fragment-index="0" -->
   - Cost and effort of creating new infrastructure 
+* Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="1" -->
+* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
 
@@ -51,7 +53,7 @@ width="50%" height="50%"-->
 
 
 ### In place rolling upgrade
-![step3](img/cluster-update-step-2.svg "Upgrade other clusters")
+![step3](img/rolling-upgrade-phase2.svg "Upgrade other clusters") <!-- .element width="50%" height="50%"-->
 
 * Repeat process across pool <!-- .element: class="fragment" data-fragment-index="0" -->
 * Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
