@@ -3,6 +3,7 @@
   become: true
   hosts: web
   serial: 1
+  any_errors_fatal: true
   tags:
     - web
   tasks:

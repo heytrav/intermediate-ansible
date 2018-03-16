@@ -201,8 +201,14 @@
 * With previous example, playbook finishes because 10% &lt; 20% <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-### Update our application
+### Upgrade our application
 
-* Open $WORKDIR/project/templates/index.html
-* Edit color of background for application
+```
+$ ansible-playbook  -K --ask-vault-pass \
+   -i ansible/inventory \
+   ansible/update-app-in-place.yml -e app_version=v2
+```
+
+* Should run an in-place upgrade to _v2_ of our app
+* Changes the background colour of the application
 

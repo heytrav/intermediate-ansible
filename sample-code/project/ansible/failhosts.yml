@@ -1,7 +1,6 @@
 - name: Any errors fatal example
   hosts: failhosts
   gather_facts: false
-  max_fail_percentage: 20
   tasks:
     - name: fail last host
       fail:
