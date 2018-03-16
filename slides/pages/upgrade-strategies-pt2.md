@@ -18,11 +18,9 @@ $ cd $WORKDIR/project2
 ```
 
 
-
 ### Expand and contract
 
-* Easier and cheaper to create servers on-demand
-* This strategy involves creating new hosts from scratch
+* This strategy involves deploying updates on completely new hosts
 * Advantages
   - Machines are more up-to-date
   - No need to worry about config not managed by Ansible
