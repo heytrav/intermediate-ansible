@@ -52,3 +52,29 @@ $ cd $WORKDIR/lesson7
   - Stop services on old cluster
 * Decommision old cluster <!-- .element: class="fragment" data-fragment-index="1" -->
 
+
+### Managing inventory
+
+* The expand approach requires dynamic naming of hosts <!-- .element: class="fragment" data-fragment-index="0" -->
+* Naming scheme might use application version combined with some other <!-- .element: class="fragment" data-fragment-index="1" -->
+  identifier
+  - `web-v1-1`
+  - `web-v1-2`
+  - `app-v1-1`
+* Our traditional static inventory file not sufficient <!-- .element: class="fragment" data-fragment-index="2" -->
+* Need to use dynamic inventory
+
+
+### Dynamic inventories
+
+* Inventory for your stack could be sourced from 
+  - database
+  - API
+* Ansible will regard an executable file on inventory path as dynamic
+  inventory
+  - Configured in `ansible.cfg`
+  - Command line option `-i`
+
+  <pre ><code data-trim data-noescape>
+  $ ansible-playbook -i <mark>ansible/inventory</mark>
+  </code></pre>

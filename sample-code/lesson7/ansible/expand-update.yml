@@ -96,6 +96,8 @@
     - name: Wait for gunicorn to be up and running
       wait_for:
         port: 5000
+        timeout: 60
+        delay: 10
 
   handlers:
     - name: restart gunicorn
@@ -116,6 +118,8 @@
     - name: Wait for nginx to be up and running
       wait_for:
         port: 80
+        delay: 10
+        timeout: 60
 
   handlers:
     - name: restart nginx
@@ -137,6 +141,8 @@
     - name: Wait for haproxy to listen on port 80
       wait_for:
         port: 80
+        delay: 10
+        timeout: 60
 
   handlers:
     - name: restart haproxy
