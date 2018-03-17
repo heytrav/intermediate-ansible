@@ -36,7 +36,7 @@
         owner: train
         group: train
         mode: 0644
-      notify: restart gunicorn
+      notify: start gunicorn
 
     - name: Install app requirements
       pip:
@@ -56,7 +56,7 @@
         owner: root
         group: root
         mode: 0644
-      notify: restart gunicorn
+      notify: start gunicorn
 
     - meta: flush_handlers
 
