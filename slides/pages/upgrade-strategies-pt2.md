@@ -6,7 +6,7 @@
 ###  Expand and contract upgrades
 
 ```
-$ cd $WORKDIR/lesson6
+$ cd $WORKDIR/lesson5
 .
 └── ansible
     ├── add-hosts-to-inventory.yml
