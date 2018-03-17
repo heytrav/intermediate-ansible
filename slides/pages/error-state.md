@@ -287,7 +287,7 @@ $ cd $WORKDIR/lesson3
 
 ### Error handling with blocks
 
-<pre><code data-trim data-noescape>
+<pre style="font-size:15pt;"><code data-trim data-noescape>
     - name: Perform an operation that fails
       block:
         - name: Perform failure task
@@ -302,6 +302,7 @@ $ cd $WORKDIR/lesson3
         - debug:
             msg: I always run
 </code></pre>
+*  Run playbook `error-handling.yml`
 
 
 ### Summary
