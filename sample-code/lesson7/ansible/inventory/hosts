@@ -1,0 +1,12 @@
+[mycluster]
+travis-bastion
+travis-db1
+
+[bastion]
+travis-bastion
+
+[db]
+travis-db1
+
+
+

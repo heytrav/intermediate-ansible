@@ -1,12 +1,9 @@
 ---
-- import_playbook: check-defined.yml
-
-- import_playbook: add-hosts-to-inventory.yml
-
-- name: Set up variables for inventory
-  hosts: mycluster
+- name: Make sure variables are defined before starting
+  hosts: localhost
   gather_facts: false
-
+  vars:
+    app_prefix: "{{ prefix | mandatory }}"
 
 - name: Provision a set of hosts in the Catalyst Cloud
   hosts: localhost

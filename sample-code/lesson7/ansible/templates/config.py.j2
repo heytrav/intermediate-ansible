@@ -8,4 +8,4 @@ class Config(object):
     SQLALCHEMY_TRACK_MODIFICATIONS = False 
     SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{{ database_user }}:{{ database_password }}@{{ groups['db'][0] }}/cat_pics"
     SERVER = "{{ inventory_hostname }}"
-    APPVERSION = "{{ app_version | default('master') }}"
+    APPVERSION = "{{ app_version }}"
