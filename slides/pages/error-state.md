@@ -276,6 +276,7 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
+
 ### Recovering from errors
 
 * Sometimes necessary to recover from errors <!-- .element: class="fragment" data-fragment-index="0" -->

@@ -32,6 +32,16 @@
   - High availability
 
 
+### Ansible default behaviour
+
+* By default Ansible will act on multiple hosts at once <!-- .element: class="fragment" data-fragment-index="0" -->
+* This can still lead to problems <!-- .element: class="fragment" data-fragment-index="1" -->
+
+![multi-host](img/rolling-upgrade-pre-multi.svg "Simultaneous upgrade") <!--
+.element: style="float:left;" width="45%" height="45%" class="fragment" data-fragment-index="0"-->
+![multi-host](img/rolling-upgrade-complete-outage.svg "Simultaneous upgrade") <!--
+.element: style="float:right;" width="45%" height="45%"  class="fragment" data-fragment-index="1" -->
+
 
 ### In-place rolling upgrade
 
@@ -39,6 +49,28 @@
   - Creating new infrastructure can be prohibitively expensive
 * Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="1" -->
 * Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="2" -->
+
+
+### Performing `serial` operations
+
+* The<!-- .element: class="fragment" data-fragment-index="0" --> `serial` attribute regulates how many hosts Ansible operates on at a time 
+* Serial can be represented as <!-- .element: class="fragment" data-fragment-index="1" -->
+  * An integer <!-- .element: class="fragment" data-fragment-index="2" -->
+   <pre  class="fragment" data-fragment-index="3" style="font-size:15pt;"><code data-trim data-noescape>
+    - name: Upgrade application in place
+      become: true
+      hosts: app
+      <mark>serial: 1</mark>
+      vars:
+    </code></pre>
+  * A percentage of hosts in the cluster to act on <!-- .element: class="fragment" data-fragment-index="4" -->
+    <pre  class="fragment" data-fragment-index="5" style="font-size:15pt;"><code data-trim data-noescape>
+    - name: Upgrade application in place
+      become: true
+      hosts: app
+      <mark>serial: "30%"</mark>
+      vars:
+    </code></pre>
 
 
 
@@ -57,41 +89,6 @@ width="50%" height="50%"-->
 
 * Repeat process across pool <!-- .element: class="fragment" data-fragment-index="0" -->
 * Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
-
-
-### Ansible default behaviour
-
-* By default Ansible will act on multiple hosts at once <!-- .element: class="fragment" data-fragment-index="0" -->
-* This can still lead to problems <!-- .element: class="fragment" data-fragment-index="1" -->
-
-![multi-host](img/rolling-upgrade-pre-multi.svg "Simultaneous upgrade") <!--
-.element: style="float:left;" width="45%" height="45%" class="fragment" data-fragment-index="0"-->
-![multi-host](img/rolling-upgrade-complete-outage.svg "Simultaneous upgrade") <!--
-.element: style="float:right;" width="45%" height="45%"  class="fragment" data-fragment-index="1" -->
-
-
-
-### Performing `serial` operations
-
-* The<!-- .element: class="fragment" data-fragment-index="0" --> `serial` attribute regulates how many hosts Ansible operates on at a time 
-* Serial can be represented as <!-- .element: class="fragment" data-fragment-index="1" -->
-  * An integer <!-- .element: class="fragment" data-fragment-index="2" -->
-  * A percentage of hosts in the cluster to act on <!-- .element: class="fragment" data-fragment-index="3" -->
-
-<pre  class="fragment" data-fragment-index="4" style="font-size:15pt;"><code data-trim data-noescape>
-- name: Upgrade application in place
-  become: true
-  hosts: app
-  <mark>serial: 1</mark>
-  vars:
-</code></pre>
-<pre  class="fragment" data-fragment-index="5" style="font-size:15pt;"><code data-trim data-noescape>
-- name: Upgrade application in place
-  become: true
-  hosts: app
-  <mark>serial: "30%"</mark>
-  vars:
-</code></pre>
 
 
 ### Delegation
@@ -114,7 +111,7 @@ width="50%" height="50%"-->
 </code></pre>
 
 
-### Ensuring healthy update
+### Ensuring healthy upgrade
 
 * After upgrading the application or config, typically want to <!-- .element: class="fragment" data-fragment-index="0" -->
   - Restart service that was upgraded <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -124,7 +121,7 @@ width="50%" height="50%"-->
   - Make sure service is<!-- .element: class="fragment" data-fragment-index="5" --> _healthy_ 
 
 
-### Ensuring healthy update
+### Ensuring healthy upgrade
 
 * When we upgrade our application or config we trigger a restart using<!-- .element: class="fragment" data-fragment-index="0" --> _notify_ 
 

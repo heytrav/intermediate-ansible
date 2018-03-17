@@ -399,6 +399,36 @@ $ $EDITOR tasks/files.yml
 ```
 
 
+### Blocks
+
+* Blocks allow for logical grouping of tasks <!-- .element: class="fragment" data-fragment-index="0" -->
+* Directives that can be applied to a single task can be applied to groups of
+  <!-- .element: class="fragment" data-fragment-index="1" -->
+  tasks in a block
+  - when clauses
+  - privilege escalation
+
+
+### Using blocks
+
+  <pre style="font-size:15pt;"><code data-trim data-noescape>
+  become: false
+  tasks:
+    - debug:
+        msg: Outside a block
+
+    - name: Set up server
+      block
+        - name: Install nginx
+          apt:
+            name: nginx
+            state: present
+      when:
+       - ansible_distribution == "Ubuntu"
+      become: true
+  </code></pre>
+
+
 ### Summary
 
 * Includes provide way to organise infrastructure for large projects
