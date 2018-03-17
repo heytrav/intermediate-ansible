@@ -4,7 +4,7 @@
 ### Deploying applications
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ cd $WORKDIR/lesson4/provisioning
+$ cd $WORKDIR/lesson4
 $ tree
 .
 ├── ansible
@@ -24,7 +24,7 @@ $ tree
 
 ### Basic application
 
-![Basic app](img/simple-lesson4/provisioning-app.svg "opt title")
+![Basic app](img/simple-lesson4-app.svg "opt title")
 * Web server running nginx
 * App server running a Python Flask web application
 * A database
@@ -193,7 +193,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 * Should be able to access your new <!-- .element: class="fragment" data-fragment-index="1" --> <a href="http://my-app.cat">web application</a> 
 
 
-### Refactoring our lesson4/provisioning
+### Refactoring our lesson4
 
 ```
 - name: Provision a set of hosts in Catalyst Cloud
@@ -229,7 +229,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 #### Provisioning role
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ sudo mkdir -p $WORKDIR/lesson4/provisioning/ansible/roles
+$ sudo mkdir -p $WORKDIR/lesson4/ansible/roles
 </code></pre>
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 .
@@ -286,7 +286,7 @@ $ sudo mkdir -p $WORKDIR/lesson4/provisioning/ansible/roles
 #### Refactoring _common_ tasks
 
 * These tasks <!-- .element: class="fragment" data-fragment-index="0" -->will be useful in later lessons 
-* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/lesson4/provisioning/ansible/roles` next to _os-provision_ role
+* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/lesson4/ansible/roles` next to _os-provision_ role
 
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 /.

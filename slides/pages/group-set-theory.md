@@ -4,7 +4,7 @@
 ### Set theory in Ansible
 
 ```
-$ cd $WORKDIR/lesson4/set-theory
+$ cd $WORKDIR/lesson5
 .
 └── ansible
     ├── inventory

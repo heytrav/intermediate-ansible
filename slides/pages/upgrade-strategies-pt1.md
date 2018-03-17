@@ -5,10 +5,10 @@
 
 ### Rolling upgrades
 
-* Need to go back to lesson4
+* Need to go back to lesson6
 
 ```
-$ cd $WORKDIR/lesson4
+$ cd $WORKDIR/lesson6
 ```
 
 
