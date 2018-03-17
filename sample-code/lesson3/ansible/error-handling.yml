@@ -1,0 +1,20 @@
+- name: Error handling demo
+  hosts: localhost
+  tasks:
+
+    - name: Execute a block with an error
+      block:
+        - name: Execute a task that fails
+          command: /bin/false
+
+        - debug:
+            msg: This never runs
+      rescue:
+        - debug:
+            msg: I caught an error
+      always:
+        - debug:
+            msg: I always run!
+
+    - debug:
+        msg: The task after the block runs

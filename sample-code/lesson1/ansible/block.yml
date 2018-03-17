@@ -1,0 +1,27 @@
+- name: Exercise using block
+  hosts: localhost
+  tasks:
+    
+    - debug:
+        msg: Before block execution
+
+    - name: Perform some operations as privileged user
+      block:
+        - name: Update apt cache
+          apt:
+            update_cache: yes
+
+        - name: Install a package on host machine
+          apt:
+            name: nginx
+            state: present
+
+        - debug:
+            msg: Installed nginx
+
+      become: true
+      when: ansible_distribution == 'Ubuntu'
+
+    - debug:
+        msg: After block execution
+

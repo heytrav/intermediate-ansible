@@ -282,8 +282,26 @@ $ cd $WORKDIR/lesson3
 * Sometimes necessary to recover from errors <!-- .element: class="fragment" data-fragment-index="0" -->
 * May need to perform tasks to clean up <!-- .element: class="fragment" data-fragment-index="1" -->
 * The method in ansible is to use<!-- .element:parent: class="fragment" data-fragment-index="2" --> _blocks_ 
-  - Group tasks into a logical unit <!-- .element: class="fragment" data-fragment-index="3" -->
 * blocks used with rescue/always section similar to <!-- .element: class="fragment" data-fragment-index="4" -->_try/catch blocks_ in programming 
+
+
+### Error handling with blocks
+
+<pre><code data-trim data-noescape>
+    - name: Perform an operation that fails
+      block:
+        - name: Perform failure task
+          command: /bin/false
+
+        - debug:
+            msg: Never  executed
+      <mark>rescue:</mark>
+        - debug:
+            msg: Caught an error
+      <mark>always:</mark>
+        - debug:
+            msg: I always run
+</code></pre>
 
 
 ### Summary

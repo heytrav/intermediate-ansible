@@ -418,7 +418,7 @@ $ $EDITOR tasks/files.yml
         msg: Outside a block
 
     - name: Set up server
-      block
+      block:
         - name: Install nginx
           apt:
             name: nginx
@@ -427,6 +427,8 @@ $ $EDITOR tasks/files.yml
        - ansible_distribution == "Ubuntu"
       become: true
   </code></pre>
+
+* Run the playbook `block.yml`
 
 
 ### Summary
