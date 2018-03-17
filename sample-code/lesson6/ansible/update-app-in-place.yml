@@ -10,6 +10,10 @@
     - app
   tasks:
 
+    - name: Stop the gunicorn service
+      systemd:
+        name: gunicorn
+        state: stopped
 
     - name: Disable application at load balancer
       haproxy:
@@ -23,8 +27,7 @@
         repo: https://github.com/heytrav/sample-flask-app.git
         dest: "{{ app_directory }}"
         version: "{{ app_version | default('master') }}"
-      notify: restart gunicorn
-
+      notify: start gunicorn
     
     - name: Add app config
       template:
@@ -70,8 +73,8 @@
 
 
   handlers:
-    - name: restart gunicorn
+    - name: start gunicorn
       systemd:
         name: gunicorn
-        state: restarted
+        state: started
 
