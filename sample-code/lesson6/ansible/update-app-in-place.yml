@@ -63,6 +63,7 @@
     - name: Make sure gunicorn is accepting connections
       wait_for:
         port: 5000
+        timeout: 60
 
     - name: Re-enable application at load balancer
       haproxy:
