@@ -282,7 +282,7 @@ $ cd $WORKDIR/lesson3
 * Sometimes necessary to recover from errors <!-- .element: class="fragment" data-fragment-index="0" -->
 * May need to perform tasks to clean up <!-- .element: class="fragment" data-fragment-index="1" -->
 * The method in ansible is to use<!-- .element:parent: class="fragment" data-fragment-index="2" --> _blocks_ 
-* blocks used with rescue/always section similar to <!-- .element: class="fragment" data-fragment-index="4" -->_try/catch blocks_ in programming 
+* blocks used with<!-- .element: class="fragment" data-fragment-index="4" --> _rescue/always_ section similar to _try/catch blocks_ in programming 
 
 
 ### Error handling with blocks
@@ -290,7 +290,7 @@ $ cd $WORKDIR/lesson3
 <pre style="font-size:15pt;"><code data-trim data-noescape>
     - name: Perform an operation that fails
       block:
-        - name: Perform failure task
+        - name: This task fails
           command: /bin/false
 
         - debug:
@@ -302,6 +302,7 @@ $ cd $WORKDIR/lesson3
         - debug:
             msg: I always run
 </code></pre>
+
 *  Run playbook `error-handling.yml`
 
 

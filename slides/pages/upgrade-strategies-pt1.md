@@ -3,6 +3,15 @@
 ## In place rolling upgrade
 
 
+### Rolling upgrades
+
+* Need to go back to lesson4
+
+```
+$ cd $WORKDIR/lesson4
+```
+
+
 ### Simple application
 
 ![simple application](img/simple-project-app.svg "Simple application")
