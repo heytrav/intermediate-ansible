@@ -62,19 +62,65 @@ $ cd $WORKDIR/lesson7
   - `web-v1-2`
   - `app-v1-1`
 * Our traditional static inventory file not sufficient <!-- .element: class="fragment" data-fragment-index="2" -->
-* Need to use dynamic inventory
+* Need to use dynamic inventory <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
-### Dynamic inventories
+### Dynamic inventory scripts
 
-* Inventory for your stack could be sourced from 
-  - database
-  - API
-* Ansible will regard an executable file on inventory path as dynamic
-  inventory
-  - Configured in `ansible.cfg`
-  - Command line option `-i`
+* Executable script <!-- .element: class="fragment" data-fragment-index="0" -->
+* Interact with  <!-- .element: class="fragment" data-fragment-index="1" -->
+  * Database <!-- .element: class="fragment" data-fragment-index="2" -->
+  * Cloud host API <!-- .element: class="fragment" data-fragment-index="3" -->
+* Must support two command line flags <!-- .element: class="fragment" data-fragment-index="4" -->
+  * `--host=<hostname>` 
+  * `--list`
 
-  <pre ><code data-trim data-noescape>
-  $ ansible-playbook -i <mark>ansible/inventory</mark>
+
+### Dynamic inventory interface
+
+#### `--list` option
+
+List all groups and details of hosts <!-- .element: class="fragment" data-fragment-index="0" -->
+<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
+$ ./dynamic-inventory.py --list
+{"web": ["training-web1", "training-web2"],
+ "app": ["training-app1", "training-app2"],
+ "db": ["training-db1"]
+ .
+ "_meta": {
+    "hostvars": {
+        "training-web1": {
+    }
+ }
+
+</code></pre>
+
+
+### Dynamic inventory interface
+
+#### `--host=<hostname>` option
+
+Fetch details for a particular host
+
+```
+$ ./dynamic-inventory.py --host=training-db1
+{ "ansible_host": "192.168.99.101", 
+   "ansible_distribution": "Ubuntu",
+.
+.
+
+```
+
+
+### Using dynamic inventories
+
+* Ansible will run<!-- .element: class="fragment" data-fragment-index="0" --> _executable_ files in inventory path 
+  * Configured in `ansible.cfg`
+  * Passed to command line option `-i`
+  <pre class="fragment" data-fragment-index="1" ><code data-trim data-noescape>
+  $ ansible-playbook -i <mark>ansible/inventory</mark> \ 
+              ansible/playbook.yml
   </code></pre>
+* File or directory of files <!-- .element: class="fragment" data-fragment-index="2" -->
+
+

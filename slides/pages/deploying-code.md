@@ -24,7 +24,7 @@ $ tree
 
 ### Basic application
 
-![Basic app](img/simple-lesson4-app.svg "opt title")
+![Basic app](img/simple-project-app.svg "opt title")
 * Web server running nginx
 * App server running a Python Flask web application
 * A database
@@ -193,7 +193,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 * Should be able to access your new <!-- .element: class="fragment" data-fragment-index="1" --> <a href="http://my-app.cat">web application</a> 
 
 
-### Refactoring our lesson4
+### Refactoring our project
 
 ```
 - name: Provision a set of hosts in Catalyst Cloud
