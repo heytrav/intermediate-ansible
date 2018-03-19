@@ -1,15 +1,25 @@
 # Upgrade strategies
 
-## In place rolling upgrade
+## _In place_ rolling upgrade
 
 
 ### Rolling upgrades
 
-* Need to go back to lesson6
+<pre><code data-trim data-noescape>
 
-```
 $ cd $WORKDIR/lesson6
-```
+.
+└── ansible
+    ├── failhosts.yml
+    ├── group_vars
+    .
+    ├── inventory
+    .
+    ├── remove-hosts.yml
+    .
+    ├── update-app-in-place.yml
+    └── update-nginx-in-place.yml
+</code></pre>
 
 
 ### Simple application
@@ -239,7 +249,7 @@ $ ansible-playbook  -K --ask-vault-pass \
 
 * The _in place rolling upgrade_ is a common approach to updating applications
   - Ensures zero downtime
-  - Doesn't require extensive infrastructure
+  - Doesn't require expensive infrastructure
 * Leveraging how Ansible works is critical
 * Process segements of cluster in serial
 * Delegation to operate across cluster more easily
