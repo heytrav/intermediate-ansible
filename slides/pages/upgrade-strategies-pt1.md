@@ -234,3 +234,13 @@ $ ansible-playbook  -K --ask-vault-pass \
 * Should run an in-place upgrade to _v2_ of our app
 * Changes the background colour of the application
 
+
+### Summary
+
+* The _in place rolling upgrade_ is a common approach to updating applications
+  - Ensures zero downtime
+  - Doesn't require extensive infrastructure
+* Leveraging how Ansible works is critical
+* Process segements of cluster in serial
+* Delegation to operate across cluster more easily
+* Fail fast to avoid leaving cluster in broken state

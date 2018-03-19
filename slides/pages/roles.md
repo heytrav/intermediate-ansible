@@ -156,3 +156,13 @@ $ cd $WORKDIR/lesson2
     - name: some task
 </code></pre>
 
+
+### Summary
+
+* Roles provide useful way to reuse code accross projects
+  - Simple to include
+* Designed to facilitate automation
+  - Directory structure
+  - Naming conventions
+
+

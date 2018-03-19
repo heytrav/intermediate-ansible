@@ -1,12 +1,19 @@
 ## Course Outline
 
 
-#### DRY techniques
+#### Organising infrastructure code
 
 * Compartmentalising playbooks
-    * including tasks
-    * including playbooks
-* Roles
+    * Including playbooks
+    * Including tasks
+    * Passing variables to includes
+    * Blocks
+
+
+#### Roles
+
+* Components of roles
+* Writing a role
 
 
 #### Task conditions
@@ -19,15 +26,27 @@
 * Error recovery
   - block/rescue
 
+
 #### Deploying code
 
 * Deploying loadbalanced applications
 * Ansible via a bastion host
-* Update strategies
-  * In place upgrade
-  * Expand and contract
 
 
-#### Other topics
+#### Set theory
 
-* Groups and "set" logic
+* Set theory filters
+* Inventory set theory operators
+
+
+#### In place rolling upgrade
+
+* Serialising upgrades
+* Delegation
+* Failing fast
+
+
+#### Expand and contract
+
+* Dynamic inventories
+

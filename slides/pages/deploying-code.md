@@ -167,14 +167,15 @@ $ ansible-playbook -i ansible/inventory/hosts \
 ### Deploying our application
 
 * Once machines provisioned, time to set up individual hosts for assigned jobs
-* Database server
+  <!-- .element: class="fragment" data-fragment-index="0" -->
+* Database server <!-- .element: class="fragment" data-fragment-index="1" -->
   - Runs postgresql database
-* Web server
+* Web server <!-- .element: class="fragment" data-fragment-index="2" -->
   - Runs nginx
   - Sends request through to app server
-* App server
+* App server <!-- .element: class="fragment" data-fragment-index="3" -->
   - Runs Python web application
-* Loadbalancer
+* Loadbalancer <!-- .element: class="fragment" data-fragment-index="4" -->
   - Sends HTTP requests to web server
 
 
@@ -251,11 +252,11 @@ $ sudo mkdir -p $WORKDIR/lesson4/ansible/roles
 
 #### Exercise: Refactor common setup tasks
 
-* The playbook `provision-hosts.yml` still has some repetition
-* Two plays do the same thing on different sets of hosts
-  - Install python and set up /etc/hosts on bastion host
-  - Install python and set up /etc/hosts on rest of cluster
-* Let's do the same thing for these tasks and create a _common_ role
+* The playbook<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` still has some repetition 
+* Two plays do the same thing on different sets of hosts <!-- .element: class="fragment" data-fragment-index="1" -->
+  - Install python and set up /etc/hosts on bastion host <!-- .element: class="fragment" data-fragment-index="2" -->
+  - Install python and set up /etc/hosts on rest of cluster <!-- .element: class="fragment" data-fragment-index="3" -->
+* Let's do the same thing for these tasks and create a<!-- .element: class="fragment" data-fragment-index="4" --> _common_ role 
 
 
 #### Refactoring _common_ tasks
@@ -297,3 +298,11 @@ $ sudo mkdir -p $WORKDIR/lesson4/ansible/roles
 │   │       └── tasks
 │   │           └── main.yml
 </code></pre>
+
+
+### Summary
+
+* Ansible has modules for provisioning at different cloud providers
+  - As localhost
+* Able to use SSH options for configuring via bastion host
+* Easy to set up load balanced applications

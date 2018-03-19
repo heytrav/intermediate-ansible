@@ -91,13 +91,18 @@ $ tree
   </div>
 
 
+### Tasks
+
+* Useful to organise tasks into logical units
+* Can be reused in multiple playbooks
+* Can be reused multiple times in same playbook
+  - Processing iterative blocks
+
+
 ### Refactoring tasks
 
-![Long playbook](img/playbook-long.svg "Long playbook")
-
-* Goal is to restructure so that
-  - Related tasks are grouped together <!-- .element: class="fragment" data-fragment-index="0" -->
-  - Components can be reused if possible <!-- .element: class="fragment" data-fragment-index="1" -->
+![Long playbook](img/playbook-long.svg "Long playbook") <!-- .element: width="20%"  style="float:left;" -->
+![Broken up playbook](img/playbook-refactor1.svg "Refactored") <!-- .element: width="40%" style="float:right;" class="fragment" data-fragment-index="0"-->
 
 
 ### Task files
@@ -114,12 +119,6 @@ $ tree
 </code></pre>
 * Ideally tasks related to specific purpose <!-- .element: class="fragment" data-fragment-index="2" -->
 * Import them into your playbooks as needed <!-- .element: class="fragment" data-fragment-index="3" -->
-
-
-
-### Refactored playbook
-
-![Broken up playbook](img/playbook-refactor1.svg "Refactored")
 
 
 ### Project layout

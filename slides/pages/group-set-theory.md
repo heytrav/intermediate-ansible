@@ -113,5 +113,3 @@ $ ansible-playbook -i ansible/inventory \
   - Deletes private network <!-- .element: class="fragment" data-fragment-index="1" -->
   - Removes security groups <!-- .element: class="fragment" data-fragment-index="2" -->
   - Removes local entries from both<!-- .element: class="fragment" data-fragment-index="3" --> `/etc/hosts` and `~/.ssh/config` 
-
-
