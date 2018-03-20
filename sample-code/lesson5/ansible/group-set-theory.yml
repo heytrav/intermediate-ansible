@@ -18,29 +18,29 @@
         var: inventory_hostname
 
 - name: Intersection of hosts
-  hosts: web:&primary
+  hosts: web:&blue
   gather_facts: false
   tasks:
-    - name: Output intersection of web and primary
+    - name: Output intersection of web and blue
       debug:
         var: inventory_hostname
 
 
 - name: Intersection of hosts
-  hosts: app:&secondary
+  hosts: app:&green
   gather_facts: false
   tasks:
-    - name: Output intersection of app and secondary
+    - name: Output intersection of app and green
       debug:
         var: inventory_hostname
 
 
 
 - name: Difference of groups
-  hosts: wellington:!primary
+  hosts: wellington:!blue
   gather_facts: false
   tasks:
-    - name: Output difference of primary and secondary
+    - name: Output difference of blue and green
       debug:
         var: inventory_hostname
 

@@ -25,11 +25,11 @@ loadbalancer
 bastion
 
 
-[primary]
+[blue]
 train-web1
 train-app1
 
-[secondary]
+[green]
 train-web2
 train-app2
 

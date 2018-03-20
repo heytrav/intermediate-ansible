@@ -72,11 +72,11 @@ Hosts that are in first and second group
 ![Intersect](img/intersect.svg "Intersection") <!-- .element: width="20%"
 height="20%" -->
 
-Hosts that are in both the<!-- .element: class="fragment" data-fragment-index="0" --> _web_ and the _primary_ group 
+Hosts that are in both the<!-- .element: class="fragment" data-fragment-index="0" --> _web_ and the _blue_ group 
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Intersection of hosts
-  <mark>hosts: web:&primary</mark>
+  <mark>hosts: web:&blue</mark>
   gather_facts: false
   tasks:
 </code></pre>
@@ -89,11 +89,11 @@ Set of hosts in first set but not in second set
 ![Difference](img/difference.svg "Difference")<!-- .element: width="20%"
 height="20%" -->
 
-Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" --> _wellington_ group **but not in the _primary_** group
+Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" --> _wellington_ group **but not in the _blue_** group
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Difference of groups
-  <mark>hosts: wellington:!primary</mark>
+  <mark>hosts: wellington:!blue</mark>
   gather_facts: false
   tasks:
 </code></pre>
