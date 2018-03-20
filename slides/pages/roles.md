@@ -157,6 +157,15 @@ $ cd $WORKDIR/lesson2
 </code></pre>
 
 
+### Open source roles
+
+[Ansible Galaxy](https://galaxy.ansible.com)
+
+* A repository of ansible roles
+* Thousands of opensource roles for any purpose
+* Can be easily imported into your projects
+
+
 ### Summary
 
 * Roles provide useful way to reuse code accross projects
