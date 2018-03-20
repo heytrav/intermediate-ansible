@@ -1,12 +1,12 @@
 [mycluster]
-travis-bastion
-travis-db1
+train-bastion
+train-db1
 
 [bastion]
-travis-bastion
+train-bastion
 
 [db]
-travis-db1
+train-db1
 
 
 

@@ -1,34 +1,34 @@
 [mycluster]
-travis-lb
-travis-web[1:2]
-travis-app[1:2]
-travis-db1
-travis-bastion
+train-lb
+train-web[1:2]
+train-app[1:2]
+train-db1
+train-bastion
 
 [loadbalancer]
-travis-lb
+train-lb
 
 [bastion]
-travis-bastion
+train-bastion
 
 [web]
-travis-web[1:2]
+train-web[1:2]
 
 [db]
-travis-db1
+train-db1
 
 [app]
-travis-app[1:2]
+train-app[1:2]
 
 [publichosts:children]
 loadbalancer
 bastion
 
 [primary]
-travis-web1
-travis-app1
+train-web1
+train-app1
 
 
 [secondary]
-travis-web2
-travis-app2
+train-web2
+train-app2
