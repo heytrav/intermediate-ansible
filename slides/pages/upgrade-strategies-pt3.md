@@ -7,7 +7,7 @@
 ### Blue-Green Deployments
 
 ![bluegreen](img/blue_green_deployments.png "Blue Green deployment strategy")
-<!-- .element: height="30%" width="30%" -->
+<!-- .element: height="40%" width="40%" -->
 
 * Two<!-- .element: class="fragment" data-fragment-index="0" --> identical production environments designated _blue_ and _green_ 
 * Blue<!-- .element: class="fragment" data-fragment-index="1" --> environment is _live_ and handles all traffic 
@@ -26,7 +26,7 @@
 
 
 
-###  Adapting previous models
+###  Adapting previous model
 
 * Blue-green very similar to rolling in place upgrade model
 * In place upgrade
