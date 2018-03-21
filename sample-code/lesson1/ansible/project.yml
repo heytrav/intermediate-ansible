@@ -1,31 +1,16 @@
 ---
 - name: Set up python application
   hosts: localhost
-  vars_files:
-    - secrets.yml
-  vars:
-    database_user: admin
-    database: cat_pics
-    database_host: localhost
-  environment:
-    PGPASSWORD: "{{ vault_database_password }}"
   tasks:
 
     - name: Update apt cache
-      become: yes
-      apt:
-        update_cache: yes
-
-    - name: Install needed libraries
-      become: yes
-      apt:
-        name: "{{ item }}"  
-        state: present
       with_items:
         - python3-dev
         - python3-psycopg2
         - python-psycopg2
         - postgresql
+      debug:
+        msg: Installing  "{{ item }}"
 
     - name: Check out code for project
       debug:
