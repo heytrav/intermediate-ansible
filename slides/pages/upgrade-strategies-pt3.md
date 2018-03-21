@@ -17,7 +17,7 @@
 ### Blue-Green Upgrade
 
 ![bluegreen](img/blue_green_deployments.png "Blue Green deployment strategy")
-<!-- .element: height="30%" width="30%" -->
+<!-- .element: height="40%" width="40%" -->
 
 * Final<!-- .element: class="fragment" data-fragment-index="0" --> stage of testing new production code takes place on the _green_ environment 
 * When<!-- .element: class="fragment" data-fragment-index="1" --> checks and testing has completed, traffic is switched to _green_ 
