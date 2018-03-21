@@ -6,17 +6,13 @@
 ```
 $ cd $WORKDIR/lesson2
 .
-├── ansible
-│   ├── group_vars
-│   │   └── all.yml
-│   ├── hosts
-│   ├── project.yml
-│   ├── roles
-│   ├── secrets.yml
-│   ├── tasks
-│   └── templates
-│       └── config.py.j2
-└── ansible.cfg
+├── group_vars
+│   └── all.yml
+├── hosts
+├── project.yml
+├── secrets.yml
+└── templates
+    └── config.py.j2
 ```
 
 
