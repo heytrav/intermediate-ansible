@@ -7,8 +7,19 @@
 $ cd $WORKDIR/sample-code/lesson1
 $ tree
 .
-└── ansible
-    └── playbook.yml
+├── ansible
+│   ├── block.yml
+│   ├── group_vars
+│   │   └── all.yml
+│   ├── hosts
+│   ├── long-playbook.yml
+│   ├── project.yml
+│   ├── secrets.yml
+│   ├── templates
+│   │   └── config.py.j2
+│   └── touch-files.yml
+├── ansible.cfg
+└── touch-files.yml
 ```
 
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
