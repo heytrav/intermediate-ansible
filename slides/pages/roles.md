@@ -118,7 +118,7 @@ $ cd $WORKDIR/lesson2
 
 ### Refactor tasks into role
 
-* Create directory called _myapp_ under _roles_
+* Create directory under the _roles_ directory to put your role
   
   ```
   $ mkdir -p ansible/roles/myapp
@@ -157,6 +157,98 @@ $ cd $WORKDIR/lesson2
 </code></pre>
 
 
+
+### Exercise: Refactor `project.yml` into roles
+
+* The `project.yml` playbook tasks can be broken down into a couple of groups
+  - Installing libraries
+  - Checking out code
+  - Setting up a database
+* See if we can break them up into some useful roles
+
+
+
+#### Moving app related tasks
+
+* Take tasks related to installing the application and move them into their
+  own role
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+    - name: Check out code for project
+    - name: Create python virtual environment
+    - name: Add app config
+</code></pre>
+<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
+├── roles
+│   <mark>├── catapp
+│   │   ├── tasks
+│   │   │   └── main.yml
+│   │   └── templates
+│   │       └── config.py.j2</mark>
+</code></pre>
+
+
+
+#### Moving db related tasks
+
+* Take tasks related to installing the database and move them into their own role
+* Note you will also need to move the handler to the db role
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+    - name: Create DB user
+    - name: Make postgres listen on external ports
+    - name: Add pb_hba rule for hosts
+    - name: Create the database
+    - name: Create table for pics 
+    - name: Add images to new table
+</code></pre>
+<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
+├── roles
+│   ├── catapp
+│   <mark>└── db
+│       ├── handlers
+│       │   └── main.yml
+│       └── tasks
+│           └── main.yml</mark>
+</code></pre>
+
+
+#### Importing the roles
+
+* Let's add the new roles to our `project.yml`
+
+<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+- name: Set up python application
+  hosts: localhost
+  vars_files:
+    - secrets.yml
+  vars:
+    database_user: admin
+    database: cat_pics
+    database_host: localhost
+  environment:
+    PGPASSWORD: "{{ vault_database_password }}"
+  <mark>roles:
+    - role: catapp
+    - role: db</mark>
+</code></pre>
+
+
+#### Pre and post tasks
+
+* We still need to make sure that the apt modules runs before
+  anything else happens
+* Changing these into a *pre_task* ensures it will run before the roles do
+
+<pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
+  <mark>pre_tasks:</mark>
+
+    - name: Update apt cache
+      become: yes
+      apt:
+        update_cache: yes
+</code></pre>
+
+
 ### Open source roles
 
 [Ansible Galaxy](https://galaxy.ansible.com)
@@ -173,5 +265,5 @@ $ cd $WORKDIR/lesson2
 * Designed to facilitate automation
   - Directory structure
   - Naming conventions
-
-
+* Ansible Galaxy is an Open Source repository of roles available for all
+  purposes
