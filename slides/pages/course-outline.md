@@ -3,7 +3,7 @@
 
 #### Organising infrastructure code
 
-* Compartmentalising playbooks
+* [Compartmentalising playbooks](includes.md)
     * Including playbooks
     * Including tasks
     * Passing variables to includes
