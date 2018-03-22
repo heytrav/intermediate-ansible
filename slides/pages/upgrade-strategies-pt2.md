@@ -184,7 +184,7 @@ $ ansible/inventory/openstack.py --list
 $ ansible-playbook -i ansible/inventory \
       -K --ask-vault-pass \
       -e prefix=$(hostname) \
-      -e app_version=v1
+      -e app_version=v1 \
       ansible/deploy.yml 
 ```
 * Once this finishes, you should be able to see the <a href="http://my-app.cat">website</a>
@@ -213,7 +213,7 @@ $ ansible-playbook -i ansible/inventory \
      -K --ask-vault-pass \
      -e prefix=$(hostname) \
      -e prefix=$(hostname) \
-     -e app_version=v1
+     -e app_version=v1 \
      ansible/remove-hosts.yml
 ```
 
