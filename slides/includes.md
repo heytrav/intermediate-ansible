@@ -71,7 +71,6 @@ $ tree
     tasks:
       - name: First task
       - name: Second task
-
   - name: Another play
     hosts: somehosts
     tasks:
