@@ -118,7 +118,7 @@ $ tree
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> conventional approach is to break tasks out into separate _task files_ 
 * A<!-- .element: class="fragment" data-fragment-index="1" --> _task file_ only contains a YAML list 
-<pre class="fragment" data-fragment-index="1"><code data-trim>
+<pre class="fragment" data-fragment-index="1"><code class="json" data-trim>
     - name: This is task 1
 
     - name: This is task 2
