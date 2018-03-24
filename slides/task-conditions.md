@@ -4,7 +4,7 @@
 
 # Task conditions
 
-```
+```console
 $ cd $WORKDIR/lesson3
 ```
 
@@ -37,11 +37,10 @@ $ cd $WORKDIR/lesson3
 
 * Tell Ansible to continue execution when an error happens
 * Accepts a boolean: `true`, `yes`
-<pre><code data-trim data-noescape>
+<pre><code  data-trim data-noescape>
     - name: Delete a branch from repository
       command: do_something_that_fails.sh
       <mark class="fragment" data-fragment-index="0">ignore_errors: true</mark>
-
 </code></pre>
 
 

@@ -3,7 +3,7 @@
 
 ### Organising Infrastructure Code
 
-```
+```console
 $ cd $WORKDIR/sample-code/lesson1
 $ tree
 .
@@ -71,7 +71,6 @@ $ tree
     tasks:
       - name: First task
       - name: Second task
-
   - name: Another play
     hosts: somehosts
     tasks:
@@ -92,7 +91,6 @@ $ tree
   </code></pre>
   <pre class="fragment" data-fragment-index="2"><code data-trim data-noescape>
   <mark>- import_playbook: play1.yml</mark>
-
   - name: Another play
     hosts: somehosts
     tasks:
@@ -120,7 +118,7 @@ $ tree
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> conventional approach is to break tasks out into separate _task files_ 
 * A<!-- .element: class="fragment" data-fragment-index="1" --> _task file_ only contains a YAML list 
-<pre class="fragment" data-fragment-index="1"><code data-trim>
+<pre class="fragment" data-fragment-index="1"><code class="json" data-trim>
     - name: This is task 1
 
     - name: This is task 2
@@ -135,7 +133,7 @@ $ tree
 ### Project layout
 
 Conventional organisation of tasks in ansible
- <pre><code data-trim data-noescape>
+ <pre><code class="console" data-trim data-noescape>
  $ mkdir -p $WORKDIR/lesson1/ansible/tasks
  .
  └── ansible
