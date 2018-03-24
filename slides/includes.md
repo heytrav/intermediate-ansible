@@ -133,7 +133,7 @@ $ tree
 ### Project layout
 
 Conventional organisation of tasks in ansible
- <pre><code data-trim data-noescape>
+ <pre><code class="console" data-trim data-noescape>
  $ mkdir -p $WORKDIR/lesson1/ansible/tasks
  .
  └── ansible
