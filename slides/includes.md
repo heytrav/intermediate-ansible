@@ -3,7 +3,7 @@
 
 ### Organising Infrastructure Code
 
-```
+```console
 $ cd $WORKDIR/sample-code/lesson1
 $ tree
 .

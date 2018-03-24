@@ -4,7 +4,7 @@
 
 # Task conditions
 
-```
+```console
 $ cd $WORKDIR/lesson3
 ```
 
@@ -41,7 +41,6 @@ $ cd $WORKDIR/lesson3
     - name: Delete a branch from repository
       command: do_something_that_fails.sh
       <mark class="fragment" data-fragment-index="0">ignore_errors: true</mark>
-
 </code></pre>
 
 
