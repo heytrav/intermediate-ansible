@@ -91,7 +91,6 @@ $ tree
   </code></pre>
   <pre class="fragment" data-fragment-index="2"><code data-trim data-noescape>
   <mark>- import_playbook: play1.yml</mark>
-
   - name: Another play
     hosts: somehosts
     tasks:
