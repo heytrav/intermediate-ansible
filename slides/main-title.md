@@ -1,4 +1,5 @@
-# Intermediate Ansible
+### Intermediate Ansible
 
-#### presented by
-#### Travis Holton
+# Catalyst <!-- .element class="catalyst-logo" -->
+
+Presented by [Travis Holton](#) <!-- .element: class="small-text"  -->
