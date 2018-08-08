@@ -1,7 +1,7 @@
-# Organising Infrastructure Code
+#### Organising Infrastructure Code
 
 
-### Organising Infrastructure Code
+#### Organising Infrastructure Code
 
 ```console
 $ cd $WORKDIR/sample-code/lesson1
@@ -25,7 +25,7 @@ $ tree
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
 
 
-### Refactoring Infrastructure Code
+#### Refactoring Infrastructure Code
 
 * Projects often grow organically <!-- .element: class="fragment" data-fragment-index="0" -->
 * Pressure to get things done quickly <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -35,7 +35,7 @@ $ tree
 * Eventually you will probably need to refactor <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
-### Refactoring a Playbook
+#### Refactoring a Playbook
 
 * Ideal to break infrastructure code into smaller components <!-- .element: class="fragment" data-fragment-index="0" -->
   - Compartmentalise logic <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -46,7 +46,7 @@ $ tree
 * We can reuse<!-- .element: class="fragment" data-fragment-index="4" --> _tasks_ and _plays_ 
 
 
-### Importing and including
+#### Importing and including
 
 * Two modes for reusing code in Ansible <!-- .element: class="fragment" data-fragment-index="0" -->
   - static <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -60,7 +60,7 @@ $ tree
 
 
 
-### Importing playbooks
+#### Importing playbooks
 
 #### `import_playbook`
 
@@ -100,7 +100,7 @@ $ tree
   </div>
 
 
-### Tasks
+#### Tasks
 
 * Useful to organise tasks into logical units
 * Can be reused in multiple playbooks
@@ -108,13 +108,13 @@ $ tree
   - Processing iterative blocks
 
 
-### Refactoring tasks
+#### Refactoring tasks
 
 ![Long playbook](img/playbook-long.svg "Long playbook") <!-- .element: width="20%"  style="float:left;" -->
 ![Broken up playbook](img/playbook-refactor1.svg "Refactored") <!-- .element: width="40%" style="float:right;" class="fragment" data-fragment-index="0"-->
 
 
-### Task files
+#### Task files
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> conventional approach is to break tasks out into separate _task files_ 
 * A<!-- .element: class="fragment" data-fragment-index="1" --> _task file_ only contains a YAML list 
@@ -130,7 +130,7 @@ $ tree
 * Import them into your playbooks as needed <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
-### Project layout
+#### Project layout
 
 Conventional organisation of tasks in ansible
  <pre><code class="console" data-trim data-noescape>
@@ -151,7 +151,7 @@ Conventional organisation of tasks in ansible
 
 
 
-### Including files in Ansible
+#### Including files in Ansible
 
 #### `include`
 
@@ -159,7 +159,7 @@ Conventional organisation of tasks in ansible
 
 
 
-### Including _tasks_ in Ansible
+#### Including _tasks_ in Ansible
 
 #### `import_tasks`
 
@@ -181,7 +181,7 @@ tasks:
   playbook is parsed
 
 
-### Including _tasks_ in Ansible
+#### Including _tasks_ in Ansible
 
 #### `include_tasks`
 
@@ -204,7 +204,7 @@ tasks:
 * Ansible parses the task file when the <!-- .element: class="fragment" data-fragment-index="1" --> task is encountered during playbook execution
 
 
-### Exercise: Refactor a playbook using task files
+#### Exercise: Refactor a playbook using task files
 
 * Break up `long-playbook.yml` into separate tasks files
 * The way you organise them is up to you
@@ -215,7 +215,7 @@ tasks:
   - monitoring setup
 
 
-### Refactoring our playbook
+#### Refactoring our playbook
 
 ```yaml
   tasks:
@@ -231,7 +231,7 @@ tasks:
 Answers may vary <!-- .element: class="fragment" data-fragment-index="0" -->
 
 
-### Refactoring our playbook
+#### Refactoring our playbook
 
 #### Alternative approach
 
@@ -253,14 +253,14 @@ note: import_tasks will not work here because of how ansible parses playbooks <!
 
 
 
-### Passing variables to includes
+#### Passing variables to includes
 
 * Importing tasks is useful when it is necessary to iterate over sets of tasks
 * ..or when tasks need to be run in different contexts 
 * Can be necessary to pass variables into included/imported tasks
 
 
-### Passing variables to includes
+#### Passing variables to includes
 
 * Pass a variable to an include using `vars:` attribute
 * Variable scope only within the included task file
@@ -273,14 +273,14 @@ note: import_tasks will not work here because of how ansible parses playbooks <!
 </code></pre>
 
 
-### Exercise: Refactor a playbook to use tasks
+#### Exercise: Refactor a playbook to use tasks
 
 * Playbook `touch-files.yml` just creates a directory and touches a few files
 * Refactor this to use tasks instead
 
 
 
-### Exercise: pass variables to an included file
+#### Exercise: pass variables to an included file
 
 * Task file 
   - Use variables instead of fixed paths
@@ -303,7 +303,7 @@ $ $EDITOR tasks/files.yml
 </code></pre>
 
 
-### Exercise: pass variable to an included file
+#### Exercise: pass variable to an included file
 
 * Modify `touch-files.yml` to use `tasks/files.yml`
 * Pass the path and file parameters in to tasks
@@ -323,7 +323,7 @@ $ $EDITOR tasks/files.yml
 </code></pre>
 
 
-### Refactor main playbook to pass dictionary to include
+#### Refactor main playbook to pass dictionary to include
 
 * This works, but we import the same task multiple times for different files
 * It is possible to use complex data in our tasks so we only have to import
@@ -341,7 +341,7 @@ $ $EDITOR tasks/files.yml
 </code></pre>
 
 
-### Iterating over complex data
+#### Iterating over complex data
 
 * Modify `files.yml` to process _files_ dictionary
 
@@ -362,7 +362,7 @@ $ $EDITOR tasks/files.yml
 
 
 
-### Passing conditionals to included files
+#### Passing conditionals to included files
 
 * Includes can also take a conditional "when" attribute <!-- .element: class="fragment" data-fragment-index="0" -->
     <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
@@ -374,7 +374,7 @@ $ $EDITOR tasks/files.yml
 
 
 
-### Passing conditionals
+#### Passing conditionals
 
 * Let's add a conditional to import_tasks in `long-playbook.yml`
 
@@ -389,7 +389,7 @@ $ $EDITOR tasks/files.yml
  
 
 
-### Conditional behaviour on imported tasks
+#### Conditional behaviour on imported tasks
 
 * Modify `tasks/basic.yml` to iterate over the `some_list` variable
 * Run `long-playbook.yml` and note some tasks are skipped when `item == false`
@@ -407,7 +407,7 @@ $ $EDITOR tasks/files.yml
 ```
 
 
-### Blocks
+#### Blocks
 
 * Blocks allow for logical grouping of tasks <!-- .element: class="fragment" data-fragment-index="0" -->
 * Directives that can be applied to a single task can be applied to groups of
@@ -417,7 +417,7 @@ $ $EDITOR tasks/files.yml
   - privilege escalation
 
 
-### Using blocks
+#### Using blocks
 
   <pre style="font-size:15pt;"><code data-trim data-noescape>
   become: false
@@ -439,7 +439,7 @@ $ $EDITOR tasks/files.yml
 * Run the playbook `block.yml`
 
 
-### Summary
+#### Summary
 
 * Includes provide way to organise infrastructure for large projects
   - `import*` for static inclusion

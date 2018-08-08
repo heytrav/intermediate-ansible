@@ -1,7 +1,7 @@
-# Roles
+#### Roles
 
 
-### Roles
+#### Roles
 
 ```
 $ cd $WORKDIR/lesson2
@@ -16,32 +16,53 @@ $ cd $WORKDIR/lesson2
 ```
 
 
-### Making tasks reusable
+#### Making tasks reusable
 
 * At some point in your development/refactoring process, you may come across
   bits that will be useful across multiple projects
 * Important to follow _DRY_ (don't repeat yourself) principles in infrastructure code
-* _Roles_ are mechanism for reusing code in Ansible
+
+
+#### Roles
+
+* A mechanism for reusing code in Ansible
   - within a project
   - accross multiple projects
+* Typically designed for a specific purpose
+* Not executable on their own
 
 
-### Basic concepts
+#### Typical Use Cases
+* Install supporting libraries/software to multiple machines
+* Standardise provisioning of machines across vendors
+   - AWS
+   - Azure
+   - OpenStack
+* Tasks needed across entire infrastructure
+   - Security hardening
+   
 
-* Roles typically designed for a specific purpose
-* Roles are not executable on their own
-* Can be distributed multiple ways:
-  - In `roles` subdirectory in the same place your playbooks live
-  - In `/etc/ansible/roles` directory
+
+#### Where do roles live?
+* In order of _decreasing_ precedence
   - Custom location configured in `ansible.cfg`
+     ```ini
+     [defaults]
+     roles_path = ~/ansible_roles
+     ```
+  - In `roles` subdirectory in the same place your playbooks live
+     ```
+     ansible/
+        \
+         --- playbook1.yml
+         |
+         --- roles/
+     ```
+  - `$HOME/.ansible/roles`
+  - In `/etc/ansible/roles` directory
 
-  ```
-  [defaults]
-  roles_path = ~/ansible_roles
-  ```
 
-
-### Components of a role
+#### Components of a role
 
 * tasks
   - tasks that the role will perform
@@ -54,7 +75,7 @@ $ cd $WORKDIR/lesson2
 
 
 
-### Components of a role (continued)
+#### Components of a role (continued)
 
 * vars
   - Variables needed by role (shouldn't be overridden)
@@ -64,7 +85,7 @@ $ cd $WORKDIR/lesson2
   - Dependency information
 
 
-### Structure of a role
+#### Structure of a role
   
 ```
   /roles
@@ -87,7 +108,7 @@ $ cd $WORKDIR/lesson2
   * Each of these files/folders is optional
 
 
-### File and directory naming conventions
+#### File and directory naming conventions
 
 * The naming of components correspond to directories in the role
 * Ansible will look in these directories automatically when running a role
@@ -96,7 +117,7 @@ $ cd $WORKDIR/lesson2
 * Nearly all components are optional
 
 
-### Creating roles
+#### Creating roles
 
 * Imagine our playbook has some tasks that could be reusable in other projects
 
@@ -112,7 +133,7 @@ $ cd $WORKDIR/lesson2
 </code></pre>
 
 
-### Refactor tasks into role
+#### Refactor tasks into role
 
 * Create directory under the _roles_ directory to put your role
   
@@ -130,7 +151,7 @@ $ cd $WORKDIR/lesson2
   ```
 
 
-### Use role in your playbook
+#### Use role in your playbook
 
 <pre><code data-trim data-noescape>
 - name: My playbook
@@ -154,7 +175,7 @@ $ cd $WORKDIR/lesson2
 
 
 
-### Exercise: Refactor `project.yml` into roles
+#### Exercise: Refactor `project.yml` into roles
 
 * The `project.yml` playbook tasks can be broken down into a couple of groups
   - Installing libraries
@@ -245,7 +266,7 @@ $ cd $WORKDIR/lesson2
 </code></pre>
 
 
-### Open source roles
+#### Open source roles
 
 [Ansible Galaxy](https://galaxy.ansible.com)
 
@@ -254,7 +275,7 @@ $ cd $WORKDIR/lesson2
 * Can be easily imported into your projects
 
 
-### Summary
+#### Summary
 
 * Roles provide useful way to reuse code accross projects
   - Simple to include
