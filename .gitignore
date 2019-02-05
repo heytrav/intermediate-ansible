@@ -1,6 +1,6 @@
 *.retry
 .vault_password
-sample-code/lesson1/ansible/tasks
+sample-code/lesson1/tasks
 
 sample-code/project/ansible/hosts
 
