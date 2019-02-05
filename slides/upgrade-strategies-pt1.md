@@ -7,18 +7,17 @@
 
 <pre><code data-trim data-noescape>
 
-$ cd $WORKDIR/lesson6
+$ cd $WORKDIR/upgrade-strategies
 .
-└── ansible
-    ├── failhosts.yml
-    ├── group_vars
-    .
-    ├── inventory
-    .
-    ├── remove-hosts.yml
-    .
-    ├── update-app-in-place.yml
-    └── update-nginx-in-place.yml
+├── failhosts.yml
+├── group_vars
+.
+├── inventory
+.
+├── remove-hosts.yml
+.
+├── update-app-in-place.yml
+└── update-nginx-in-place.yml
 </code></pre>
 
 

@@ -4,7 +4,7 @@
 #### Roles
 
 ```
-$ cd $WORKDIR/lesson2
+$ cd $WORKDIR/ansible-roles
 .
 ├── group_vars
 │   └── all.yml

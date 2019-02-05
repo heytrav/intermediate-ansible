@@ -4,23 +4,22 @@
 #### Organising Infrastructure Code
 
 ```console
-$ cd $WORKDIR/sample-code/lesson1
-$ tree
+$ cd $WORKDIR/sample-code/includes
 .
-├── ansible
-│   ├── block.yml
-│   ├── group_vars
-│   │   └── all.yml
-│   ├── hosts
-│   ├── long-playbook.yml
-│   ├── project.yml
-│   ├── secrets.yml
-│   ├── templates
-│   │   └── config.py.j2
-│   └── touch-files.yml
+├── block.yml
+├── group_vars
+│   └── all.yml
+├── hosts
+├── long-playbook.yml
+├── project.yml
+├── secrets.yml
+├── templates
+│   └── config.py.j2
+└── touch-files.yml
 ├── ansible.cfg
 └── touch-files.yml
 ```
+<!-- .element: style="font-size:12pt;"  -->
 
 >In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
 
@@ -117,7 +116,7 @@ $ tree
 #### Task files
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> conventional approach is to break tasks out into separate _task files_ 
-* A<!-- .element: class="fragment" data-fragment-index="1" --> _task file_ only contains a YAML list 
+* <!-- .element: class="fragment" data-fragment-index="1" -->A _task file_ only contains a YAML list 
 <pre class="fragment" data-fragment-index="1"><code class="json" data-trim>
     - name: This is task 1
 
@@ -134,16 +133,15 @@ $ tree
 
 Conventional organisation of tasks in ansible
  <pre><code class="console" data-trim data-noescape>
- $ mkdir -p $WORKDIR/lesson1/ansible/tasks
+ $ mkdir -p $WORKDIR/includes/tasks
  .
- └── ansible
-      ├── hosts
-      ├── long-playbook.yml
-<mark class="fragment" data-fragment-index="0">      └── tasks</mark>
-<mark class="fragment" data-fragment-index="1">            ├── db.yml
-            ├── monitoring.yml
-            ├── server.yml
-            └── setup.yml</mark>
+ ├── hosts
+ ├── long-playbook.yml
+<mark class="fragment" data-fragment-index="0"> └── tasks</mark>
+<mark class="fragment" data-fragment-index="1">       ├── db.yml
+       ├── monitoring.yml
+       ├── server.yml
+       └── setup.yml</mark>
  </code></pre>
 
 * In general you can put task files anywhere as long they can be resolved by ansible <!-- .element: class="fragment" data-fragment-index="2" -->

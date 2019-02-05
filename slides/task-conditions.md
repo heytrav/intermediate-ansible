@@ -1,15 +1,15 @@
-# Task conditions
+## Task conditions
 
 
 
-# Task conditions
+### Task conditions
 
 ```console
-$ cd $WORKDIR/lesson3
+$ cd $WORKDIR/task-conditions
 ```
 
 
-## Managing task conditions
+#### Managing task conditions
 
 * Most modules have their own way of defining failure or change of state <!-- .element: class="fragment" data-fragment-index="0" -->
 * Some improvise based on return code <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -20,20 +20,20 @@ $ cd $WORKDIR/lesson3
 * May be necessary to override Ansible behaviour <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
-## Managing errors
+#### Managing errors
 
-#### `ansible/runtools.yml`
+##### `runtools.yml`
 
 * This playbook tries to:
   - Delete a branch from the repository
   - Run a script which creates a directory
-* Run playbook `ansible/runtools.yml`
+* Run playbook `runtools.yml`
 <asciinema-player loop="1" cols="90" theme="solarized-light" start-at="13.0" rows="10" autoplay="1" font-size="medium" src="asciinema/error-playbook.cast"></asciinema-player>
 
 
-## Ignore errors
+#### Ignore errors
 
-#### `ignore_errors`
+##### `ignore_errors`
 
 * Tell Ansible to continue execution when an error happens
 * Accepts a boolean: `true`, `yes`
@@ -44,9 +44,9 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
-### Exercise: Ignore errors from a task
+#### Exercise: Ignore errors from a task
 
-* In `ansible/runtools.yml`
+* In `runtools.yml`
 * First task fails to delete a branch that does not exist
 * Not a critical error for our playbook
 * Alter the first task in `runtools.yml` so errors are ignored
@@ -57,7 +57,7 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
-### Problems with `ignore_errors`
+#### Problems with `ignore_errors`
 
 * Blunt way of bypassing errors <!-- .element: class="fragment" data-fragment-index="0" -->
 * Output of task can be confusing because it looks like something bad happened <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -65,18 +65,18 @@ $ cd $WORKDIR/lesson3
 * Shell command output may not be failure <!-- .element: class="fragment" data-fragment-index="3" -->
 
 
-### Controlling failure
+#### Controlling failure
 
-* Run `ansible/runtools.yml` a couple times
-* The second task in `ansible/runtools.yml` runs a script `tools.sh` 
+* Run `runtools.yml` a couple times
+* The second task in runs a script `tools.sh` that: 
     * creates a directory
     * fails if directory already exists
 * Actually failing because of idempotent behaviour
 
 
-### Preventing failure
+#### Preventing failure
 
-#### How do we keep playbook from failing?
+##### How do we keep playbook from failing?
 
 * One option would be to check if the directory exists before running script
 <pre><code data-trim data-noescape>
@@ -94,9 +94,9 @@ $ cd $WORKDIR/lesson3
 * This works, but adds extra unneeded tasks <!-- .element: class="fragment" data-fragment-index="0" -->
 
 
-## Defining failed state
+#### Defining failed state
 
-#### `failed_when`
+##### `failed_when`
 
 * Define when ansible should interpret a task has failed <!-- .element: class="fragment" data-fragment-index="0" -->
 * Semantically similar to<!-- .element: class="fragment" data-fragment-index="1" --> _when_ (i.e. conditional)
@@ -112,9 +112,9 @@ $ cd $WORKDIR/lesson3
 
 
 
-### Exercise: Do not fail if directory exists
+#### Exercise: Do not fail if directory exists
 
-* Use `failed_when` to keep task from failing if directory exits
+* Use `register` and `failed_when` to keep task from failing if directory exits
 <pre  class="fragment" data-fragment-index="0"><code data-trim>
     - name: Run tools command in working directory
       shell: "{{ application_directory }}/tools.sh"
@@ -128,15 +128,15 @@ $ cd $WORKDIR/lesson3
 * Run playbook again <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
-### Defining _changed_ state
+#### Defining _changed_ state
 
-* The `ansible/runtools.yml` playbook still has a probem
+* The `runtools.yml` playbook still has a probem
 * It always reports the task for running the script as _changed_
 
 
-### Defining _changed_ state
+#### Defining _changed_ state
 
-#### `changed_when`
+##### `changed_when`
 
 * <!-- .element: class="fragment" data-fragment-index="0" -->`changed_when` attribute can be used to define criteria for _changed_
 * Also similar semantics to<!-- .element: class="fragment" data-fragment-index="1" --> _when_ conditional 
@@ -147,7 +147,7 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
-#### Exercise: Control task changed state
+##### Exercise: Control task changed state
 
 * Change task in `runtools.yml` to show changed when directory created
 
@@ -159,14 +159,15 @@ $ cd $WORKDIR/lesson3
       register: tools_output
       failed_when: 
         - tools_output.rc != 0
-        - not tools_output.stderr | search('already exists')
+        - not tools_output.stderr is search('already exists')
       changed_when:
         - tools_output.rc == 0
-        - tools_output.stdout | search('Created testdir')
+        - tools_output.stdout is search('Created testdir')
 </code></pre>
 
 
-###  _creates_ and _removes_ with command modules
+#### The `command` module  
+###### _creates_ and _removes_ 
 
 *  _command_, _script_ and _shell_ all take a special attribute to influence
    behaviour
@@ -176,7 +177,7 @@ $ cd $WORKDIR/lesson3
 
 
 
-### Examples of _creates_ and _removes_
+#### Examples of _creates_ and _removes_
 
 * Task used to install reveal presentation on training machines
 
@@ -195,15 +196,14 @@ $ cd $WORKDIR/lesson3
 ```
 
 
-#### Exercise: modify task to use _creates_ argument
+##### Exercise: modify task to use _creates_ argument
 
 * Can replace `changed_when` clause
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
     - name: Run tools command in working directory
-      shell: "{{ application_directory }}/tools.sh"
+      shell: "tools.sh"
       args:
-        chdir: "{{ application_directory }}"
         <mark>creates: testdir</mark>
       register: tools_output
       failed_when: 
@@ -212,9 +212,9 @@ $ cd $WORKDIR/lesson3
 </code></pre>
 
 
-#### Exercise: Add task to remove a directory
+##### Exercise: Add task to remove a directory
 
-* Remove the `temporarydir` in lesson3
+* Remove the `temporarydir` in task-conditions folder
 * Use _removes_ argument
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
@@ -222,13 +222,12 @@ $ cd $WORKDIR/lesson3
       command: rm -fr temporarydir
       args:
         removes: temporarydir
-        chdir: "{{ application_directory }}"
 </code></pre>
 
 
-### Applied control of task conditions
+#### Applied control of task conditions
 
-* `ansible/db.yml` creates a db table and adds some images
+* `db.yml` creates a db table and adds some images
 * There are a couple problems:
   - _Create table for pics_ task always displays changed
   - _Add images to new table_ will fail after first run due to unique constraint
@@ -236,7 +235,7 @@ $ cd $WORKDIR/lesson3
 
 
 
-### Exercise: Allow task to pass on duplicate errors
+#### Exercise: Allow task to pass on duplicate errors
 
 * Use _register_ to capture stdout/stderr
 * Do not fail if error response has the word "duplicate"
@@ -256,7 +255,7 @@ $ cd $WORKDIR/lesson3
 
 
 
-### Exercise: only show changed when table created
+#### Exercise: only show changed when table created
 
 * First task doesn't fail because of <!-- .element: class="fragment" data-fragment-index="0" -->_if not exists_ clause
 * If a table exists postgres outputs <!-- .element: class="fragment" data-fragment-index="1" --> _already exists, skipping_ to stderr
@@ -276,7 +275,7 @@ $ cd $WORKDIR/lesson3
 
 
 
-### Recovering from errors
+#### Recovering from errors
 
 * Sometimes necessary to recover from errors <!-- .element: class="fragment" data-fragment-index="0" -->
 * May need to perform tasks to clean up <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -284,7 +283,7 @@ $ cd $WORKDIR/lesson3
 * blocks used with<!-- .element: class="fragment" data-fragment-index="4" --> _rescue/always_ section similar to _try/catch blocks_ in programming 
 
 
-### Error handling with blocks
+#### Error handling with blocks
 
 <pre style="font-size:15pt;"><code data-trim data-noescape>
     - name: Perform an operation that fails
@@ -305,7 +304,7 @@ $ cd $WORKDIR/lesson3
 *  Run playbook `error-handling.yml`
 
 
-### Summary
+#### Summary
 
 * It is sometimes necessary to override or ignore Ansible task conditions
 * Failed and changed states can be controlled for arbitrary tasks using

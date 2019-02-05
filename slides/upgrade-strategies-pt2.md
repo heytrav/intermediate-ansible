@@ -6,17 +6,16 @@
 ###  Expand and contract upgrades
 
 ```
-$ cd $WORKDIR/lesson7
+$ cd $WORKDIR/upgrade-strategies-2
 .
-└── ansible
-    ├── add-hosts-to-inventory.yml
-    ├── check-defined.yml
-    ├── deploy.yml
-    ├── expand-update.yml
-    ├── files
-    │   ├── mycluster_rsa.pub
-    │   └── rsyslog-haproxy.conf
-    ├── group_vars
+├── add-hosts-to-inventory.yml
+├── check-defined.yml
+├── deploy.yml
+├── expand-update.yml
+├── files
+│   ├── mycluster_rsa.pub
+│   └── rsyslog-haproxy.conf
+├── group_vars
 ```
 
 
@@ -132,9 +131,9 @@ $ ./dynamic-inventory.py --host=training-db1
   - <!-- .element: class="fragment" data-fragment-index="1" --><a href="https://raw.github.com/ansible/ansible/devel/contrib/inventory/cobbler.py">Cobbler</a> 
   - <!-- .element: class="fragment" data-fragment-index="2" --><a href="https://raw.github.com/ansible/ansible/devel/contrib/inventory/ec2.py">AWS</a> 
   - <!-- .element: class="fragment" data-fragment-index="3" --><a href="https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/openstack.py">OpenStack</a> 
- * In<!-- .element: class="fragment" data-fragment-index="4" --> lesson7 ansible inventory 
+ * In<!-- .element: class="fragment" data-fragment-index="4" --> upgrade-strategies ansible inventory 
     ```
-    $ ansible/inventory/openstack.py --list
+    $ ./inventory/openstack.py --list
     ```
 
 

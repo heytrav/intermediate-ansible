@@ -4,7 +4,7 @@
 ### Deploying applications
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ cd $WORKDIR/lesson4
+$ cd $WORKDIR/deploying-code
 $ tree
 .
 ├── ansible
@@ -230,7 +230,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 #### Provisioning role
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ sudo mkdir -p $WORKDIR/lesson4/ansible/roles
+$ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
 </code></pre>
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 .
@@ -287,7 +287,7 @@ $ sudo mkdir -p $WORKDIR/lesson4/ansible/roles
 #### Refactoring _common_ tasks
 
 * These tasks <!-- .element: class="fragment" data-fragment-index="0" -->will be useful in later lessons 
-* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/lesson4/ansible/roles` next to _os-provision_ role
+* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/deploying-code/ansible/roles` next to _os-provision_ role
 
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 /.
