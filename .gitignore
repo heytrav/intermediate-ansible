@@ -1,6 +1,9 @@
 *.retry
 .vault_password
-sample-code/lesson1/tasks
+sample-code/includes/tasks
+*Vagrantfile*
+*.vagrant*
+*venv*
 
 sample-code/project/ansible/hosts
 

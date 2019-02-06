@@ -1,13 +1,31 @@
 - name: Run a set of tools in local directory
-  hosts: localhost
+  hosts: testserver
+  vars:
+    repository_destination:  "{{ ansible_env.HOME }}/intermediate-ansible"
   tasks:
+
+    - name: checkout this repository from github
+      git:
+        repo: https://github.com/heytrav/intermediate-ansible.git
+        dest: "{{ repository_destination }}"
+        version: master
+
 
     - name: Delete a branch from repository
       command: git branch -D notabranch
+      args:
+        chdir: "{{ repository_destination }}"
 
+    - name: Copy tools script to home directory
+      copy:
+        src: files/tools.sh
+        dest: "{{ ansible_env.HOME }}/tools.sh"
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
+        mode: 0700
 
     - name: Run tools command in working directory
-      shell: "{{ ansible_env.PWD }}/tools.sh"
+      shell: "{{ ansible_env.HOME }}/tools.sh"
 
   
 

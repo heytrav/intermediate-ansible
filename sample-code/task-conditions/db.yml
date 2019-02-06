@@ -1,12 +1,67 @@
 ---
+
+- name: Install postgres on host
+  hosts: dbserver
+  become: true
+  tasks:
+    - name: Install locales
+      apt:
+        name: locales
+        state: present
+
+    - name: Add NZ locale to all instances
+      locale_gen:
+        name: en_NZ.UTF-8
+        state: present
+
+    - name: Install postgres
+      register: install_result
+      apt:
+        name: 
+          - postgresql-10
+          - python3-psycopg2
+        state: present
+
+    - name: output result of installing packages
+      debug:
+        var: install_result
+
+    - name: Make postgres listen on external ports
+      lineinfile:
+        path: /etc/postgresql/10/main/postgresql.conf
+        line: "listen_addresses = '*'"
+        insertbefore: '^#listen_addresses'
+      notify: restart postgres
+
+
+  handlers:
+    - name: restart postgres
+      systemd:
+        name: postgresql
+        state: restarted
+
+- name: Set up database and user 
+  hosts: dbserver
+  become: true
+  become_user: postgres
+  tasks:
+    - name: Create DB user
+      postgresql_user:
+        name: "{{ database_user }}"
+        password: "{{ vault_database_password }}"
+
+    - name: Create the database
+      postgresql_db:
+        name: "{{ database_name }}"
+        owner: "{{ database_user }}"
+        encoding: UTF8
+        lc_ctype: en_NZ.UTF-8
+        lc_collate: en_NZ.UTF-8
+        template: template0
+
+
 - name: Set up python application
-  hosts: localhost
-  vars_files:
-    - secrets.yml
-  vars:
-    database_user: admin
-    database: cat_pics
-    database_host: localhost
+  hosts: dbserver
   environment:
     PGPASSWORD: "{{ vault_database_password }}"
   tasks:
@@ -16,11 +71,11 @@
       command: |
         psql -U {{ database_user }} -h {{ database_host }} 
         -c "CREATE TABLE IF NOT EXISTS images_unique (id SERIAL primary key not null,
-        image char(200) not null unique)" {{ database }}
+        image char(200) not null unique)" {{ database_name }}
 
     - name: Add images to new table
       command: |
         psql -U {{ database_user }} -h {{ database_host }} 
-        -c "INSERT INTO images_unique (image) VALUES ('{{ item }}')" {{ database }}
+        -c "INSERT INTO images_unique (image) VALUES ('{{ item }}')" {{ database_name}}
       with_items: "{{ images }}"
       

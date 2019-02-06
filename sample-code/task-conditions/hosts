@@ -1,1 +1,6 @@
 localhost ansible_connection=local
+
+testserver  ansible_host=127.0.0.1 ansible_port=2222 
+
+[db]
+dbserver ansible_host=127.0.0.1 ansible_port=2222
