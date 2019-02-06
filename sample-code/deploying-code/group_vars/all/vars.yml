@@ -5,7 +5,7 @@ ssh_public_key_file: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
 ssh_public_key: "{{ lookup('file', ssh_public_key_file) }}"
 keypair_name: "training-key{{ suffix }}"
 ssh_remote_cidr: "{{ lookup('dig', 'myip.opendns.com', '@resolver1.opendns.com') + '/32' | default('0.0.0.0/0', true) }}"
-ssh_proxy_command: "ProxyCommand {{ proxy_command }}"
+ssh_proxy_command: ""
 ansible_python_interpreter: /usr/bin/python3
 network_name: "training-net{{ suffix }}"
 public_net_name: public-net

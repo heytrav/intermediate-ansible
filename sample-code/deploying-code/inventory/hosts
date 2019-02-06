@@ -1,7 +1,6 @@
 localhost ansible_connection=local
 
 [appcluster]
-train-lb
 train-web[1:2]
 train-app[1:2]
 train-db1

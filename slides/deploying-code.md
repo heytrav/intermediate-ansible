@@ -1,20 +1,19 @@
-# Deploying applications
+## Deploying applications
 
 
-### Deploying applications
+#### Deploying applications
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 $ cd $WORKDIR/deploying-code
 $ tree
 .
-├── ansible
-│   ├── <mark>provision-hosts.yml</mark>
-│   ├── <mark>deploy.yml</mark>
-.
-.
-├── templates
-│   └── index.html
-└── wsgi.py
+├── <mark>provision-hosts.yml</mark>
+├── <mark>deploy.yml</mark>
+
+
+templates
+└── index.html
+wsgi.py
 </code></pre>
 
 * This lesson sets up the<!-- .element: class="fragment" data-fragment-index="1" --> _Cat Pic of the Day_ application 
@@ -22,7 +21,7 @@ $ tree
   <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-### Basic application
+#### Basic application
 
 ![Basic app](img/simple-project-app.svg "opt title")
 * Web server running nginx
@@ -31,7 +30,7 @@ $ tree
 * All behind a loadbalancer
 
 
-### Provisioning machines
+#### Provisioning machines
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` playbook contains several plays 
   * Preflight plays to set up variables <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -42,7 +41,7 @@ $ tree
   * Basic setup for machines <!-- .element: class="fragment" data-fragment-index="7" -->
 
 
-### Preflighting 
+#### Preflighting 
 
 * The second play in<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` does not have any tasks 
   ```
@@ -56,7 +55,7 @@ $ tree
   * Prevents Ansible from trying to create SSH connection with them <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
-### Provisioning
+#### Provisioning
 
 * When interacting with cloud providers Ansible modules leverage APIs <!-- .element: class="fragment" data-fragment-index="0" -->
   - [AWS](https://docs.ansible.com/ansible/latest/list_of_cloud_modules.html#amazon)
@@ -69,7 +68,7 @@ $ tree
   - Create machines <!-- .element: class="fragment" data-fragment-index="5" -->
 
 
-### Preparing your local machine
+#### Preparing your local machine
 
 * Provisioned machines are configured just enough that you
   (and Ansible) can log in via SSH <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -80,7 +79,7 @@ $ tree
   - Add entries to<!-- .element: class="fragment" data-fragment-index="3" --> `/etc/hosts`  
 
 
-### Setting up new hosts
+#### Setting up new hosts
 
 * The next thing we need to do is set up remote machines <!-- .element: class="fragment" data-fragment-index="0" -->
 * Ansible modules will not work because Python is not installed <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -91,7 +90,7 @@ $ tree
 * We have a special setup w.r.t. SSH in our cluster <!-- .element: class="fragment" data-fragment-index="6" -->
 
 
-### Bastion host
+#### Bastion host
 
 ![Network security Diagram](img/application-security.svg "Networking security") 
 * Only one machine is directly accessible by SSH <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -101,7 +100,7 @@ $ tree
 
 
 
-### Using Ansible via a bastion host
+#### Using Ansible via a bastion host
 
 * Ansible allows us to pass options to SSH for all interactions with a host <!-- .element: class="fragment" data-fragment-index="0" -->
   ```yaml
@@ -116,7 +115,7 @@ $ tree
   ```
 
 
-### Load balanced application
+#### Load balanced application
 
 * We are setting up multiple web and app instances
   - Redundancy
@@ -124,7 +123,7 @@ $ tree
 ![Basic network diagram](img/application-lb.svg  "Diagram of our simple app")
 
 
-### Managing multiple hosts with inventory
+#### Managing multiple hosts with inventory
 
 * Sets of hosts can be trivially managed in the inventory file <!-- .element: class="fragment" data-fragment-index="0" -->
 * Bracket syntax<!-- .element: class="fragment" data-fragment-index="1" --> `[x:y]` managed hosts from `x` to `y` inclusive 
@@ -150,21 +149,21 @@ train-app[1:2]
 </div>
 
 
-### Provision cloud machines
+#### Provision cloud machines
 
 Let's go ahead and provision our machines
 ```
 $ cat ~/credentials.txt
 $ source ~/os-training.catalyst.net.nz-openrc.sh 
-# prompts for password
+## prompts for password
 $ ansible-playbook -i ansible/inventory/hosts \
    -e prefix=$(hostname) -K \
     --ask-vault-pass ansible/provision-hosts.yml
-# Prompts for sudo and vault password
+## Prompts for sudo and vault password
 ```
 
 
-### Deploying our application
+#### Deploying our application
 
 * Once machines provisioned, time to set up individual hosts for assigned jobs
   <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -180,7 +179,7 @@ $ ansible-playbook -i ansible/inventory/hosts \
 
 
 
-### Deploying our application
+#### Deploying our application
 
 ```
 $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
@@ -194,7 +193,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 * Should be able to access your new <!-- .element: class="fragment" data-fragment-index="1" --> <a href="http://my-app.cat">web application</a> 
 
 
-### Refactoring our project
+#### Refactoring our project
 
 ```
 - name: Provision a set of hosts in Catalyst Cloud
@@ -211,7 +210,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 * In fact, we should probably make a<!-- .element: class="fragment" data-fragment-index="2" --> **role** out of this  
 
 
-#### Exercise: Refactor catalyst cloud tasks in `provision-hosts.yml` playbook
+##### Exercise: Refactor catalyst cloud tasks in `provision-hosts.yml` playbook
 
 * Create a role called<!-- .element: class="fragment" data-fragment-index="0" --> _os-provision_ in `/etc/ansible/roles` 
 * Move tasks into role<!-- .element: class="fragment" data-fragment-index="1" --> _os-provision_ role 
@@ -227,7 +226,7 @@ $ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
 * Change remaining tasks to<!-- .element: class="fragment" data-fragment-index="4" --> `post_tasks` 
 
 
-#### Provisioning role
+##### Provisioning role
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 $ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
@@ -250,7 +249,7 @@ $ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
 </code></pre>
 
 
-#### Exercise: Refactor common setup tasks
+##### Exercise: Refactor common setup tasks
 
 * The playbook<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` still has some repetition 
 * Two plays do the same thing on different sets of hosts <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -259,7 +258,7 @@ $ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
 * Let's do the same thing for these tasks and create a<!-- .element: class="fragment" data-fragment-index="4" --> _common_ role 
 
 
-#### Refactoring _common_ tasks
+##### Refactoring _common_ tasks
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Basic host setup
@@ -284,23 +283,22 @@ $ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
 
 
 
-#### Refactoring _common_ tasks
+##### Refactoring _common_ tasks
 
 * These tasks <!-- .element: class="fragment" data-fragment-index="0" -->will be useful in later lessons 
 * Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/deploying-code/ansible/roles` next to _os-provision_ role
 
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 /.
-├── ansible
-│   ├── roles
-│   │   ├── os-provision
-│   │   └── common
-│   │       └── tasks
-│   │           └── main.yml
+├── roles
+│   ├── os-provision
+│   └── common
+│       └── tasks
+│           └── main.yml
 </code></pre>
 
 
-### Summary
+#### Summary
 
 * Ansible has modules for provisioning at different cloud providers
   - As localhost
