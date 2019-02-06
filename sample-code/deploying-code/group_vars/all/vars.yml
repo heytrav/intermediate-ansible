@@ -1,13 +1,12 @@
-ssh_user: train
+cloud_name: ansible-training
 suffix: "-{{ prefix }}"
 appname: catapp
 ssh_public_key_file: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"
 ssh_public_key: "{{ lookup('file', ssh_public_key_file) }}"
 keypair_name: "training-key{{ suffix }}"
 ssh_remote_cidr: "{{ lookup('dig', 'myip.opendns.com', '@resolver1.opendns.com') + '/32' | default('0.0.0.0/0', true) }}"
-proxy_command: "ssh {{ ssh_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p"
 ssh_proxy_command: "ProxyCommand {{ proxy_command }}"
-ansible_python_interpreter: /usr/bin/python
+ansible_python_interpreter: /usr/bin/python3
 network_name: "training-net{{ suffix }}"
 public_net_name: public-net
 subnet_name: "training-subnet{{ suffix }}"
@@ -17,7 +16,7 @@ subnet_cidr: "{{ subnet_prefix }}.0/24"
 subnet_dhcp_start: "{{ subnet_prefix }}.98"
 subnet_dhcp_end: "{{ subnet_prefix }}.200"
 
-default_os_image: ubuntu-16.04-x86_64
+default_os_image: ubuntu-18.04-x86_64
 default_flavor: c1.c1r1
 
 region_nameservers:

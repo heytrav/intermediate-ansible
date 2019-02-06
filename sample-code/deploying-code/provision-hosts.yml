@@ -9,7 +9,6 @@
   hosts: mycluster
   gather_facts: false
 
-
 - name: Provision a set of hosts in the Catalyst Cloud
   hosts: localhost
   gather_facts: false
@@ -25,19 +24,23 @@
 
     - name: Connect to Catalyst Cloud
       os_auth:
+        cloud: "{{ cloud_name }}"
 
     - name: Create keypair
       os_keypair:
+        cloud: "{{ cloud_name }}"
         name: "{{ keypair_name }}"
         public_key: "{{ ssh_public_key }}"
 
     - name: Create Network
       os_network:
+        cloud: "{{ cloud_name }}"
         name: "{{ network_name }}"
         state: present
 
     - name: Create subnet
       os_subnet:
+        cloud: "{{ cloud_name }}"
         name: "{{ subnet_name }}"
         network_name: "{{ network_name }}"
         state: present
@@ -49,6 +52,7 @@
 
     - name: Create router
       os_router:
+        cloud: "{{ cloud_name }}"
         state: present
         name: "{{ router_name }}"
         network: "{{ public_net_name }}"
@@ -57,12 +61,14 @@
 
     - name: Create security groups
       os_security_group:
+        cloud: "{{ cloud_name }}"
         state: present
         name: "{{ item }}"
       with_items: "{{ security_group_names }}"
 
     - name: Add rules for security group
       os_security_group_rule:
+        cloud: "{{ cloud_name }}"
         state: present
         security_group: "{{ item.group }}"
         protocol: "{{ item.proto | default('tcp') }}"
@@ -75,6 +81,7 @@
 
     - name: Create cluster instances
       os_server:
+        cloud: "{{ cloud_name }}"
         state: present
         name: "{{ item }}"
         image: "{{ default_os_image }}"
@@ -91,7 +98,7 @@
                       metadata_urls: ["http://169.254.169.254"]
                       max_wait: -1
                   users:
-                    - name: "{{ hostvars[item].ssh_user }}"
+                    - name: "{{ hostvars[item].ansible_user }}"
                       shell: /bin/bash
                       lock_passwd: true
                       sudo: ALL=(ALL) NOPASSWD:ALL
@@ -105,18 +112,18 @@
         name: "{{ item.openstack.name }}"
         ansible_host: "{{ item.openstack.private_v4 }}"
         private_v4: "{{ item.openstack.private_v4 }}"
-        ansible_user: "{{ hostvars[item.openstack.name].ssh_user }}"
       with_items: "{{ launch.results }}"
 
     - name: Assign floating ips
       os_floating_ip:
+        cloud: "{{ cloud_name }}"
         state: present
         reuse: yes
         wait: true
         server: "{{ item }}"
       register: floating_ip_info
       with_items:
-        - "{{ groups.publichosts }}"
+        - "{{ groups.bastion }}"
 
     - name: Append floating ip to host info
       add_host:
@@ -142,12 +149,12 @@
         insertbefore: BOF
         block: |
           Host {{ item }}
-              User {{ ssh_user }}
+              User {{ hostvars[item].ansible_user }}
               StrictHostKeyChecking no
               {{ hostvars[item].ssh_proxy_command }}
           Host {{ hostvars[item].ansible_host }}
               Hostname {{ item }}
-              User {{ ssh_user }}
+              User {{ hostvars[item].ansible_user }}
               StrictHostKeyChecking no
               {{ hostvars[item].ssh_proxy_command }}
         marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
@@ -174,16 +181,6 @@
   become: true
   gather_facts: false
   tasks:
-
-
-    - name: Update apt cache
-      raw: apt update -y
-
-    - name: Install python
-      raw: >
-        which python || apt-get install -y python && echo 'installed'
-      register: python
-      changed_when: python.stdout == 'installed'
 
     - name: Add NZ locale to all instances
       locale_gen:

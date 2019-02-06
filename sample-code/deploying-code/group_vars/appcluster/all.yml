@@ -1,0 +1,3 @@
+---
+proxy_command: "ssh {{ ansible_user }}@{{ groups.bastion[0] }} exec nc -w300 %h %p"
+ansible_ssh_common_args: "-o StrictHostKeyChecking=no -o ProxyCommand='{{ proxy_command }}'"

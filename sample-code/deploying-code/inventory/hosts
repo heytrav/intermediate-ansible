@@ -1,12 +1,11 @@
-[mycluster]
+localhost ansible_connection=local
+
+[appcluster]
 train-lb
 train-web[1:2]
 train-app[1:2]
 train-db1
-train-bastion
 
-[loadbalancer]
-train-lb
 
 [bastion]
 train-bastion
@@ -21,8 +20,12 @@ train-db1
 train-app[1:2]
 
 [publichosts:children]
-loadbalancer
 bastion
+
+[cluster:children]
+bastion
+appcluster
+
 
 [blue]
 train-web1
