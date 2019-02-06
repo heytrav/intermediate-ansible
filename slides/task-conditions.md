@@ -53,7 +53,9 @@ $ cd $WORKDIR/task-conditions
 <pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
     - name: Delete a branch from repository
       command: git branch -D notabranch
-      ignore_errors: true
+      args:
+        chdir: "{{ repository_destination }}"
+      <mark>ignore_errors: true</mark>
 </code></pre>
 
 
@@ -82,13 +84,11 @@ $ cd $WORKDIR/task-conditions
 <pre><code data-trim data-noescape>
     - name: Get status of testdir
       stat:
-        path: "{{ application_directory }}/testdir"
+        path: "{{ ansible_env.HOME }}/testdir"
       register: stat_output
 
     - name: Run tools command in working directory
-      shell: "{{ application_directory }}/tools.sh"
-      args:
-        chdir: "{{ application_directory }}"
+      shell: "{{ ansible_env.HOME }}/tools.sh"
       <mark>when: not stat_output.stat.exists</mark>
 </code></pre>
 * This works, but adds extra unneeded tasks <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -117,13 +117,11 @@ $ cd $WORKDIR/task-conditions
 * Use `register` and `failed_when` to keep task from failing if directory exits
 <pre  class="fragment" data-fragment-index="0"><code data-trim>
     - name: Run tools command in working directory
-      shell: "{{ application_directory }}/tools.sh"
-      args:
-        chdir: "{{ application_directory }}"
+      shell: "{{ ansible_env.HOME }}/tools.sh"
       register: tools_output
       failed_when: 
         - tools_output.rc != 0
-        - not tools_output.stderr | search('already exists')
+        - not tools_output.stderr is search('already exists')
 </code></pre>
 * Run playbook again <!-- .element: class="fragment" data-fragment-index="1" -->
 
@@ -169,7 +167,7 @@ $ cd $WORKDIR/task-conditions
 #### The `command` module  
 ###### _creates_ and _removes_ 
 
-*  _command_, _script_ and _shell_ all take a special attribute to influence
+*  _command_, _script_ and _shell_ all take a special arguments to influence
    behaviour
    - creates
    - removes
@@ -202,13 +200,13 @@ $ cd $WORKDIR/task-conditions
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
     - name: Run tools command in working directory
-      shell: "tools.sh"
+      shell: "{{ ansible_env.HOME }}/tools.sh"
       args:
-        <mark>creates: testdir</mark>
+        <mark>creates: "{{ ansible_env.HOME }}/testdir"</mark>
       register: tools_output
       failed_when: 
         - tools_output.rc != 0
-        - not tools_output.stderr | search('already exists')
+        - not tools_output.stderr is search('already exists')
 </code></pre>
 
 
@@ -219,9 +217,9 @@ $ cd $WORKDIR/task-conditions
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
     - name: Directory created by script
-      command: rm -fr temporarydir
+      command: rm -fr {{ ansible_env.HOME }}/temporarydir
       args:
-        removes: temporarydir
+        removes: "{{ ansible_env.HOME }}/temporarydir"
 </code></pre>
 
 
@@ -231,7 +229,7 @@ $ cd $WORKDIR/task-conditions
 * There are a couple problems:
   - _Create table for pics_ task always displays changed
   - _Add images to new table_ will fail after first run due to unique constraint
-* So let's apply `changed_when` and `failed_when` to fix
+* So let's apply **`changed_when`** and **`failed_when`** to fix this
 
 
 
@@ -249,7 +247,7 @@ $ cd $WORKDIR/task-conditions
       <mark class="fragment" data-fragment-index="1">register: db_insert</mark>
       <mark class="fragment" data-fragment-index="2">failed_when: 
         - db_insert.rc != 0 
-        - not db_insert.stderr | search('duplicate')</mark>
+        - not db_insert.stderr is search('duplicate')</mark>
 
 </code></pre>
 
@@ -269,7 +267,7 @@ $ cd $WORKDIR/task-conditions
 <mark  class="fragment" data-fragment-index="3">      register: create_table_output
       changed_when:
         - create_table_output.rc == 0
-        - not create_table_output.stderr | search('already exists')</mark>
+        - not create_table_output.stderr is search('already exists')</mark>
 
 </code></pre>
 
