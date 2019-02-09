@@ -1,0 +1,4 @@
+---
+
+loadbalancer_name: "lb{{ suffix }}"
+pool_name: "pool{{ suffix }}"

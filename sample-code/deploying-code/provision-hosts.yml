@@ -27,6 +27,28 @@
       os_auth:
         cloud: "{{ cloud_name }}"
 
+
+    - name: Create loadbalancer
+      register: loadbalancer_result
+      os_loadbalancer:
+        cloud: "{{ cloud_name }}"
+        name: "{{ loadbalancer_name }}"
+        interface: public
+        auto_public_ip: true
+        state: present
+        vip_network: "{{ network_name }}"
+        wait: yes
+        timeout: 300
+
+
+    - name: output results of creating loadbalancer
+      debug:
+        var: loadbalancer_result
+
+    - name: Bail out
+      fail:
+        msg: Stop here
+
     - name: Create keypair
       os_keypair:
         cloud: "{{ cloud_name }}"
@@ -125,6 +147,7 @@
       with_items:
         - "{{ groups.bastion }}"
 
+
     - name: Append floating ip to host info
       add_host:
         name: "{{ item.item }}"
@@ -148,6 +171,20 @@
         name: "{{ item }}"
         state: absent
       with_items: "{{ host_set }}"
+
+
+    #- name: Assign floating ip to loadbalancer
+      #os_floating_ip:
+        #cloud: "{{ cloud_name }}"
+        #state: present
+        #reuse: yes
+        #wait: true
+        #server: "{{ loadbalancer_result.id }}"
+      #register: loadbalancer_floating_ip_result
+
+    #- name: Output result of loadbalancer floating ip assignmet
+      #debug:
+        #var: loadbalancer_floating_ip_result
 
     #- name: "Add cluster to local ~/.ssh/config"
       #blockinfile:
@@ -209,12 +246,12 @@
   hosts: web
   become: true
   vars:
-    group_index: "{{ inventory_hostname | regexp_search('.*(\\d+)$') }}"
+    group_index: "{{ inventory_hostname | regex_search('.*(\\d+)$') }}"
   tasks:
     - name: Map each frontend host to speak to a specific backend
       lineinfile:
         dest: /etc/hosts
-        line: "{{ groups.app[ group_index | int ].ansible_host }} backend"
+        line: "{{ hostvars[groups.app[ group_index | int ]].ansible_host }} backend"
 
 
 #- name: Extra set up for web demo
