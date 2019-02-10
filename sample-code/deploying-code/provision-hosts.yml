@@ -88,7 +88,7 @@
         image: "{{ default_os_image }}"
         key_name: "{{ keypair_name  }}"
         flavor: "{{ default_flavor }}"
-        auto_ip: no
+        auto_ip: "{{ hostvars[item].assign_floating_ip | default('no') }}"
         nics:
           - net-name: "{{ network_name }}"
         security_groups: "default,{{ hostvars[item].security_groups | map(attribute='group') | list | unique | join(',')}}"
@@ -111,43 +111,25 @@
     - name: Append info for launched machines to host info
       add_host:
         name: "{{ item.openstack.name }}"
-        ansible_host: "{{ item.openstack.private_v4 }}"
+        ansible_host: "{{ item.openstack.public_v4 | default(item.openstack.private_v4, true) }}"
       with_items: "{{ launch.results }}"
 
-    - name: Assign floating ips
-      os_floating_ip:
-        cloud: "{{ cloud_name }}"
-        state: present
-        reuse: yes
-        wait: true
-        server: "{{ item }}"
-      register: floating_ip_info
-      with_items:
-        - "{{ groups.bastion }}"
 
-    - name: Append floating ip to host info
-      add_host:
-        name: "{{ item.item }}"
-        ansible_host: "{{ item.floating_ip.floating_ip_address }}" 
-      with_items: "{{ floating_ip_info.results }}"
-
-    - name: Remove private IPv4 from all machines from known hosts
+    - name: Remove IP from all machines from known hosts
       known_hosts:
-        name: "{{ item.openstack.private_v4 }}"
+        name: "{{ hostvars[item].ansible_host }}"
         state: absent
-      with_items: "{{ launch.results }}"
+      with_items: "{{ host_set }}"
 
-    - name: Remove floating ip from known hosts
-      known_hosts:
-        name: "{{ item.floating_ip.floating_ip_address }}"
-        state: absent
-      with_items: "{{ floating_ip_info.results }}"
 
     - name: Remove inventory host from known_hosts
       known_hosts:
         name: "{{ item }}"
         state: absent
       with_items: "{{ host_set }}"
+
+
+    #- name: Assign floating ip to loadbalancer
 
     #- name: "Add cluster to local ~/.ssh/config"
       #blockinfile:
@@ -176,10 +158,40 @@
         #marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
       #with_items: "{{ groups.appcluster }}"
 
-- name: Check connectivity to hosts
-  hosts: cluster
+- name: Add bastion public ip to known_hosts
+  hosts: bastion
   gather_facts: false
   tasks:
+    - block:
+        - name: Perform SSH keyscan to add to known_hosts
+          shell: ssh-keyscan {{ ansible_host }}
+          register: bastion_ssh_key
+
+        - name: Add ssh key to known_hosts
+          known_hosts:
+            name: "{{ ansible_host }}"
+            key: "{{ item }}"
+            state: present
+          with_items: "{{ bastion_ssh_key.stdout_lines }}"
+
+        - name: Wait for bastion to be reachable over SSH
+          wait_for:
+
+      delegate_to: localhost
+
+- name: Check connectivity to hosts
+  hosts: cluster:!bastion
+  gather_facts: false
+  tasks:
+
+    - name: output ansible host
+      debug:
+        var: ansible_host
+
+    - name: output ssh connection info
+      debug:
+        var: ansible_ssh_common_args
+
     - name: Wait for connection to be available on hosts before proceeding
       wait_for_connection:
 
@@ -208,13 +220,23 @@
 - name: Set up web hosts with mapping to backend
   hosts: web
   become: true
-  vars:
-    group_index: "{{ inventory_hostname | regexp_search('.*(\\d+)$') }}"
+  serial: 1
+  tasks:
+    - name: Map each of the frontend hosts in the loadbalancer
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ ansible_host }} frontend{{ group_index }}"
+      delegate_to: loadbalancer
+
+- name: Set up web hosts with mapping to backend
+  hosts: app
+  become: true
   tasks:
     - name: Map each frontend host to speak to a specific backend
       lineinfile:
         dest: /etc/hosts
-        line: "{{ groups.app[ group_index | int ].ansible_host }} backend"
+        line: "{{ ansible_host }} backend{{ group_index }}"
+      delegate_to: "train-web{{ group_index }}"
 
 
 #- name: Extra set up for web demo

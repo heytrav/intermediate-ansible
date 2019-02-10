@@ -1,0 +1,3 @@
+---
+
+group_index: "{{ inventory_hostname | regex_search('.*(\\d+)$') }}"

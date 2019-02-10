@@ -5,6 +5,8 @@ train-web[1:2]
 train-app[1:2]
 train-db1
 
+[loadbalancer]
+train-lb
 
 [bastion]
 train-bastion
@@ -20,9 +22,15 @@ train-app[1:2]
 
 [publichosts:children]
 bastion
+loadbalancer
+
+[behindbastion:children]
+appcluster
+loadbalancer
 
 [cluster:children]
 bastion
+loadbalancer
 appcluster
 
 
