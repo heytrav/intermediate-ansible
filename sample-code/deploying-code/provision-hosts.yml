@@ -112,7 +112,14 @@
       add_host:
         name: "{{ item.openstack.name }}"
         ansible_host: "{{ item.openstack.public_v4 | default(item.openstack.private_v4, true) }}"
+        private_v4: "{{ item.openstack.private_v4 }}"
       with_items: "{{ launch.results }}"
+
+    - name: Make sure loadbalancer uses private v4
+      add_host:
+        name: "{{ item }}"
+        ansible_host: "{{ hostvars[item].private_v4 }}"
+      with_items: "{{ groups.loadbalancer }}"
 
 
     - name: Remove IP from all machines from known hosts
@@ -175,7 +182,7 @@
           with_items: "{{ bastion_ssh_key.stdout_lines }}"
 
         - name: Wait for bastion to be reachable over SSH
-          wait_for:
+          wait_for_connection:
 
       delegate_to: localhost
 
@@ -194,6 +201,7 @@
 
     - name: Wait for connection to be available on hosts before proceeding
       wait_for_connection:
+      delegate_to: localhost
 
 - name: Common setup for all hosts
   hosts: cluster
@@ -226,12 +234,13 @@
       lineinfile:
         dest: /etc/hosts
         line: "{{ ansible_host }} frontend{{ group_index }}"
-      delegate_to: loadbalancer
+      delegate_to: "{{ groups.loadbalancer.0 }}"
 
 - name: Set up web hosts with mapping to backend
   hosts: app
   become: true
   tasks:
+
     - name: Map each frontend host to speak to a specific backend
       lineinfile:
         dest: /etc/hosts
