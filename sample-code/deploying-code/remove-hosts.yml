@@ -9,7 +9,7 @@
   hosts: localhost
   gather_facts: false
   vars:
-    host_set: "{{ groups['mycluster'] | unique | list }}"
+    host_set: "{{ groups.cluster | unique | list }}"
     # change if required or override at runtime using --extra-vars
 
     security_groups: "{{ host_set | map('extract', hostvars, 'security_groups') | sum(start=main_security_groups) | unique | list }}"
