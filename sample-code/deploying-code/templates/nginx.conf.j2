@@ -4,6 +4,6 @@ server {
 
  location / {
   include proxy_params;
-  proxy_pass http://{{ inventory_hostname | regex_replace('^(.*)web(.*)$','\\1app\\2') }}:5000;
+  proxy_pass http://backend:5000;
  }
 }
