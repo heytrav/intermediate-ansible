@@ -1,286 +1,119 @@
-#### Roles
+#### Roles 
+##### Part 2
 
 
-#### Roles
-
-```
-$ cd $WORKDIR/ansible-roles
-.
-├── group_vars
-│   └── all.yml
-├── hosts
-├── project.yml
-├── secrets.yml
-└── templates
-    └── config.py.j2
-```
+#### Reusing Ansible
+* Roles make it easy to distribute/reuse Ansible tasks
+* Distribute via conventional source code management tools
+* Open Source your Ansible
 
 
-#### Making tasks reusable
-
-* At some point in your development/refactoring process, you may come across
-  bits that will be useful across multiple projects
-* Important to follow _DRY_ (don't repeat yourself) principles in infrastructure code
-
-
-#### Roles
-
-* A mechanism for reusing code in Ansible
-  - within a project
-  - accross multiple projects
-* Typically designed for a specific purpose
-* Not executable on their own
-
-
-#### Typical Use Cases
-* Install supporting libraries/software to multiple machines
-* Standardise provisioning of machines across vendors
-   - AWS
-   - Azure
-   - OpenStack
-* Tasks needed across entire infrastructure
-   - Security hardening
-   
+#### Importing roles
+* The <!-- .element: class="fragment" data-fragment-index="0" -->`ansible-galaxy` command line tool can be used to import roles from
+  different sources
+* Install a role from Ansible Galaxy <!-- .element: class="fragment" data-fragment-index="1" -->
+   ```
+   ansible-galaxy install  role-name
+   ```
+* Install version 1.0.0 of a role from a repository on GitHub <!-- .element: class="fragment" data-fragment-index="2" -->
+   ```
+   ansible-galaxy install git+https://github.com/user/role-name.git,1.0.0
+   ```
+   <!-- .element: style="font-size:13pt;"  -->
+* Use the role in your playbook <!-- .element: class="fragment" data-fragment-index="3" -->
+   ```
+   role:
+     - role: role-name
+   ```
 
 
-#### Where do roles live?
-* In order of _decreasing_ precedence
-  - Custom location configured in `ansible.cfg`
-     ```ini
-     [defaults]
-     roles_path = ~/ansible_roles
-     ```
-  - In `roles` subdirectory in the same place your playbooks live
-     ```
-     ansible/
-        \
-         --- playbook1.yml
-         |
-         --- roles/
-     ```
-  - `$HOME/.ansible/roles`
-  - In `/etc/ansible/roles` directory
+#### Distributing your Roles
+* Using/importing 3rd party roles in your code is easy
+* Real benefit is distributing your own roles
+* Easy to do
 
 
-#### Components of a role
-
-* tasks
-  - tasks that the role will perform
-* files
-  - Files that will be uploaded
-* templates
-  - Jinja2 templates that the role will use
-* handlers
-  - Handlers that will be called from tasks
-
+##### Exercise: Distributing a Role
+* The `ansible-roles` directory contains a very basic role
+   ```
+   sample-code/ansible-roles
+   └── my-role
+       └── tasks
+           └── main.yml
+   ```
+* Let's make it ready for distribution
 
 
-#### Components of a role (continued)
-
-* vars
-  - Variables needed by role (shouldn't be overridden)
-* defaults
-  - Variables that can be overridden
-* meta
-  - Dependency information
-
-
-#### Structure of a role
-  
-```
-  /roles
-    └── role_name
-        ├── defaults
-        │   └── main.yml
-        ├── files
-        │   └── someconfig.conf
-        ├── handlers
-        │   └── main.yml
-        ├── meta
-        │   └── main.yml
-        ├── tasks
-        │   └── main.yml
-        ├── templates
-        │   └── sometemplate.j2
-        └── vars
-            └── main.yml
-```
-  * Each of these files/folders is optional
+#### Making a Role *distributable*
+* Need to fill in <!-- .element: class="fragment" data-fragment-index="0" -->*meta* information about dependencies
+* <!-- .element: class="fragment" data-fragment-index="1" -->Create a `meta` subfolder with a *main.yml* file
+   <pre><code data-trim data-noescape>
+└── my-role
+<mark>  ├── meta
+    │  └── main.yml</mark>
+    └── tasks
+        └── main.yml</code></pre>
 
 
-#### File and directory naming conventions
-
-* The naming of components correspond to directories in the role
-* Ansible will look in these directories automatically when running a role
-* YAML files named `main.yml` will be loaded automatically when role is
-  executed
-* Nearly all components are optional
-
-
-#### Creating roles
-
-* Imagine our playbook has some tasks that could be reusable in other projects
-
-<pre><code data-trim data-noescape>
-- name: My playbook
-  hosts: somehosts
-  tasks:
-<mark>    - name: myapp task 1
-    - name: myapp task 2
-    - name: myapp task 3
-    - name: myapp task 4</mark>
-    - name: some task
-</code></pre>
+##### Setting up dependencies
+* <!-- .element: class="fragment" data-fragment-index="0" -->Dependencies tell `ansible-galaxy` to pull in other related roles
+   ```
+   # meta/main.yml
+   dependencies:
+     - role: antonchernik.nodejs
+     - role: my-other-role
+       vars: 
+         someattribute: green
+   ```
+* Must be defined, even if you have no dependencies <!-- .element: class="fragment" data-fragment-index="1" -->
+* <!-- .element: class="fragment" data-fragment-index="2" -->Perfectly normal to have an empty dictionary
+   ```
+   # meta/main.yml
+   dependencies:
+   ```
 
 
-#### Refactor tasks into role
-
-* Create directory under the _roles_ directory to put your role
-  
+#### Distributing your Role
+* Once you have defined dependencies you are ready to distribute your role
+* Simply upload to your SCM of choice
+* Assume you have pushed to http://github.com/myaccount/my-role.git repo
   ```
-  $ mkdir -p ansible/roles/myapp
-  $ mkdir -p ansible/roles/myapp/tasks
+  ansible-galaxy install git+https://github.com/myaccount/my-role.git
   ```
-* Put your tasks into `ansible/roles/myapp/tasks/main.yml`
-
-  ```
-  - name: myapp task 1
-  - name: myapp task 2
-  - name: myapp task 3
-  - name: myapp task 4
-  ```
+  <!-- .element: style="font-size:13pt;"  -->
 
 
-#### Use role in your playbook
-
-<pre><code data-trim data-noescape>
-- name: My playbook
-  hosts: somehosts
-<mark>  roles:
-    - myapp</mark>
-  tasks:
-
-    - name: some task
-</code></pre>
-<pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-- name: My playbook
-  hosts: somehosts
-<mark>  roles:
-   - role: myapp
-     var1: "{{ somevar }}"</mark>
-  tasks:
-
-    - name: some task
-</code></pre>
+#### Managing roles in a project
+* Your project might depend on a number of roles
+* Adding/tracking each manually can get tedious
+* Use a *requirements.yml* file
 
 
+#### Role Requirements File
+* A YAML file (surprise)
+* Specify a list of requirements with URL, version, and local name
+   ```
+    - src: git@github.com/my-account/my-role.git
+      scm: git
+      version: master
+      name: my-role
 
-#### Exercise: Refactor `project.yml` into roles
-
-* The `project.yml` playbook tasks can be broken down into a couple of groups
-  - Installing libraries
-  - Checking out code
-  - Setting up a database
-* See if we can break them up into some useful roles
-
-
-
-#### Moving app related tasks
-
-* Take tasks related to installing the application and move them into their
-  own role
-
-<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-    - name: Check out code for project
-    - name: Create python virtual environment
-    - name: Add app config
-</code></pre>
-<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
-├── roles
-│   <mark>├── catapp
-│   │   ├── tasks
-│   │   │   └── main.yml
-│   │   └── templates
-│   │       └── config.py.j2</mark>
-</code></pre>
+    - src: some-other-role
+      version: 1.0
+   ```
+* Place this file in your project somewhere 
 
 
+#### Install roles using a requirements file
+* Use `ansible-galaxy` command line tool as before
+   ```
+   ansible-galaxy install -r requirements.yml
+   ```
+* Wash, rinse, repeat
 
-#### Moving db related tasks
-
-* Take tasks related to installing the database and move them into their own role
-* Note you will also need to move the handler to the db role
-<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-    - name: Create DB user
-    - name: Make postgres listen on external ports
-    - name: Add pb_hba rule for hosts
-    - name: Create the database
-    - name: Create table for pics 
-    - name: Add images to new table
-</code></pre>
-<pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
-├── roles
-│   ├── catapp
-│   <mark>└── db
-│       ├── handlers
-│       │   └── main.yml
-│       └── tasks
-│           └── main.yml</mark>
-</code></pre>
-
-
-#### Importing the roles
-
-* Let's add the new roles to our `project.yml`
-
-<pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-- name: Set up python application
-  hosts: localhost
-  vars_files:
-    - secrets.yml
-  vars:
-    database_user: admin
-    database: cat_pics
-    database_host: localhost
-  environment:
-    PGPASSWORD: "{{ vault_database_password }}"
-  <mark>roles:
-    - role: catapp
-    - role: db</mark>
-</code></pre>
-
-
-#### Pre and post tasks
-
-* We still need to make sure that the apt modules runs before
-  anything else happens
-* Changing these into a *pre_task* ensures it will run before the roles do
-
-<pre class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-  <mark>pre_tasks:</mark>
-
-    - name: Update apt cache
-      become: yes
-      apt:
-        update_cache: yes
-</code></pre>
-
-
-#### Open source roles
-
-[Ansible Galaxy](https://galaxy.ansible.com)
-
-* A repository of ansible roles
-* Thousands of opensource roles for any purpose
-* Can be easily imported into your projects
 
 
 #### Summary
-
-* Roles provide useful way to reuse code accross projects
-  - Simple to include
-* Designed to facilitate automation
-  - Directory structure
-  - Naming conventions
-* Ansible Galaxy is an Open Source repository of roles available for all
-  purposes
+* Anisble roles useful way to distribute reusable tasks
+* Combined with requirements file, very useful way to manage infrastructure
+  dependencies

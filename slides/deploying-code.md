@@ -9,8 +9,6 @@ $ tree
 .
 ├── <mark>provision-hosts.yml</mark>
 ├── <mark>deploy.yml</mark>
-
-
 templates
 └── index.html
 wsgi.py

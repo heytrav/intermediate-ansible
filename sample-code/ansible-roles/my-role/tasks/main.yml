@@ -1,0 +1,8 @@
+---
+- name: Task that does something
+  debug:
+    msg: "Output a message"
+
+- name: another task that does something
+  debug:
+    msg: "Output another message"

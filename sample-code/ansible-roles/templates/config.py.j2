@@ -1,8 +1,0 @@
-import os
-basedir = os.path.abspath(os.path.dirname(__file__))
-
-
-class Config(object):
-    DEBUG= False
-    SQLALCHEMY_TRACK_MODIFICATIONS = False 
-    SQLALCHEMY_DATABASE_URI = "postgresql+psycopg2://{{ database_user }}:{{ vault_database_password }}@{{ database_host }}/cat_pics"

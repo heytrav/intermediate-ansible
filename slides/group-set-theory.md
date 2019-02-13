@@ -6,11 +6,10 @@
 ```
 $ cd $WORKDIR/set-theory
 .
-└── ansible
-    ├── inventory
-    │   └── hosts
-    ├── group-set-theory.yml
-    └── set-filters.yml
+├── inventory
+│   └── hosts
+├── group-set-theory.yml
+└── set-filters.yml
 ```
 
 
@@ -32,7 +31,7 @@ $ cd $WORKDIR/set-theory
 * Run the playbook
 
   ```
-  $ ansible-playbook ansible/set-fitlers.yml
+  $ ansible-playbook ansible/set-filters.yml
   ```
 
 
