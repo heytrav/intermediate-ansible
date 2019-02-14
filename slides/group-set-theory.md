@@ -1,7 +1,7 @@
-# Set theory
+## Set theory
 
 
-### Set theory in Ansible
+#### Set theory in Ansible
 
 ```
 $ cd $WORKDIR/set-theory
@@ -13,7 +13,7 @@ $ cd $WORKDIR/set-theory
 ```
 
 
-### Set theory tools
+#### Set theory tools
 
 * Ansible provides a few useful filters for working with sets of data
 * union
@@ -24,30 +24,30 @@ $ cd $WORKDIR/set-theory
   - list of items in list 1 but not in list 2
 
 
-### Using set theory filters
+#### Using set theory filters
 
 * Have a look at `set-filters.yml`
 * Demonstrates a few simple set operations
 * Run the playbook
 
   ```
-  $ ansible-playbook ansible/set-filters.yml
+  $ ansible-playbook set-filters.yml
   ```
 
 
-### Set theory using groups
+#### Set theory using groups
 
 * It is possible to apply set theory to inventory items as well
 * The _hosts_ attribute has syntax for set theory operations on inventory 
 * These enable fine control over which hosts playbooks operate
 * Run the playbook `group-set-theory.yml`
   ```
-  $ ansible-playbook -i ansible/inventory/hosts \
-      ansible/group-set-theory.yml
+  $ ansible-playbook -i inventory/hosts \
+      group-set-theory.yml
   ```
 
 
-### Union
+#### Union
 
 Combination of hosts in two groups
 
@@ -64,7 +64,7 @@ All hosts in<!-- .element: class="fragment" data-fragment-index="0" --> _web_ an
 
 
 
-### Intersection
+#### Intersection
 
 Hosts that are in first and second group
 
@@ -81,7 +81,7 @@ Hosts that are in both the<!-- .element: class="fragment" data-fragment-index="0
 </code></pre>
 
 
-### Difference
+#### Difference
 
 Set of hosts in first set but not in second set
 
@@ -98,7 +98,7 @@ Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" -->
 </code></pre>
 
 
-### Summary
+#### Summary
 
 * Ansible provides tools for manipulating sets of items
 * Set theory filters can be used for working on lists
@@ -107,12 +107,12 @@ Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" -->
 * Enable fine tuning of operations in playbooks
 
 
-### Tearing down our project
+#### Tearing down our project
 
 ```
-$ ansible-playbook -i ansible/inventory \
+$ ansible-playbook -i inventory \
     -K --ask-vault-pass  -e prefix=$(hostname) \
-        ansible/remove-hosts.yml
+        remove-hosts.yml
 ```
 
 * The  `remove-hosts.yml` playbook

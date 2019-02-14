@@ -1,8 +1,11 @@
-#### Roles 
+### Roles 
 ##### Part 2
 
 
 #### Reusing Ansible
+```
+cd $WORKDIR/ansible-roles
+```
 * Roles make it easy to distribute/reuse Ansible tasks
 * Distribute via conventional source code management tools
 * Open Source your Ansible
@@ -30,7 +33,7 @@
 #### Distributing your Roles
 * Using/importing 3rd party roles in your code is easy
 * Real benefit is distributing your own roles
-* Easy to do
+* Also easy
 
 
 ##### Exercise: Distributing a Role

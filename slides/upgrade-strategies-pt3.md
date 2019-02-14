@@ -1,10 +1,10 @@
-# Upgrade strategies
+## Upgrade strategies
 
-## Blue Green
+### Blue Green
 
 
 
-### Blue-Green Deployments
+#### Blue-Green Deployments
 
 ![bluegreen](img/blue_green_deployments.png "Blue Green deployment strategy")
 <!-- .element: height="40%" width="40%" -->
@@ -14,7 +14,7 @@
 * Green<!-- .element: class="fragment" data-fragment-index="2" --> environment is _idle_ 
 
 
-### Blue-Green Upgrade
+#### Blue-Green Upgrade
 
 ![bluegreen](img/blue_green_deployments.png "Blue Green deployment strategy")
 <!-- .element: height="40%" width="40%" -->
@@ -26,7 +26,7 @@
 
 
 
-###  Adapting previous model
+####  Adapting previous model
 
 * Blue-green very similar to rolling in place upgrade model
 * In place upgrade

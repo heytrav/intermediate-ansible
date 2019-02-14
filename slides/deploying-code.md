@@ -44,12 +44,12 @@ wsgi.py
 * The second play in<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` does not have any tasks 
   ```
     - name: Preflight to set up machine specific variables
-      hosts: mycluster
+      hosts: cluster
       gather_facts: false
   ```
 * Objective is to load inventory variables into<!-- .element: class="fragment" data-fragment-index="1" --> _hostvars_ for later plays 
 * Note also that<!-- .element: class="fragment" data-fragment-index="2" --> *gather_facts* is set to false 
-  * The hosts in<!-- .element: class="fragment" data-fragment-index="3" --> _mycluster_ do not actually exist yet 
+  * The hosts in<!-- .element: class="fragment" data-fragment-index="3" --> _cluster_ do not actually exist yet 
   * Prevents Ansible from trying to create SSH connection with them <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
@@ -80,12 +80,10 @@ wsgi.py
 #### Setting up new hosts
 
 * The next thing we need to do is set up remote machines <!-- .element: class="fragment" data-fragment-index="0" -->
-* Ansible modules will not work because Python is not installed <!-- .element: class="fragment" data-fragment-index="1" -->
-* Need to <!-- .element: class="fragment" data-fragment-index="2" -->
-  - Install Python <!-- .element: class="fragment" data-fragment-index="3" -->
-  - Set the locale to NZ <!-- .element: class="fragment" data-fragment-index="4" -->
-  - Add entries for other hosts in private network <!-- .element: class="fragment" data-fragment-index="5" -->
-* We have a special setup w.r.t. SSH in our cluster <!-- .element: class="fragment" data-fragment-index="6" -->
+* Need to <!-- .element: class="fragment" data-fragment-index="1" -->
+  - Set the locale to NZ <!-- .element: class="fragment" data-fragment-index="2" -->
+  - Add entries for other hosts in private network <!-- .element: class="fragment" data-fragment-index="3" -->
+* We have a special setup w.r.t. SSH in our cluster <!-- .element: class="fragment" data-fragment-index="4" -->
 
 
 #### Bastion host

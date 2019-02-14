@@ -1,9 +1,9 @@
-# Upgrade strategies
+## Upgrade strategies
 
-## _In place_ rolling upgrade
+### _In place_ rolling upgrade
 
 
-### Rolling upgrades
+#### Rolling upgrades
 
 <pre><code data-trim data-noescape>
 
@@ -21,15 +21,15 @@ $ cd $WORKDIR/upgrade-strategies
 </code></pre>
 
 
-### Simple application
+#### Simple application
 
 ![simple application](img/simple-project-app.svg "Simple application")
 <!-- .element width="80%" height="80%" -->
 
 
-### Upgrading our application
+#### Upgrading our application
 
-#### What can go wrong?
+##### What can go wrong?
 
 * Without some kind of redundancy, we risk of disrupting entire operation <!-- .element: class="fragment" data-fragment-index="0" -->
 * Could be bad for business <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -41,7 +41,7 @@ $ cd $WORKDIR/upgrade-strategies
 </div>
 
 
-### Load balanced application
+#### Load balanced application
 
 ![Basic network diagram](img/rolling-upgrade-pre.svg  "Diagram of our simple app") <!-- .element width="50%" height="50%" -->
 
@@ -50,7 +50,7 @@ $ cd $WORKDIR/upgrade-strategies
   - High availability
 
 
-### Ansible default behaviour
+#### Ansible default behaviour
 
 * By default Ansible will act on multiple hosts at once <!-- .element: class="fragment" data-fragment-index="0" -->
 * This can still lead to problems <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -61,7 +61,7 @@ $ cd $WORKDIR/upgrade-strategies
 .element: style="float:right;" width="45%" height="45%"  class="fragment" data-fragment-index="1" -->
 
 
-### In-place rolling upgrade
+#### In-place rolling upgrade
 
 * Traditional approach to upgrading applications across a cluster <!-- .element: class="fragment" data-fragment-index="0" -->
   - Creating new infrastructure can be prohibitively expensive
@@ -69,7 +69,7 @@ $ cd $WORKDIR/upgrade-strategies
 * Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-### Performing `serial` operations
+#### Performing `serial` operations
 
 * The<!-- .element: class="fragment" data-fragment-index="0" --> `serial` attribute regulates how many hosts Ansible operates on at a time 
 * Serial can be represented as <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -92,7 +92,7 @@ $ cd $WORKDIR/upgrade-strategies
 
 
 
-### First step of in place upgrade
+#### First step of in place upgrade
 
 ![step2](img/rolling-upgrade-phase1.svg "Upgrade first cluster") <!-- .element
 width="50%" height="50%"-->
@@ -102,14 +102,14 @@ width="50%" height="50%"-->
 * Re-enable at LB <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-### In place rolling upgrade
+#### In place rolling upgrade
 ![step3](img/rolling-upgrade-phase2.svg "Upgrade other clusters") <!-- .element width="50%" height="50%"-->
 
 * Repeat process across pool <!-- .element: class="fragment" data-fragment-index="0" -->
 * Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
-### Delegation
+#### Delegation
 
 * The application that we need to update is on our app servers <!-- .element: class="fragment" data-fragment-index="0" -->
 * However, as part of updating, we need to control haproxy on our loadbalancer
@@ -129,7 +129,7 @@ width="50%" height="50%"-->
 </code></pre>
 
 
-### Ensuring healthy upgrade
+#### Ensuring healthy upgrade
 
 * After upgrading the application or config, typically want to <!-- .element: class="fragment" data-fragment-index="0" -->
   - Restart service that was upgraded <!-- .element: class="fragment" data-fragment-index="1" -->
@@ -139,7 +139,7 @@ width="50%" height="50%"-->
   - Make sure service is<!-- .element: class="fragment" data-fragment-index="5" --> _healthy_ 
 
 
-### Ensuring healthy upgrade
+#### Ensuring healthy upgrade
 
 * When we upgrade our application or config we trigger a restart using<!-- .element: class="fragment" data-fragment-index="0" --> _notify_ 
 
@@ -160,7 +160,7 @@ width="50%" height="50%"-->
   </code></pre>
 
 
-### Waiting for a service
+#### Waiting for a service
 
 * Instead of waiting for handler to execute at the end of play, we trigger it
   immediately<!-- .element: class="fragment" data-fragment-index="0" -->
@@ -180,7 +180,7 @@ width="50%" height="50%"-->
   </code></pre>
 
 
-### Failing fast
+#### Failing fast
 
 * When upgrading an application, it's important to stop if there are problems
 * Normally, if an error occurs on a particular host, Ansible will
@@ -189,7 +189,7 @@ width="50%" height="50%"-->
 * This presents a problem as we may progressively crash all other hosts on same error
 
 
-### Failing fast
+#### Failing fast
 
 * Have a look at `failhosts.yml` and `inventory/failhosts`
 * Run the playbook:
@@ -201,9 +201,9 @@ width="50%" height="50%"-->
 * Play proceeeds to run for `failhost0` thru `failhost9`
 
 
-### Stopping on any error
+#### Stopping on any error
 
-#### `any_errors_fatal`
+##### `any_errors_fatal`
 
 * Tells Ansible to consider operation a failure if an error occurs on one host
   <!-- .element: class="fragment" data-fragment-index="0" -->
@@ -217,9 +217,9 @@ width="50%" height="50%"-->
 * Now <!-- .element: class="fragment" data-fragment-index="2" -->if the first task fails for `failhost10`, the entire play will be aborted at the first task
 
 
-### Failing based on proportion
+#### Failing based on proportion
 
-#### `max_fail_percentage`
+##### `max_fail_percentage`
 
 * Defines a percentage of hosts that can fail before operation is aborted <!-- .element: class="fragment" data-fragment-index="0" -->
   <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
@@ -232,7 +232,7 @@ width="50%" height="50%"-->
 * With previous example, playbook finishes because 10% &lt; 20% <!-- .element: class="fragment" data-fragment-index="2" -->
 
 
-### Upgrade our application
+#### Upgrade our application
 
 ```
 $ ansible-playbook  -K --ask-vault-pass \
@@ -244,7 +244,7 @@ $ ansible-playbook  -K --ask-vault-pass \
 * Changes the background colour of the application
 
 
-### Summary
+#### Summary
 
 * The _in place rolling upgrade_ is a common approach to updating applications
   - Ensures zero downtime
