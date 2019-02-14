@@ -149,18 +149,12 @@ train-app[1:2]
 
 Let's go ahead and provision our machines
 ```
-$ cat ~/credentials.txt
-$ source ~/os-training.catalyst.net.nz-openrc.sh 
-## prompts for password
-$ ansible-playbook -i ansible/inventory/hosts \
-   -e prefix=$(hostname) -K \
-    --ask-vault-pass ansible/provision-hosts.yml
-## Prompts for sudo and vault password
+$ ansible-playbook  -e prefix=$(hostname) -K --ask-vault-pass provision-hosts.yml
 ```
+<!-- .element: style="font-size:12pt;"  -->
 
 
 #### Deploying our application
-
 * Once machines provisioned, time to set up individual hosts for assigned jobs
   <!-- .element: class="fragment" data-fragment-index="0" -->
 * Database server <!-- .element: class="fragment" data-fragment-index="1" -->
