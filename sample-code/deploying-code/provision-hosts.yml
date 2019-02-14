@@ -237,7 +237,7 @@
       lineinfile:
         dest: /etc/hosts
         line: "{{ ansible_host }} backend"
-      delegate_to: "train-web{{ group_index }}"
+      delegate_to: "{{ hostvars[groups.web[( group_index | int ) - 1]].inventory_hostname }}"
 
 
 - name: Add mapping for db on app boxes
