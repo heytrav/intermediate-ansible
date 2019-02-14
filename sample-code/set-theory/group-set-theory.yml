@@ -1,6 +1,6 @@
 ---
 - name: Explore set functions in groups
-  hosts: mycluster
+  hosts: cluster
   gather_facts: false
   tasks:
 

@@ -1,4 +1,4 @@
-## Set theory
+### Set theory tools
 
 
 #### Set theory in Ansible
@@ -6,44 +6,18 @@
 ```
 $ cd $WORKDIR/set-theory
 .
-├── inventory
-│   └── hosts
-├── group-set-theory.yml
-└── set-filters.yml
+└── group-set-theory.yml
 ```
 
 
-#### Set theory tools
-
-* Ansible provides a few useful filters for working with sets of data
-* union
-  - union of two lists
-* intersect
-  - unique list of items in two lists
-* difference
-  - list of items in list 1 but not in list 2
-
-
-#### Using set theory filters
-
-* Have a look at `set-filters.yml`
-* Demonstrates a few simple set operations
-* Run the playbook
-
-  ```
-  $ ansible-playbook set-filters.yml
-  ```
-
-
-#### Set theory using groups
-
+#### Set theory using inventory
+* Previously we explored using set theory filters
 * It is possible to apply set theory to inventory items as well
 * The _hosts_ attribute has syntax for set theory operations on inventory 
 * These enable fine control over which hosts playbooks operate
 * Run the playbook `group-set-theory.yml`
   ```
-  $ ansible-playbook -i inventory/hosts \
-      group-set-theory.yml
+  $ ansible-playbook  group-set-theory.yml
   ```
 
 
