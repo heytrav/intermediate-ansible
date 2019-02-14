@@ -41,6 +41,7 @@
       postgresql_user:
         name: "{{ database_user }}"
         password: "{{ database_password }}"
+        encrypted: yes
 
 
     - name: Create the database
@@ -80,7 +81,7 @@
       register: create_table_output
       changed_when:
         - create_table_output.rc == 0
-        - not create_table_output.stderr | search('already exists')
+        - create_table_output.stderr is not search('already exists')
                                                                                                                                                                                                                                   
     - name: Add images to new table
       command: |
@@ -90,10 +91,10 @@
       register: db_insert
       failed_when:
         - db_insert.rc != 0 
-        - not db_insert.stderr | search('duplicate')
+        - db_insert.stderr is not search('duplicate')
       changed_when:
         - db_insert.rc == 0
-        - db_insert.stdout | search('INSERT')
+        - db_insert.stdout is search('INSERT')
 
 
 - name: Set up app server
