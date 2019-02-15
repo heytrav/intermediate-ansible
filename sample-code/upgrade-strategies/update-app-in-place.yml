@@ -1,7 +1,54 @@
 ---
+
+- name: Preflight hosts
+  hosts: bastion
+  gather_facts: false
+  tasks:
+
+    - name: Set ansible_host to be private ipv4
+      add_host:
+        name: "{{ openstack.metadata.name }}"
+        ansible_host: "{{ openstack.public_v4 }}"
+        groups: "{{ group_names }}"
+      when: 
+        - openstack is defined
+
+
+    - name: Set ansible_host to be private ipv4
+      add_host:
+        name: "{{ openstack.metadata.name }}"
+        groups:
+          - inplace_update
+      when: 
+        - openstack is defined
+
+- name: Preflight hosts
+  hosts: cluster:!bastion
+  gather_facts: false
+  serial: 1
+  tasks:
+
+    - name: Set ansible_host to be private ipv4
+      add_host:
+        name: "{{ openstack.metadata.name }}"
+        ansible_host: "{{ openstack.private_v4 }}"
+        groups: "{{ group_names  }}"
+      when: 
+        - openstack is defined
+
+    - name: Set ansible_host to be private ipv4
+      add_host:
+        name: "{{ openstack.metadata.name }}"
+        ansible_host: "{{ openstack.private_v4 }}"
+        groups: 
+          - inplace_update
+      when: 
+        - openstack is defined
+
+  
 - name: Upgrade application in place
   become: true
-  hosts: app
+  hosts: app:&inplace_update
   serial: 1
   any_errors_fatal: true
   vars:
@@ -26,7 +73,7 @@
         backend: catapp-backend
         host: "{{ web_server }}"
         state: disabled
-      delegate_to: "{{ groups.loadbalancer[0] }}"
+      delegate_to: "{{ groups.loadbalancer | intersect(groups.inplace_update) | first  }}"
 
     - name: Checkout application from git
       git:
@@ -39,10 +86,10 @@
       template:
         src: templates/config.py.j2
         dest: "{{ app_directory }}/config.py"
-        owner: train
-        group: train
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_user }}"
         mode: 0644
-      notify: start gunicorn
+      notify: restart gunicorn
 
     - name: Install app requirements
       pip:
