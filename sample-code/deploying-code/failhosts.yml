@@ -2,10 +2,12 @@
   hosts: failhosts
   gather_facts: false
   tasks:
+
     - name: fail last host
       fail:
         msg: "I am last"
       when: inventory_hostname == play_hosts[-1]
+
     - name: never ran
       debug:
         msg: "I should never be ran"

@@ -1,4 +1,5 @@
 cloud_name: ansible-training
+prefix: "{{ lookup('env', 'INVENTORY_HOSTNAME') }}"
 suffix: "-{{ prefix }}"
 appname: catapp
 ssh_public_key_file: "{{ lookup('env', 'HOME') }}/.ssh/id_rsa.pub"

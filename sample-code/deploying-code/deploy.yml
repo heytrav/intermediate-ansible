@@ -100,6 +100,8 @@
 - name: Set up app server
   hosts: app
   become: true
+  vars:
+    db_host: "{{ groups.db[0] }}"
   tasks:
 
     - name: Install packages needed for application

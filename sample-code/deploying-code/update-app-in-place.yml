@@ -9,18 +9,10 @@
       add_host:
         name: "{{ openstack.metadata.name }}"
         ansible_host: "{{ openstack.public_v4 }}"
-        groups: "{{ group_names }}"
+        groups: "inplace_update,{{ group_names | join(',') }}"
       when: 
         - openstack is defined
-
-
-    - name: Set ansible_host to be private ipv4
-      add_host:
-        name: "{{ openstack.metadata.name }}"
-        groups:
-          - inplace_update
-      when: 
-        - openstack is defined
+        - openstack.metadata.training_machine == prefix
 
 - name: Preflight hosts
   hosts: cluster:!bastion
@@ -32,18 +24,10 @@
       add_host:
         name: "{{ openstack.metadata.name }}"
         ansible_host: "{{ openstack.private_v4 }}"
-        groups: "{{ group_names  }}"
+        groups: "inplace_update,{{ group_names | join(',')  }}"
       when: 
         - openstack is defined
-
-    - name: Set ansible_host to be private ipv4
-      add_host:
-        name: "{{ openstack.metadata.name }}"
-        ansible_host: "{{ openstack.private_v4 }}"
-        groups: 
-          - inplace_update
-      when: 
-        - openstack is defined
+        - openstack.metadata.training_machine == prefix
 
   
 - name: Upgrade application in place
@@ -53,10 +37,17 @@
   any_errors_fatal: true
   vars:
     web_server: "{{ inventory_hostname | regex_replace('^(.*)app(\\d+)$', '\\1web\\2') }}"
+    db_host: "{{ groups.db | intersect(groups.inplace_update) | first  }}"
   tags:
     - app
   tasks:
 
+    - name: "Disable {{ web_server }}  at load balancer"
+      haproxy:
+        backend: catapp-backend
+        host: "{{ web_server }}"
+        state: disabled
+      delegate_to: "{{ groups.loadbalancer | intersect(groups.inplace_update) | first  }}"
     - name: Stop the gunicorn service
       systemd:
         name: gunicorn
@@ -68,12 +59,6 @@
         delay: 10
         state: drained
 
-    - name: Disable application at load balancer
-      haproxy:
-        backend: catapp-backend
-        host: "{{ web_server }}"
-        state: disabled
-      delegate_to: "{{ groups.loadbalancer | intersect(groups.inplace_update) | first  }}"
 
     - name: Checkout application from git
       git:
@@ -119,12 +104,12 @@
         delay: 10
         timeout: 60
 
-    - name: Re-enable application at load balancer
+    - name: "Re-enable {{ web_server }} at load balancer"
       haproxy:
         backend: catapp-backend
         host: "{{ web_server }}"
         state: enabled
-      delegate_to: "{{ groups.loadbalancer[0] }}"
+      delegate_to: "{{ groups.loadbalancer | intersect(groups.inplace_update) | first  }}"
 
 
   handlers:
@@ -132,4 +117,9 @@
       systemd:
         name: gunicorn
         state: started
+
+    - name: restart gunicorn
+      systemd:
+        name: gunicorn
+        state: restarted
 
