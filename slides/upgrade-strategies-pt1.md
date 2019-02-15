@@ -15,8 +15,8 @@
 
 #### Upgrade Strategies
 * Blue-Green
-* Rolling Deployment
 * Expand and Contract
+* Rolling Deployment
 
 
 #### Blue-Green Deployments
@@ -38,32 +38,6 @@
 * When<!-- .element: class="fragment" data-fragment-index="1" --> checks and testing has completed, traffic is switched to _green_ 
   environment
 * Updates<!-- .element: class="fragment" data-fragment-index="2" --> to production code installed on _blue_ environment 
-
-
-#### In-place rolling upgrade
-
-* Traditional approach to upgrading applications across a cluster <!-- .element: class="fragment" data-fragment-index="0" -->
-  - Creating new infrastructure can be prohibitively expensive
-* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="1" -->
-* Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="2" -->
-
-
-
-#### First step of in place upgrade
-
-![step2](img/rolling-upgrade-phase1.svg "Upgrade first cluster") <!-- .element
-width="50%" height="50%"-->
-
-* Disable application at LB (no HTTP requests) <!-- .element: class="fragment" data-fragment-index="0" -->
-* Upgrade necessary applications, configuration <!-- .element: class="fragment" data-fragment-index="1" -->
-* Re-enable at LB <!-- .element: class="fragment" data-fragment-index="2" -->
-
-
-#### In place rolling upgrade
-![step3](img/rolling-upgrade-phase2.svg "Upgrade other clusters") <!-- .element width="50%" height="50%"-->
-
-* Repeat process across pool <!-- .element: class="fragment" data-fragment-index="0" -->
-* Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
 #### Expand and contract
@@ -97,4 +71,31 @@ width="50%" height="50%"-->
   - Change DNS to point at new cluster
   - Stop services on old cluster
 * Decommision old cluster <!-- .element: class="fragment" data-fragment-index="1" -->
+
+
+#### In-place rolling upgrade
+
+* Traditional approach to upgrading applications across a cluster <!-- .element: class="fragment" data-fragment-index="0" -->
+  - Creating new infrastructure can be prohibitively expensive
+* Operates on infrastructure that already exists <!-- .element: class="fragment" data-fragment-index="1" -->
+* Minimise downtime by upgrading parts of the cluster at a time <!-- .element: class="fragment" data-fragment-index="2" -->
+
+
+
+#### First step of in place upgrade
+
+![step2](img/rolling-upgrade-phase1.svg "Upgrade first cluster") <!-- .element
+width="50%" height="50%"-->
+
+* Disable application at LB (no HTTP requests) <!-- .element: class="fragment" data-fragment-index="0" -->
+* Upgrade necessary applications, configuration <!-- .element: class="fragment" data-fragment-index="1" -->
+* Re-enable at LB <!-- .element: class="fragment" data-fragment-index="2" -->
+
+
+#### In place rolling upgrade
+![step3](img/rolling-upgrade-phase2.svg "Upgrade other clusters") <!-- .element width="50%" height="50%"-->
+
+* Repeat process across pool <!-- .element: class="fragment" data-fragment-index="0" -->
+* Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
+
 
