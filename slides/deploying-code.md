@@ -111,6 +111,32 @@ wsgi.py
   ```
 
 
+#### Delegation
+* Quite often we need to configure one host *in the context of another host*
+* Examples:
+   - Set up ssh config locally with remote host IP
+   - Add web host IPs to loadbalancer config
+   - Nginx proxy pass on web host with backend IP
+* Key to this is *delegation*
+
+<pre class="fragment" data-fragment-index="2" style="font-size:13pt;"><code data-trim data-noescape>
+- name: Set up web hosts with mapping to backend
+  hosts: <mark>web</mark>
+  .
+    - name: Map each of the frontend hosts in the loadbalancer
+      lineinfile:
+        dest: /etc/hosts
+        line: "{{ ansible_host }} frontend{{ group_index }}"
+      <mark>delegate_to: "{{ groups.loadbalancer.0 }}"</mark>
+</code></pre>
+
+
+
+#### Delegation
+* Delegation allows play to perform tasks on a host using context of another
+* Do not need to use *hostvars* to get context
+
+
 #### Load balanced application
 
 * We are setting up multiple web and app instances
@@ -149,41 +175,42 @@ train-app[1:2]
 
 Let's go ahead and provision our machines
 ```
-$ ansible-playbook  -e prefix=$(hostname) -K --ask-vault-pass provision-hosts.yml
+$ ansible-playbook   -K --ask-vault-pass provision-hosts.yml deploy.yml
 ```
 <!-- .element: style="font-size:12pt;"  -->
 
 
 #### Deploying our application
-* Once machines provisioned, time to set up individual hosts for assigned jobs
-  <!-- .element: class="fragment" data-fragment-index="0" -->
+* Once machines provisioned, time to set up individual hosts for assigned jobs <!-- .element: class="fragment" data-fragment-index="0" -->
 * Database server <!-- .element: class="fragment" data-fragment-index="1" -->
   - Runs postgresql database
 * Web server <!-- .element: class="fragment" data-fragment-index="2" -->
   - Runs nginx
   - Sends request through to app server
+
+
+
+#### Deploying our application
 * App server <!-- .element: class="fragment" data-fragment-index="3" -->
   - Runs Python web application
 * Loadbalancer <!-- .element: class="fragment" data-fragment-index="4" -->
   - Sends HTTP requests to web server
 
 
-
 #### Deploying our application
-
-```
-$ ansible-playbook -K --ask-vault-pass ansible/deploy.yml
-```
-
 * The<!-- .element: class="fragment" data-fragment-index="0" --> `deploy.yml` playbook:
   - configures machines 
   - sets up database
   - deploys our web application
   - Configures the loadbalancer to direct HTTP between web1 and web2
 * Should be able to access your new <!-- .element: class="fragment" data-fragment-index="1" --> <a href="http://my-app.cat">web application</a> 
+* <!-- .element: class="fragment" data-fragment-index="2" -->View [loadbalancer admin page](http://my-app.cat/haproxy?stats)
+  - login: admin
+  - password is in `group_vars/loadbalancer/secrets.yml`
 
 
-#### Refactoring our project
+
+##### Exercise: Refactoring our project
 
 ```
 - name: Provision a set of hosts in Catalyst Cloud

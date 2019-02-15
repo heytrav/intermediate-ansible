@@ -62,7 +62,7 @@ Set of hosts in first set but not in second set
 ![Difference](img/difference.svg "Difference")<!-- .element: width="20%"
 height="20%" -->
 
-Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" --> _wellington_ group **but not in the _blue_** group
+Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" --> _wellington_ group **but not** in the _blue_ group
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
 - name: Difference of groups
