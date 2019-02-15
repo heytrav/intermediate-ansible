@@ -89,6 +89,9 @@
         key_name: "{{ keypair_name  }}"
         flavor: "{{ default_flavor }}"
         auto_ip: "{{ hostvars[item].assign_floating_ip | default('no') }}"
+        meta:
+          name: "{{ item }}"
+          groups: "{{ hostvars[item].group_names | join(',') }}"
         nics:
           - net-name: "{{ network_name }}"
         security_groups: "default,{{ hostvars[item].security_groups | map(attribute='group') | list | unique | join(',')}}"
