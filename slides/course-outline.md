@@ -9,9 +9,9 @@
 
 
 
-* [Roles](roles.md)
-  * Components of roles
-  * Writing a role
+* [Roles part 2](roles.md)
+  * Importing roles
+  * Distributing your own roles
 
 
 
@@ -35,11 +35,15 @@
   *  Inventory set theory operators
 
 
-* [In place rolling upgrade](upgrade-strategies-pt1.md)
-  *  Serialising upgrades
-  *  Delegation
-  *  Failing fast
+* [Upgrade strategies](upgrade-strategies-pt1.md)
+  *  What can go wrong?
+  *  Types of strategies
 
 
-* [Expand and contract](upgrade-strategies-pt2.md)
-  * Dynamic inventories
+
+* [Dynamic Inventories](dynamic-inventories.jd)
+* [Handling Failure](failing-fast.md)
+
+
+* [Rolling Upgrade Demo](rolling-upgrade-demo.md)
+* [Wrap Up](closing.md)

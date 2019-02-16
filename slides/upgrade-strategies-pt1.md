@@ -99,3 +99,11 @@ width="50%" height="50%"-->
 * Mixed versions will be running for a period of time <!-- .element: class="fragment" data-fragment-index="1" -->
 
 
+#### Summary
+* Update infrastructure code should be designed to avoid *loss of service*
+* Update strategies that ensure healthy system is always running are crucial
+* Alternatives based on cost, hardware, ease of implementation
+  - Blue-green
+  - Expand and contract
+  - Rolling Upgrade
+

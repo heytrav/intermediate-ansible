@@ -30,10 +30,50 @@ cd $WORKDIR/ansible-roles
    ```
 
 
+##### Exercise: Install a role
+* <!-- .element: class="fragment" data-fragment-index="0" -->Go to the [Ansible Galaxy Website](https://galaxy.ansible.com)
+* <!-- .element: class="fragment" data-fragment-index="1" -->Find a role that interests you
+* <!-- .element: class="fragment" data-fragment-index="2" -->Install it using `ansible-galaxy install`
+* <!-- .element: class="fragment" data-fragment-index="3" -->Example
+   ```
+   ansible-galaxy install geerlingguy.java
+   ```
+
+
+#### Where does Ansible install roles?
+* <!-- .element: class="fragment" data-fragment-index="0" -->See *Introduction to Ansible* lesson
+* <!-- .element: class="fragment" data-fragment-index="1" -->Depends on configuration
+* <!-- .element: class="fragment" data-fragment-index="2" -->By default roles are installed in
+   ```
+   $HOME/.ansible/roles
+   ```
+* <!-- .element: class="fragment" data-fragment-index="3" -->Can be overridden using **<code>roles_path</code>** in `ansible.cfg`
+   ```ini
+   [defaults]
+   roles_path = <path>
+   ```
+   - note rules about precedence from previous lesson
+
+
+##### Exercise: Change role install location
+* Install role into 
+   ```
+   $WORKDIR/ansible-roles/roles
+   ```
+* <!-- .element: class="fragment" data-fragment-index="0" -->First add `ansible.cfg` to current directory
+* <!-- .element: class="fragment" data-fragment-index="1" -->Specify `roles_path`
+   ```ini
+   [defaults]
+   roles_path = roles
+   ```
+* <!-- .element: class="fragment" data-fragment-index="2" -->Re-run `ansible-galaxy install <role>`
+
+
+
 #### Distributing your Roles
-* Using/importing 3rd party roles in your code is easy
-* Real benefit is distributing your own roles
-* Also easy
+* Ansible galaxy makes it easy to import roles
+   - don't reinvent the wheel if you don't have to
+* What if you want to distribute your own roles?
 
 
 ##### Exercise: Distributing a Role
@@ -84,6 +124,16 @@ cd $WORKDIR/ansible-roles
   ansible-galaxy install git+https://github.com/myaccount/my-role.git
   ```
   <!-- .element: style="font-size:13pt;"  -->
+
+
+##### Exercise: Install a role from GitHub
+* <!-- .element: class="fragment" data-fragment-index="0" -->Install random [ansible-nodejs](https://github.com/heytrav/ansible-nodejs) role
+* <!-- .element: class="fragment" data-fragment-index="1" -->Note that you need to specify `git+<url>`
+
+```
+ansible-galaxy install git+https://github.com/heytrav/ansible-nodejs.git
+```
+<!-- .element: class="fragment" data-fragment-index="2" style="font-size:14pt;"-->
 
 
 #### Managing roles in a project
