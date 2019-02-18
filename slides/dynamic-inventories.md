@@ -66,11 +66,23 @@ $ ./dynamic-inventory.py --host=training-db1
   - <!-- .element: class="fragment" data-fragment-index="1" --><a href="https://raw.github.com/ansible/ansible/devel/contrib/inventory/cobbler.py">Cobbler</a> 
   - <!-- .element: class="fragment" data-fragment-index="2" --><a href="https://raw.github.com/ansible/ansible/devel/contrib/inventory/ec2.py">AWS</a> 
   - <!-- .element: class="fragment" data-fragment-index="3" --><a href="https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/openstack.py">OpenStack</a> 
- * In<!-- .element: class="fragment" data-fragment-index="4" --> upgrade-strategies ansible inventory 
-    ```
-    cd $WORKDIR/deploying-code
-    ./inventory/dynamic/openstack_inventory.py --list
-    ```
+
+
+
+##### Exercise: OpenStack Dynamic Inventory
+* Fetch the example dynamic inventory script for openstack
+   ```console
+   mkdir -p inventory/dynamic
+   cd inventory/dynamic
+   wget https://raw.githubusercontent.com/ansible/ansible/devel/contrib/inventory/openstack_inventory.py
+   chmod +x openstack_inventory.py
+   ```
+   <!-- .element: style="font-size:11pt;"  -->
+* <!-- .element: class="fragment" data-fragment-index="4" -->Get list of hosts in the stack
+   ```console
+   export OS_CLOUD=lef
+   ./openstack_inventory.py --list
+   ```
 
 
 #### Dynamic inventories in playbooks
