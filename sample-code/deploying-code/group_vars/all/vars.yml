@@ -1,3 +1,4 @@
+prefix: "{{ lookup('env', 'INVENTORY_HOSTNAME') }}"
 cloud_name: ansible-training
 suffix: "-{{ prefix }}"
 appname: catapp
