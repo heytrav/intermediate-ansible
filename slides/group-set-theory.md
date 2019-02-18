@@ -79,18 +79,3 @@ Hosts that are in the<!-- .element: class="fragment" data-fragment-index="0" -->
 * Set theory operators can also be applied to inventory items when running
   playbooks
 * Enable fine tuning of operations in playbooks
-
-
-#### Tearing down our project
-
-```
-$ ansible-playbook -i inventory \
-    -K --ask-vault-pass  -e prefix=$(hostname) \
-        remove-hosts.yml
-```
-
-* The  `remove-hosts.yml` playbook
-  - Shutdown openstack instances <!-- .element: class="fragment" data-fragment-index="0" -->
-  - Deletes private network <!-- .element: class="fragment" data-fragment-index="1" -->
-  - Removes security groups <!-- .element: class="fragment" data-fragment-index="2" -->
-  - Removes local entries from both<!-- .element: class="fragment" data-fragment-index="3" --> `/etc/hosts` and `~/.ssh/config` 
