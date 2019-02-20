@@ -151,9 +151,9 @@ $ cd $WORKDIR/task-conditions
 
 <pre class="fragment" data-fragment-index="0"><code data-trim>
     - name: Run tools command in working directory
-      shell: "{{ application_directory }}/tools.sh"
+      shell: "{{ ansible_env.HOME }}/tools.sh"
       args:
-        chdir: "{{ application_directory }}"
+        chdir: "{{ ansible_env.HOME }}"
       register: tools_output
       failed_when: 
         - tools_output.rc != 0
