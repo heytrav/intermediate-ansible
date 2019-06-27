@@ -5,7 +5,7 @@
 ### Task conditions
 
 ```console
-$ cd $WORKDIR/task-conditions
+$ cd $INTERMED_ANSIBLE_DIR/task-conditions
 ```
 
 

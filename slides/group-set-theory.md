@@ -4,7 +4,7 @@
 #### Set theory in Ansible
 
 ```
-$ cd $WORKDIR/set-theory
+$ cd $INTERMED_ANSIBLE_DIR/set-theory
 .
 └── group-set-theory.yml
 ```

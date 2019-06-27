@@ -4,7 +4,7 @@
 #### Organising Infrastructure Code
 
 ```console
-$ cd $WORKDIR/sample-code/includes
+$ cd $INTERMED_ANSIBLE_DIR/includes
 .
 ├── block.yml
 ├── group_vars
@@ -21,7 +21,7 @@ $ cd $WORKDIR/sample-code/includes
 ```
 <!-- .element: style="font-size:12pt;"  -->
 
->In all following examples, `$WORKDIR` is the path to the `sample-code` directory.
+>In all following examples, `$INTERMED_ANSIBLE_DIR` is the path to the `sample-code` directory.
 
 
 #### Refactoring Infrastructure Code
@@ -133,7 +133,7 @@ $ cd $WORKDIR/sample-code/includes
 
 Conventional organisation of tasks in ansible
  <pre><code class="console" data-trim data-noescape>
- $ mkdir -p $WORKDIR/includes/tasks
+ $ mkdir -p $INTERMED_ANSIBLE_DIR/includes/tasks
  .
  ├── hosts
  ├── long-playbook.yml
@@ -151,7 +151,7 @@ Conventional organisation of tasks in ansible
 
 #### Including files in Ansible
 
-#### `include`
+#### The `include` directive
 
 ![Deprecated](img/3678.deprecated.png "Deprecated") <!-- .element: class="fragment" data-fragment-index="0" -->
 

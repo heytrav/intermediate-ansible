@@ -4,7 +4,7 @@
 
 #### Reusing Ansible
 ```
-cd $WORKDIR/ansible-roles
+cd $INTERMED_ANSIBLE_DIR/ansible-roles
 ```
 * Roles make it easy to distribute/reuse Ansible tasks
 * Distribute via conventional source code management tools
@@ -58,7 +58,7 @@ cd $WORKDIR/ansible-roles
 ##### Exercise: Change role install location
 * Install role into 
    ```
-   $WORKDIR/ansible-roles/roles
+   $INTERMED_ANSIBLE_DIR/ansible-roles/roles
    ```
 * <!-- .element: class="fragment" data-fragment-index="0" -->First add `ansible.cfg` to current directory
 * <!-- .element: class="fragment" data-fragment-index="1" -->Specify `roles_path`
@@ -167,6 +167,6 @@ ansible-galaxy install git+https://github.com/heytrav/ansible-nodejs.git
 
 
 #### Summary
-* Anisble roles useful way to distribute reusable tasks
+* Ansible roles useful way to distribute reusable tasks
 * Combined with requirements file, very useful way to manage infrastructure
   dependencies

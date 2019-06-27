@@ -4,8 +4,8 @@
 #### Deploying applications
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ cd $WORKDIR/deploying-code
-$ tree
+cd $INTERMED_ANSIBLE_DIR/deploying-code
+tree
 .
 ├── <mark>provision-hosts.yml</mark>
 ├── <mark>deploy.yml</mark>
@@ -246,7 +246,7 @@ $ ansible-playbook   -K --ask-vault-pass provision-hosts.yml deploy.yml
 ##### Provisioning role
 
 <pre  class="fragment" data-fragment-index="0"><code data-trim data-noescape>
-$ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
+$ sudo mkdir -p $INTERMED_ANSIBLE_DIR/deploying-code/ansible/roles
 </code></pre>
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 .
@@ -303,7 +303,7 @@ $ sudo mkdir -p $WORKDIR/deploying-code/ansible/roles
 ##### Refactoring _common_ tasks
 
 * These tasks <!-- .element: class="fragment" data-fragment-index="0" -->will be useful in later lessons 
-* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$WORKDIR/deploying-code/ansible/roles` next to _os-provision_ role
+* Create a role called<!-- .element: class="fragment" data-fragment-index="1" --> _common_ in `$INTERMED_ANSIBLE_DIR/deploying-code/ansible/roles` next to _os-provision_ role
 
 <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
 /.

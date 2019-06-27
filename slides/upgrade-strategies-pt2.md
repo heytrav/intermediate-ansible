@@ -6,7 +6,7 @@
 ####  Expand and contract upgrades
 
 ```
-$ cd $WORKDIR/upgrade-strategies-2
+$ cd $INTERMED_ANSIBLE_DIR/upgrade-strategies-2
 .
 ├── add-hosts-to-inventory.yml
 ├── check-defined.yml

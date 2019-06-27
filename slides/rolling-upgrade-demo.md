@@ -6,7 +6,7 @@
 
 <pre><code data-trim data-noescape>
 
-$ cd $WORKDIR/deploying-code
+$ cd $INTERMED_ANSIBLE_DIR/deploying-code
 .
 ├── failhosts.yml
 ├── group_vars
