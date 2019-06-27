@@ -39,20 +39,6 @@ wsgi.py
   * Basic setup for machines <!-- .element: class="fragment" data-fragment-index="7" -->
 
 
-#### Preflighting 
-
-* The second play in<!-- .element: class="fragment" data-fragment-index="0" --> `provision-hosts.yml` does not have any tasks 
-  ```
-    - name: Preflight to set up machine specific variables
-      hosts: cluster
-      gather_facts: false
-  ```
-* Objective is to load inventory variables into<!-- .element: class="fragment" data-fragment-index="1" --> _hostvars_ for later plays 
-* Note also that<!-- .element: class="fragment" data-fragment-index="2" --> *gather_facts* is set to false 
-  * The hosts in<!-- .element: class="fragment" data-fragment-index="3" --> _cluster_ do not actually exist yet 
-  * Prevents Ansible from trying to create SSH connection with them <!-- .element: class="fragment" data-fragment-index="4" -->
-
-
 #### Provisioning
 
 * When interacting with cloud providers Ansible modules leverage APIs <!-- .element: class="fragment" data-fragment-index="0" -->

@@ -132,7 +132,7 @@ $ cd $INTERMED_ANSIBLE_DIR/deploying-code
   </code></pre>
 * We proceed when we are sure that the service is running <!-- .element: class="fragment" data-fragment-index="1" -->
   <pre  class="fragment" data-fragment-index="1"><code data-trim data-noescape>
-    - name: Make sure app is listening on port 500
+    - name: Make sure app is listening on port 5000
       wait_for:
         port: 5000
   </code></pre>
@@ -140,8 +140,7 @@ $ cd $INTERMED_ANSIBLE_DIR/deploying-code
 
 #### Upgrade our application
 ```
-$ ansible-playbook  -K --ask-vault-pass \
-   -i inventory/dynamic  update-app-in-place.yml -e app_version=v2
+ansible-playbook -i inventory/dynamic  update-app-in-place.yml -e app_version=v2
 ```
 * Should run an in-place upgrade to _v2_ of our app
 * Changes the background colour of the application

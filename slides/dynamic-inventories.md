@@ -80,7 +80,7 @@ $ ./dynamic-inventory.py --host=training-db1
    <!-- .element: style="font-size:11pt;"  -->
 * <!-- .element: class="fragment" data-fragment-index="4" -->Get list of hosts in the stack
    ```console
-   export OS_CLOUD=lef
+   export OS_CLOUD=ansible-training
    ./openstack_inventory.py --list
    ```
 

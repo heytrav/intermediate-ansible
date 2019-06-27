@@ -3,7 +3,7 @@
 
 #### Handling failure
 ```
-cd $INTERMED_ANSIBLE_DIR/deploying-code
+cd $INTERMED_ANSIBLE_DIR/handlingfailure
 
 ```
 

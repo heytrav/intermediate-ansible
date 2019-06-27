@@ -1,4 +1,4 @@
-prefix: "{{ lookup('lines', 'hostname') }}"
+prefix: "{{ lookup('env', 'PREFIX') }}"
 cloud_name: ansible-training
 suffix: "-{{ prefix }}"
 appname: catapp
