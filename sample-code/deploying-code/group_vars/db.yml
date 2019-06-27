@@ -1,7 +1,7 @@
 ---
 
 machine_security_groups:
-  - {group: "db{{ suffix }}", port: 5432, remote_group: "app{{ suffix }}"}
+  - {group: "db{{ suffix }}", port: 5432, remote_group: "web{{ suffix }}"}
 
 security_groups: "{{ machine_security_groups + main_security_groups }}"
 

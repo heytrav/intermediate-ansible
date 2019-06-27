@@ -98,7 +98,7 @@
 
 
 - name: Set up app server
-  hosts: app
+  hosts: web
   become: true
   tasks:
 
@@ -142,7 +142,6 @@
       pip:
         requirements: "{{ app_directory }}/requirements.txt"
         virtualenv: "{{ app_directory }}/venv"
-        virtualenv_python: /usr/bin/python3
 
     - name: Install gunicorn
       pip:

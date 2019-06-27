@@ -1,4 +1,4 @@
-prefix: "{{ lookup('env', 'INVENTORY_HOSTNAME') }}"
+prefix: "{{ lookup('lines', 'hostname') }}"
 cloud_name: ansible-training
 suffix: "-{{ prefix }}"
 appname: catapp
@@ -32,3 +32,10 @@ main_security_groups:
 
 database_user: train_user
 database: cat_pics
+
+host_data:
+  name: "{{ item.openstack.name }}"
+  ansible_host: "{{ item.openstack.public_v4 | default(item.openstack.private_v4, true) }}"
+  public_v4: "{{ item.openstack.public_v4 | default(omit) }}"
+  private_v4: "{{ item.openstack.private_v4 }}"
+  ansible_ssh_common_args: "{{ hostvars[item.openstack.name].ansible_ssh_common_args }}"

@@ -1,91 +1,161 @@
 ---
-- name: Make sure variables are defined before starting
-  hosts: localhost
+
+- name: Sort hosts into teardown group
+  hosts: all:!localhost
   gather_facts: false
-  vars:
-    app_prefix: "{{ prefix | mandatory }}"
-
-- name: Provision a set of hosts in the Catalyst Cloud
-  hosts: localhost
-  gather_facts: false
-  vars:
-    host_set: "{{ groups.cluster | unique | list }}"
-    # change if required or override at runtime using --extra-vars
-
-    security_groups: "{{ host_set | map('extract', hostvars, 'security_groups') | sum(start=main_security_groups) | unique | list }}"
-
-    security_group_names: "{{ security_groups | map(attribute='group') | unique | list }}"
-
+  serial: 1
   tasks:
-    - name: Connect to Catalyst Cloud
-      os_auth:
-        cloud: "{{ cloud_name }}"
+    - name: Sort hosts into teardown group
+      add_host:
+        name: "{{ openstack.metadata.inventory_hostname }}"
+        ansible_host: "{{ openstack.public_v4 | default(openstack.private_v4, true) }}"
+        groups:
+          - teardown
+      when:
+        - openstack is defined
+        - openstack.metadata.inventory_hostname is defined
 
-    - name: Remove floating ips from known_hosts
-      known_hosts:
-        name: "{{ item }}"
-        state: absent
-      with_items: "{{ host_set }}"
+    - name: Assign groups from host set
+      add_host:
+        name: "{{ openstack.metadata.inventory_hostname }}"
+        ansible_host: "{{ openstack.public_v4 | default(openstack.private_v4, true) }}"
+        groups: "{{ openstack.metadata.groups }}"
+      when:
+        - openstack is defined
+        - openstack.metadata.inventory_hostname is defined
 
-    - name: Remove cluster servers
-      os_server:
-        cloud: "{{ cloud_name }}"
-        name: "{{ item }}"
-        state: absent
-        delete_fip: true
-      with_items: "{{ host_set }}"
+- name: Teardown hosts
+  hosts: teardown:cluster
+  gather_facts: false
+  tasks:
+    - block:
+        - name: Connect to Catalyst Cloud
+          os_auth:
+            cloud: "{{ cloud_name }}"
 
-    - name: Remove ports
-      os_port:
-        cloud: "{{ cloud_name }}"
-        name: "{{ item }}"
-        state: absent
-      with_items: "{{ host_set }}"
+        - name: Remove cluster servers
+          os_server:
+            cloud: "{{ cloud_name }}"
+            name: "{{ inventory_hostname }}"
+            state: absent
+            delete_fip: true
 
-    - name: Remove cluster keypair
-      os_keypair: 
-        cloud: "{{ cloud_name }}"
-        state: absent
-        name: "{{ keypair_name }}"
+        - name: Remove ports
+          os_port:
+            cloud: "{{ cloud_name }}"
+            name: "{{ inventory_hostname }}"
+            state: absent
 
-    - name: Remove cluster router
-      os_router:
-        cloud: "{{ cloud_name }}"
-        state: absent
-        name: "{{ router_name }}"
+        - name: Remove floating ips from known_hosts
+          known_hosts:
+            name: "{{ inventory_hostname }}"
+            state: absent
 
-    - name: Remove cluster network
-      os_network:
-        cloud: "{{ cloud_name }}"
-        state: absent
-        name: "{{ network_name }}"
+        - name: Remove security group
+          os_security_group:
+            cloud: "{{ cloud_name }}"
+            name: "{{ item }}"
+            state: absent
+          ignore_errors: true
+          with_items: "{{ security_group_names }}"
 
-    - name: Remove security group
-      os_security_group:
-        cloud: "{{ cloud_name }}"
-        name: "{{ item }}"
-        state: absent
-      with_items: "{{ security_group_names }}"
+        - name: Remove hosts from local ~/.ssh/config
+          blockinfile:
+            dest: "{{  lookup('env', 'HOME')  }}/.ssh/config"
+            state: absent
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
 
-    - name: Remove hosts from local ~/.ssh/config
-      blockinfile:
-        dest: "{{  lookup('env', 'HOME')  }}/.ssh/config"
-        state: absent
-        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
-      with_items: "{{ host_set }}"
+        - name: Remove host from /etc/hosts
+          become: yes
+          blockinfile:
+            dest: /etc/hosts
+            state: absent
+            insertafter: EOF
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
 
-    - name: Remove host from /etc/hosts
-      become: yes
-      blockinfile:
-        dest: /etc/hosts
-        state: absent
-        insertafter: EOF
-        marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ item }}"
-      with_items: "{{ host_set }}"
+        - name: Remove fake domain from /etc/hosts
+          become: yes
+          blockinfile:
+            dest: /etc/hosts
+            state: absent
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for my-app.cat"
+      delegate_to: localhost
 
-    - name: Remove fake domain from /etc/hosts
-      become: yes
-      blockinfile:
-        dest: /etc/hosts
+- name: Remove networks and floating ips
+  hosts: web[0]:db:bastion
+  gather_facts: false
+  tasks:
+    - block:
+        - name: Connect to Catalyst Cloud
+          os_auth:
+            cloud: "{{ cloud_name }}"
+
+        - name: Remove floating ips from known_hosts
+          known_hosts:
+            name: "{{ inventory_hostname }}"
+            state: absent
+
+        - name: Remove security group
+          os_security_group:
+            cloud: "{{ cloud_name }}"
+            name: "{{ item }}"
+            state: absent
+          ignore_errors: true
+          with_items: "{{ security_group_names }}"
+
+      delegate_to: localhost
+
+- name: Remove hosts from local machine
+  hosts: cluster
+  gather_facts: false
+  run_once: true
+  tasks:
+    - block:
+        - name: Remove hosts from local ~/.ssh/config
+          blockinfile:
+            dest: "{{  lookup('env', 'HOME')  }}/.ssh/config"
+            state: absent
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
+
+        - name: Remove host from /etc/hosts
+          become: yes
+          blockinfile:
+            dest: /etc/hosts
+            state: absent
+            insertafter: EOF
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for {{ inventory_hostname }}"
+
+        - name: Remove fake domain from /etc/hosts
+          become: yes
+          blockinfile:
+            dest: /etc/hosts
+            state: absent
+            marker: "# {mark} ANSIBLE MANAGED BLOCK for my-app.cat"
+
+        - name: Remove cluster keypair
+          os_keypair: 
+            cloud: "{{ cloud_name }}"
+            state: absent
+            name: "{{ keypair_name }}"
+
+        - name: Remove cluster router
+          os_router:
+            cloud: "{{ cloud_name }}"
+            state: absent
+            name: "{{ router_name }}"
+
+        - name: Remove cluster network
+          os_network:
+            cloud: "{{ cloud_name }}"
+            state: absent
+            name: "{{ network_name }}"
+
+      delegate_to: localhost
+
+- name: Remove load balancer
+  hosts: localhost
+  tasks:
+    - name: Remove the load balancer
+      os_loadbalancer:
+        name: "{{ prefix }}-lb"
         state: absent
-        marker: "# {mark} ANSIBLE MANAGED BLOCK for my-app.cat"
