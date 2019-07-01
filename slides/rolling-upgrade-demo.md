@@ -70,13 +70,13 @@ $ cd $INTERMED_ANSIBLE_DIR/deploying-code
 
 #### Delegation
 * As with provisioning, delegation is useful for updating hosts <!-- .element: class="fragment" data-fragment-index="0" -->
-* The application that we need to update is on our app servers <!-- .element: class="fragment" data-fragment-index="1" -->
+* The application that we need to update is on our web servers <!-- .element: class="fragment" data-fragment-index="1" -->
 * However, as part of updating, we need to control haproxy on our loadbalancer
   <!-- .element: class="fragment" data-fragment-index="2" -->
 
 <pre class="fragment" data-fragment-index="3"><code data-trim data-noescape>
 - name: Upgrade application in place
-  <mark>hosts: app</mark>
+  <mark>hosts: web</mark>
   serial: 1
   tasks:
     - name: Disable application at load balancer

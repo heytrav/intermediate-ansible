@@ -161,7 +161,7 @@ train-app[1:2]
 
 Let's go ahead and provision our machines
 ```
-$ ansible-playbook   -K --ask-vault-pass provision-hosts.yml deploy.yml
+ansible-playbook   -K provision-hosts.yml deploy.yml -e app_version=v1
 ```
 <!-- .element: style="font-size:12pt;"  -->
 
