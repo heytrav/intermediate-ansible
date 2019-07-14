@@ -5,7 +5,8 @@
 ### Task conditions
 
 ```console
-$ cd $INTERMED_ANSIBLE_DIR/task-conditions
+cd $INTERMED_ANSIBLE_DIR/task-conditions
+vagrant up
 ```
 
 
