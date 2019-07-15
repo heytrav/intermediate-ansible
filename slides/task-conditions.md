@@ -129,7 +129,7 @@ vagrant up
 
 #### Defining _changed_ state
 
-* The `runtools.yml` playbook still has a probem
+* The `runtools.yml` playbook still has a problem
 * It always reports the task for running the script as _changed_
 
 
